@@ -1,4 +1,3 @@
-import React from 'react'
 import Navbar from '../components/common/Navbar'
 import Banner from '../components/student/Banner'
 import Category from '../components/student/Category'

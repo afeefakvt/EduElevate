@@ -20,7 +20,7 @@ const Bestselling = () => {
           },
        
       ];
-
+        
       const content = [
         {
           id: 1,
@@ -60,7 +60,7 @@ const Bestselling = () => {
         variant="h4"
         sx={{ fontWeight: "bold", color: "#333", marginBottom: "1rem" }}
         
-      > Best Selling Courses</Typography>
+      > Best Selling Courses</Typography><br />
 
       <Grid container spacing={3}>
         {courses.map((course) => (

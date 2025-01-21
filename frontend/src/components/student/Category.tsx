@@ -32,7 +32,7 @@ const Category = () => {
         bgcolor: "#f5f5f5",
          padding:{xs:"2rem 1rem",md:"4rem"},
         // padding: "3rem 1rem",
-        height:"400px"
+     
       }}
     >
       <Typography
