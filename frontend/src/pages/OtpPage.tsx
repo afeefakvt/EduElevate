@@ -1,12 +1,11 @@
-import Register from '../components/common/Register'
-import Navbar from '../components/common/Navbar'
-import Footer from '../components/common/Footer'
-import { Box ,} from '@mui/material'
+import Otp from "../components/common/Otp";
+import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
+import { Box } from "@mui/material";
 
 
-const RegisterPage = () => {
 
-  
+const OtpPage = () => {
   return (
     <Box
     sx={{
@@ -22,7 +21,7 @@ const RegisterPage = () => {
             md: '64px', 
           },
           width:"100%"}}> 
-        <Register />
+        <Otp />
     </Box>
     <Box sx={{marginTop:"54px",width:"100%"}}>
     <Footer />
@@ -32,4 +31,4 @@ const RegisterPage = () => {
   )
 }
 
-export default RegisterPage
+export default OtpPage

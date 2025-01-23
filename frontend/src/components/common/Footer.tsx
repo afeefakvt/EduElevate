@@ -89,6 +89,7 @@ const Footer = () => {
           borderTop: "1px solid #444",
           paddingTop: "1rem",
           textAlign: "center",
+  
         }}
       >
         <Typography variant="body2">

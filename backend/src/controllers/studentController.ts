@@ -3,6 +3,7 @@ import { Request,Response } from "express";
 import { StudentService } from "../services/studentService";
 import { storeOtp,sendOtptoEmail } from "../utils/otp";
 import { generateToken,verifyResetToken } from "../utils/jwt";
+import { log } from "console";
 
 
 const studentRepository = new StudentRepository();
@@ -10,12 +11,17 @@ const studentService = new StudentService(studentRepository);
 
 
 export class StudentController  {
-    async createStudent(req:Request,reS:Response):Promise<void>{
+    async createStudent(req:Request,res:Response):Promise<void>{
         try {
-            const {name,email,mobile,password,confirmPassword} = req.body
+
+            console.log("wegsfwj");
+            
+            const {name,email,password,confirmPassword} = req.body
+            console.log("afefcf");
+            
 
             if(password!== confirmPassword){
-                reS.status(400).json({error:"passwords do not match"})
+                res.status(400).json({message:"passwords do not match"})
                 return;
             }
 
@@ -24,10 +30,13 @@ export class StudentController  {
             console.log('otp is',otp);
             
 
-            const student = await studentService.createStudent({name,email,mobile,password} as any)
-            reS.status(201).json({message:'student created successfully, otp is send to the email address'})
+            const student = await studentService.createStudent({name,email,password} as any)
+            console.log("ugduysjhan");
+            
+            res.status(201).json({message:'student created successfully, otp is send to the email address'})
         } catch (error:any) {
-            reS.status(400).json({error:error.message})
+            const message = error.message || 'Internal server error';
+            res.status(400).json({ message });
             
         }
     }
@@ -47,30 +56,38 @@ export class StudentController  {
             }
             res.status(400).json({message:'invalid otp'})
             
-        } catch (error) {
-            res.status(500).json({message:'server error'})
+        } catch (error:any) {
+            const message = error.message || 'Internal server error';
+            res.status(400).json({ message });
             
         }
 
     }
     async login(req:Request,res:Response):Promise<void>{
         try {
+            console.log("loginnnn");
+            
             const {email,password} = req.body
             const {token,student} = await studentService.loginStudent(email,password)
 
             if(!token){
                 res.status(404).json({message:'student not found'})
                 return
+              
             }
             if(student.isBlocked){
-                throw new Error('Your account is blcoked by admin')
+                res.status(403).json({ message: 'Your account is blocked ' });
+                return
+               
             }
+            console.log("genretaeeee");
+            
             res.status(200).json({message:'Login successful',token,student})
-
-            return;
-        } catch (error) {
-            res.status(500).json({message:'server error'})
-            return;
+            console.log(token,student);
+          
+        } catch (error:any) {
+            const message = error.message || 'Internal server error';
+            res.status(400).json({ message });
             
         }
     }

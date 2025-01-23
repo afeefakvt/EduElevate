@@ -1,5 +1,5 @@
 import logo from "../../assets/Eduelevate.png"
-import { AppBar, Avatar, Box, Button, IconButton, InputAdornment, Menu, MenuItem, TextField, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button,  Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 // import SearchIcon from "@mui/icons-material/Search";
 
@@ -107,7 +107,7 @@ const Navbar = () => {
                         <Button
                             variant="contained" color="primary"
                             sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}
-                        // onClick={() => navigate("/login")}
+                        onClick={() => navigate("/login")}
                         >
                             Log in
                         </Button>

@@ -26,9 +26,6 @@ const StudentSchema:Schema = new Schema<IStudent>(
             type:String,
             required:true
         },
-        mobile:{
-            type:Number,
-        },
         isBlocked:{
             type:Boolean,
             default:false
