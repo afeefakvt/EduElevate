@@ -1,12 +1,34 @@
 import logo from "../../assets/Eduelevate.png"
-import { AppBar, Box, Button,  Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-// import SearchIcon from "@mui/icons-material/Search";
-
+import { RootState, store } from "../../store/store";
+import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from "react";
+import { logout } from "../../store/authSlice";
 
 const Navbar = () => {
 
-    const navigate  = useNavigate()
+    const navigate = useNavigate()
+    const token = useSelector((state: RootState) => state.auth.token)
+    const student = useSelector((state: RootState) => state.auth.student)
+
+    const dispatch = useDispatch()
+    useEffect(() => {
+        console.log("Current Redux state:", store.getState());
+    }, [])
+
+    const handleLogout = () => {
+        try {
+            dispatch(logout())
+            console.log('logged out');
+            navigate('/login')
+
+        } catch (error) {
+            console.log(error);
+
+
+        }
+    }
     return (
 
         <AppBar
@@ -18,7 +40,7 @@ const Navbar = () => {
                 padding: "8px",
                 bgcolor: "white",
                 zIndex: 1000,
-                
+
             }}
         >
 
@@ -29,7 +51,7 @@ const Navbar = () => {
                     component={"img"}
                     src={logo}
                     alt="Logo"
-                    //   onClick={() =>navigate("/home")}
+                    onClick={() => navigate("/")}
 
                     style={
                         {
@@ -46,29 +68,7 @@ const Navbar = () => {
                         cursor: "pointer"
                     }}
                 ></Box>
-                {/* <TextField
-          variant="outlined"
-          size="small"
-          placeholder="Search"
-          sx={{
-            borderRadius: "24px",
-            backgroundColor: "#f9f9f9",
-            width: "50%",
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderRadius: "24px",
-            },
-            "& .MuiInputBase-input::placeholder": {
-              fontSize: { xs: "small", md: "medium" },
-            },
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ height: { xs: "15px", md: "40px" } }} />
-              </InputAdornment>
-            ),
-          }}
-        /> */}
+
                 <Box display="flex" alignItems="center" gap={2}>
                     <Typography
                         variant="body2"
@@ -103,28 +103,56 @@ const Navbar = () => {
                     >
                         My Courses
                     </Typography>
-                    <Box display={"flex"} justifyContent="center" alignItems="center">
-                        <Button
-                            variant="contained" color="primary"
-                            sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}
-                        onClick={() => navigate("/login")}
-                        >
-                            Log in
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{
-                                backgroundColor: "#550A8A",
-                                display: { xs: "none", sm: 'block' },
-                                //   "&:hover": { backgroundColor: "#333" },
-                            }}
-                        onClick={() => navigate("/register")}
-                        >
-                            Sign up
-                        </Button>
-                    </Box>
+                    {token ? (
+                        <Box display={"flex"} justifyContent="center" alignItems="center">
+                            <Button
+                                variant="contained" color="primary"
+                                sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}
+                                onClick={() => navigate("/profile")}
+                            >
+                                Profile
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                    backgroundColor: "#550A8A",
+                                    display: { xs: "none", sm: 'block' },
+                                    //   "&:hover": { backgroundColor: "#333" },
+                                }}
+                                onClick={() => handleLogout()}
+                            >
+                                Logout
+                            </Button>
+                        </Box>
+
+                    ) : (
+                        <Box display={"flex"} justifyContent="center" alignItems="center">
+                            <Button
+                                variant="contained" color="primary"
+                                sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}
+                                onClick={() => navigate("/login")}
+                            >
+                                Log in
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                    backgroundColor: "#550A8A",
+                                    display: { xs: "none", sm: 'block' },
+                                    //   "&:hover": { backgroundColor: "#333" },
+                                }}
+                                onClick={() => navigate("/register")}
+                            >
+                                Sign up
+                            </Button>
+                        </Box>
+
+
+                    )}
                 </Box>
+
             </Toolbar>
         </AppBar>
 

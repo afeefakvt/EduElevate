@@ -22,6 +22,7 @@ const Login = () => {
       setErrMessage('') //clear previouserror message
       try {
         const studentData = await login(email,password)
+        
         if(studentData){
             navigate('/')
         }

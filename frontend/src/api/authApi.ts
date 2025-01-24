@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { AxiosInstance } from "axios";
 import { axiosInstance } from "./axiosInstance";
+import {store} from '../store/store'
+import { loginSuccess } from "../store/authSlice";
 
 
 export const signUp = async(name:string,email:string,password:string,confirmPassword:string)=>{
@@ -37,6 +38,21 @@ export const verifyOtp = async(email:string,otp:string)=>{
 export const login =  async(email:string,password:string)=>{
     try {
         const response =  await axiosInstance.post('/login',{email,password})
+
+        console.log(response.data,"resssssssssssssss");
+        
+        const {token} = response.data
+        if(token){
+            store.dispatch(loginSuccess({
+                token,
+                student:response.data.student
+            }))
+            console.log('studenttttttt', response.data?.student);
+            Cookies.set('authToken', token, {expires: 1/24})
+        } else{
+            console.log(' not logged in ');
+
+        }
         return response.data
     } catch (error) {
         if( error instanceof AxiosError){

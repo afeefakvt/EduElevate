@@ -2,7 +2,7 @@ import { StudentRepository } from "../repositories/studentRepository";
 import { Request,Response } from "express";
 import { StudentService } from "../services/studentService";
 import { storeOtp,sendOtptoEmail } from "../utils/otp";
-import { generateToken,verifyResetToken } from "../utils/jwt";
+import { generateToken } from "../utils/jwt";
 import { log } from "console";
 
 
