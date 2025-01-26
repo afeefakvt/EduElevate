@@ -721,7 +721,7 @@ const Register = () => {
                 }}
             >
                 <Typography component="h1" variant="h5">
-                    Register
+                    Register as Student
                 </Typography>
                 <Box component="form" sx={{ mt: 3 }}>
                   {/* Error Alert */}

@@ -1,9 +1,70 @@
+// import Checkbox from '@mui/material/Checkbox';
+// import { AppProvider } from '@toolpad/core/AppProvider';
+// import { SignInPage } from '@toolpad/core/SignInPage';
+// import { useTheme } from '@mui/material/styles';
+
+// const providers = [{ id: 'credentials', name: 'Email and Password' }];
+
+// export default function AdminLogin() {
+//   const theme = useTheme();
+
+//   return (
+//     <AppProvider theme={theme}>
+//       <div
+//         style={{
+//           display: 'flex',
+//           justifyContent: 'center',
+//           alignItems: 'center',
+//           minHeight: '100vh',
+//           backgroundColor: theme.palette.background.default,
+//         }}
+//       >
+//         <SignInPage
+//           signIn={(provider, formData) =>
+//             alert(
+//               `Signing in with "${provider.name}" and credentials: ${formData.get('email')}, ${formData.get('password')} and checkbox value: ${formData.get('tandc')}`,
+//             )
+//           }
+//           slotProps={{
+//             emailField: { variant: 'standard', autoFocus: false, style: { width: '100%' } },
+//             passwordField: { variant: 'standard', style: { width: '100%' } },
+//             submitButton: { variant: 'outlined', style: { width: '100%' } },
+//             rememberMe: {
+//               control: (
+//                 <Checkbox
+//                   name="tandc"
+//                   value="true"
+//                   color="primary"
+//                   sx={{ padding: 0.5, '& .MuiSvgIcon-root': { fontSize: 20 } }}
+//                 />
+//               ),
+//               color: 'textSecondary',
+//               label: 'I agree with the T&C',
+//             },
+//           }}
+//           providers={providers}
+//           style={{
+//             backgroundColor: theme.palette.background.paper,
+//             padding: theme.spacing(4),
+//             borderRadius: theme.shape.borderRadius,
+//             width: '100%',
+//             maxWidth: 400,
+//           }}
+//         />
+//       </div>
+//     </AppProvider>
+//   );
+// }
+
+
+
+
 import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui/material';
 import  { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../../api/authApi';
+import {  useNavigate } from 'react-router-dom';
+import { loginAdmin } from '../../api/authApi';
 
-const Login = () => {
+const adminLogin = () => {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [errMessage,setErrMessage] = useState('')
@@ -21,10 +82,10 @@ const Login = () => {
       
       setErrMessage('') //clear previouserror message
       try {
-        const studentData = await login(email,password)
+        const studentData = await loginAdmin(email,password)
 
         if(studentData){
-            navigate('/')
+            navigate('/admin/home')
         }
       } catch (error:any) {
         setErrMessage(error.message)
@@ -46,7 +107,7 @@ const Login = () => {
                 }}
             >
                 <Typography component="h1" variant="h5">
-                    Student Login
+                    Admin Login
                 </Typography>
                 <Box component="form" sx={{ mt: 3 }}>
                     {/* Error Alert */}
@@ -93,17 +154,11 @@ const Login = () => {
                         Login
                     </Button>
 
-                    {/* Sign up link */}
-                    <Typography variant="body2" align="center">
-                        Don't have an account?{' '}
-                        <Link to="/register" style={{ textDecoration: 'none', color: 'primary.main' }}>
-                            Sign Up
-                        </Link>
-                    </Typography>
+                   
                 </Box>
             </Paper>
         </Container>
     );
 };
 
-export default Login;
+export default adminLogin;

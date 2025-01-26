@@ -19,6 +19,6 @@ export const login  = async(email:string,password:string,repository:IStudentRepo
         throw new Error('invalid password')
     }
 
-    const token = generateToken({id:student._id,email:student.email,isBlocked:student.isBlocked});
+    const token = generateToken({id:student._id,email:student.email,isBlocked:student.isBlocked,role:student.role});
     return {token,student}
 }
