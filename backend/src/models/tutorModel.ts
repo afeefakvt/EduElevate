@@ -5,6 +5,8 @@ export interface ITutor extends Document{
     email:string,
     password:string,
     isBlocked:Boolean,
+    isApproved:Boolean,
+    status:string,
     title:string,
     bio:string
 }
@@ -34,6 +36,15 @@ const TutorSchema:Schema  = new Schema<ITutor>(
         isBlocked:{
             type:Boolean,
             default:false
+        },
+        isApproved:{
+            type:Boolean,
+            default:false
+        },
+        status:{
+            type:String,
+            enum:["pending","approved","rejected"],
+            default:"pending"
         }
     }
 )

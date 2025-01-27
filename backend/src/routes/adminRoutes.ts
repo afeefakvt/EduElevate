@@ -9,7 +9,7 @@ import { StudentService } from "../services/studentService";
 
 const adminRepository = new AdminRepository()
 const adminService = new AdminService(adminRepository)
-const adminController = new AdminController(adminService)
+const adminController = new AdminController(adminService,adminRepository)
 
 
 const studentRepository = new StudentRepository()
@@ -21,8 +21,11 @@ const adminRouter = Router()
 
 adminRouter.post('/admin/login',studentController.adminLogin.bind(studentController))
 // adminRouter.post('/admin/home',studentController.adminLogin.bind(studentController))
-adminRouter.post('/admin/students',adminController.getStudents.bind(adminController))
-adminRouter.post('/admin/tutors',adminController.getTutors.bind(adminController))
+adminRouter.get('/admin/students',adminController.getStudents.bind(adminController))
+adminRouter.get('/admin/tutors',adminController.getTutors.bind(adminController))
+// adminRouter.get('/admin/tutors/:tutorId',adminController.getTutorDetails.bind(adminController))
+adminRouter.patch('/admin/tutors/:tutorId/approve',adminController.approveTutor.bind(adminController))
+adminRouter.patch('/admin/tutors/:tutorId/reject',adminController.rejectTutor.bind(adminController))
 
 
 
