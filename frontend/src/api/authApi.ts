@@ -98,7 +98,7 @@ export const loginAdmin =  async(email:string,password:string)=>{
 
 export const getStudents = async()=>{
     try {
-        const response = await axiosInstance.get('/admin/home/students')
+        const response = await axiosInstance.get('/admin/students')
 
         return response.data
     } catch (error) {

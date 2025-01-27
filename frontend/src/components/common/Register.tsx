@@ -1,3 +1,142 @@
+import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { signUp } from '../../api/authApi';
+
+const Register = () => {
+  const [name,setName] = useState("")
+  const [email,setEmail] = useState("")
+  const [password,setPassword] = useState("")
+  const [confirmPassword,setConfirmPassword] = useState("")
+  const [errMessage,setErrMessage] = useState('')
+
+  const navigate = useNavigate() 
+
+
+  useEffect(()=>{
+    if(
+      name!== ""||email!==""||password!==""||confirmPassword!==""
+    ){
+      setErrMessage('')
+    }
+  },[name,email,password,confirmPassword])
+
+  const handleSignUp = async()=>{
+    setErrMessage('') 
+    try {
+      console.log('tfvyhjvbjhhbikjmnk,');
+      console.log({ name, email,password, confirmPassword })
+      
+       const response=await signUp(name,email,password,confirmPassword)
+       console.log('Sign up response:', response);
+       navigate('/verifyOtp',{state:{email}})   //pass email to the otp page
+    } catch (error:any) {
+      setErrMessage(error.message)
+      console.error(errMessage);  
+    }
+  }
+    return (
+        <Container component="main" maxWidth="xs">
+            <Paper
+                elevation={4}
+                sx={{
+                    marginTop: 8,
+                    padding: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    borderRadius: 2,
+                    
+                }}
+            >
+                <Typography component="h1" variant="h5">
+                    Register as Student
+                </Typography>
+                <Box component="form" sx={{ mt: 3 }}>
+                  {/* Error Alert */}
+                                      {errMessage && (
+                                          <Alert severity="error" sx={{ mb: 2 }}>
+                                              {errMessage}
+                                          </Alert>
+                                      )}
+                <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="name"
+                        label="Full Name"
+                        type="name"
+                        id="name"
+                        autoComplete="name"
+                        value={name}
+                        onChange={(e)=>setName(e.target.value)}
+                    />
+                    
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        autoFocus
+                        value={email}
+                        onChange={(e)=>setEmail(e.target.value)}
+                    />
+                  
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="password"
+                        value={password}
+                        onChange={(e)=>setPassword(e.target.value)}
+                    />
+                     <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="confirmPassword"
+                        label="confirm Password"
+                        type="password"
+                        id="confirmPassword"
+                        autoComplete="confirmPassword"
+                        value={confirmPassword}
+                        onChange={(e)=>setConfirmPassword(e.target.value)}
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 2, mb: 2 }}
+                        onClick={(e)=>{
+                          e.preventDefault()
+                          handleSignUp()}}
+                    >
+                        Register
+                    </Button>
+
+                    
+                    <Typography variant="body2" align="center">
+                        Don't have an account?{' '}
+                        <Link to="/login" style={{ textDecoration: 'none', color: 'primary.main' }}>
+                            Login
+                        </Link>
+                    </Typography>
+                </Box>
+            </Paper>
+        </Container>
+    );
+};
+
+export default Register;
+
+
 // import {
 //     Box,
 //     Button,
@@ -668,141 +807,3 @@
 
 
 
-
-import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signUp } from '../../api/authApi';
-
-const Register = () => {
-  const [name,setName] = useState("")
-  const [email,setEmail] = useState("")
-  const [password,setPassword] = useState("")
-  const [confirmPassword,setConfirmPassword] = useState("")
-  const [errMessage,setErrMessage] = useState('')
-
-  const navigate = useNavigate() 
-
-
-  useEffect(()=>{
-    if(
-      name!== ""||email!==""||password!==""||confirmPassword!==""
-    ){
-      setErrMessage('')
-    }
-  },[name,email,password,confirmPassword])
-
-  const handleSignUp = async()=>{
-    setErrMessage('') 
-    try {
-      console.log('tfvyhjvbjhhbikjmnk,');
-      console.log({ name, email,password, confirmPassword })
-      
-       const response=await signUp(name,email,password,confirmPassword)
-       console.log('Sign up response:', response);
-       navigate('/verifyOtp',{state:{email}})   //pass email to the otp page
-    } catch (error:any) {
-      setErrMessage(error.message)
-      console.error(errMessage);  
-    }
-  }
-    return (
-        <Container component="main" maxWidth="xs">
-            <Paper
-                elevation={4}
-                sx={{
-                    marginTop: 8,
-                    padding: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    borderRadius: 2,
-                    
-                }}
-            >
-                <Typography component="h1" variant="h5">
-                    Register as Student
-                </Typography>
-                <Box component="form" sx={{ mt: 3 }}>
-                  {/* Error Alert */}
-                                      {errMessage && (
-                                          <Alert severity="error" sx={{ mb: 2 }}>
-                                              {errMessage}
-                                          </Alert>
-                                      )}
-                <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="name"
-                        label="Full Name"
-                        type="name"
-                        id="name"
-                        autoComplete="name"
-                        value={name}
-                        onChange={(e)=>setName(e.target.value)}
-                    />
-                    
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                        value={email}
-                        onChange={(e)=>setEmail(e.target.value)}
-                    />
-                  
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="password"
-                        value={password}
-                        onChange={(e)=>setPassword(e.target.value)}
-                    />
-                     <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="confirmPassword"
-                        label="confirm Password"
-                        type="password"
-                        id="confirmPassword"
-                        autoComplete="confirmPassword"
-                        value={confirmPassword}
-                        onChange={(e)=>setConfirmPassword(e.target.value)}
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 2, mb: 2 }}
-                        onClick={(e)=>{
-                          e.preventDefault()
-                          handleSignUp()}}
-                    >
-                        Register
-                    </Button>
-
-                    
-                    <Typography variant="body2" align="center">
-                        Don't have an account?{' '}
-                        <Link to="/login" style={{ textDecoration: 'none', color: 'primary.main' }}>
-                            Login
-                        </Link>
-                    </Typography>
-                </Box>
-            </Paper>
-        </Container>
-    );
-};
-
-export default Register;

@@ -41,9 +41,11 @@ export class TutorController {
                         await tutor.save()
                     }
                 
-                    res.status(200).json({tutor,message:'otp verified successfully'})
+                     res.status(200).json({tutor,message:'otp verified successfully'})
+                     return;
                 }
-                res.status(400).json({message:'invalid otp'})
+                 res.status(400).json({message:'invalid otp'})
+                 return;
 
             } catch (error) {
                 res.status(500).json({success:false,message:'internal server error'})  

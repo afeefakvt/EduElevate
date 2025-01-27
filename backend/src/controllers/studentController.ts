@@ -65,7 +65,7 @@ export class StudentController  {
         } catch (error:any) {
             const message = error.message || 'Internal server error';
             res.status(400).json({ message });
-            
+            return;
         }
 
     }

@@ -24,7 +24,7 @@ export const sendOtptoEmail = async (email:string):Promise<string> =>{
         from:process.env.GMAIL_USER,
         to:email,
         subject:"Your OTP for Account Verification",
-        text: `Your OTP for signing into EduElevate is: ${otp}. It is valid for 10 minutes only`
+        text: `Your OTP for signing into EduElevate is: ${otp}. It is valid for 1 minute only`
     }
     await transporter.sendMail(mailOptions)
 
@@ -67,6 +67,6 @@ export const validateOtp = async(studentId:string,otp:string):Promise<boolean> =
 export const storeOtp = (studentId:string,otp:string)=>{
     otpStore[studentId] = {
         otp,
-        expiresAt: Date.now()+10 * 60 * 1000
+        expiresAt: Date.now()+ 1 * 60 * 1000
     }
 }
