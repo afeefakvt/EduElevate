@@ -24,7 +24,12 @@ export class AdminController {
     }
 
     async getTutors(req:Request,res:Response):Promise<void>{
-        
+        try {
+            const tutors = await this.adminService.getTutors()
+        } catch (error) {
+            
+        }
+
     }
 }
 
