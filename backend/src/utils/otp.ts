@@ -44,29 +44,40 @@ const generateOtp= () : string => {
 
 let otpStore: Record<string, {otp:string; expiresAt:number}> = {};
 
-export const validateOtp = async(studentId:string,otp:string):Promise<boolean> =>{
-    const storedOtp = otpStore[studentId]
+export const validateOtp = async(email:string,otp:string):Promise<boolean> =>{
+    const storedOtp = otpStore[email]
 
     if(!storedOtp){
+        console.log('falseee');
         return false
+        
+        
     }
     const isExpired = Date.now()>storedOtp.expiresAt
 
     if(isExpired){
-        delete otpStore[studentId]
+        delete otpStore[email]  // Cleanup expired OTP
+        console.log('expiredd');
+        
         return false
     }
     if(storedOtp.otp===otp){
-        delete otpStore[studentId]
+        delete otpStore[email] // Cleanup used OTP
+        console.log('trueee');
+        
         return true
     }
+    console.log("Invalid OTP for email:", email);
     return false
 }
 
 
-export const storeOtp = (studentId:string,otp:string)=>{
-    otpStore[studentId] = {
+export const storeOtp = (email:string,otp:string)=>{
+    otpStore[email] = {
         otp,
         expiresAt: Date.now()+ 1 * 60 * 1000
     }
+    console.log('storeddd otp');
+    
 }
+

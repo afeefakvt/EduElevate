@@ -5,27 +5,16 @@ import { Box } from '@mui/material'
 
 const LoginPage = () => {
   return (
-    <Box
-    sx={{
-        display: "flex",
-        flexDirection: "column",
-        width:"100vw",
-       
-    }}
->
-    <Navbar />
-    <Box sx={{  marginTop: {
-            xs: '56px', 
-            md: '74px', 
-          },
-          width:"100%"}}> 
+    <div>
+         <Navbar />
+    <Box sx={{  marginTop:30, marginBottom:25}}> 
         <Login />
     </Box>
-    <Box sx={{marginTop:"74px",width:"100%"}}>
     <Footer />
-    </Box>
+    </div>
+  
    
-</Box>
+
   )
 }
 

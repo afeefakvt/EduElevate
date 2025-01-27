@@ -7,26 +7,12 @@ import { Box } from "@mui/material";
 
 const OtpPage = () => {
   return (
-    <Box
-    sx={{
-        display: "flex",
-        flexDirection: "column",
-        width:"100vw",
-       
-    }}
->
+    <Box>
     <Navbar />
-    <Box sx={{  marginTop: {
-            xs: '56px', 
-            md: '64px', 
-          },
-          width:"100%"}}> 
+    <Box sx={{marginTop:30,marginBottom:25  }}> 
         <Otp />
     </Box>
-    <Box sx={{marginTop:"54px",width:"100%"}}>
     <Footer />
-    </Box>
-   
 </Box>
   )
 }

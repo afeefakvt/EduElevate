@@ -1,4 +1,4 @@
-import { Box,Typography,Card,CardContent,CardMedia} from '@mui/material'
+import { Box,Typography,Card,CardContent} from '@mui/material'
 
 
 const Banner2 = () => {

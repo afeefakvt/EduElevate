@@ -14,6 +14,7 @@ const tutorRouter = Router()
 
 tutorRouter.post('/tutor/register',validateTutorRegistration,tutorController.registerTutor.bind(tutorController))
 tutorRouter.post('/tutor/verifyOtp',tutorController.verifyOtp.bind(tutorController))
+tutorRouter.post('/tutor/resendOtp',tutorController.resendOtp.bind(tutorController))
 tutorRouter.post('/tutor/login',validateTutorLogin,tutorController.loginTutor.bind(tutorController))
 
 

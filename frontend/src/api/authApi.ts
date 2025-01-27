@@ -34,6 +34,10 @@ export const verifyOtp = async(email:string,otp:string)=>{
         throw new Error((error as Error).message);   
     }
 }
+export const resendOtp = async (email:string):Promise<void>=>{
+    const response = await axiosInstance.post('/resendOtp', { email });
+    return response.data;
+}
 
 export const login =  async(email:string,password:string)=>{
     try {

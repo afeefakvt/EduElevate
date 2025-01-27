@@ -41,6 +41,7 @@ export const tutorLogin  = async(email:string,password:string,repository:ITutorR
     }
     if (!tutor.isApproved) {
         throw new Error('You cannot login. Your account is waiting admin approval')
+        
       }
       if (tutor.status==='rejected') {
         throw new Error('Your cannot login. Your approval is rejected by admin')

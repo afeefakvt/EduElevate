@@ -17,8 +17,9 @@ export class TutorController {
                 const {name,email,password,title,bio} = req.body
 
                 const otp = await sendOtptoEmail(email)
-                storeOtp(otp,email)
-
+        
+                storeOtp(email,otp)
+             
                 const tutor  = await this.tutorService.registerTutor({name,email,password,title,bio} as any)
                 res.status(201).json({message:"tutor created,otp is send to your email address"})
                 
@@ -49,6 +50,22 @@ export class TutorController {
 
             } catch (error) {
                 res.status(500).json({success:false,message:'internal server error'})  
+            }
+        }
+
+        async resendOtp(req:Request,res:Response):Promise<void>{
+            try {
+                const {email} = req.body
+                
+                const otp = await sendOtptoEmail(email)
+                storeOtp(email,otp)
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: 'Failed to resend OTP.',
+                    error: error instanceof Error ? error.message : error,
+                });
+                
             }
         }
 

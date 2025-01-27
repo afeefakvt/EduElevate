@@ -1,19 +1,23 @@
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { verifyOtp } from '../../api/authApi';
+import { verifyOtp,resendOtp } from '../../api/authApi';
 import { useState } from 'react';
+
 
 
 const Otp = () => {
     const [otp,setOtp] = useState('');
     const [errMessage,setErrMessage] = useState('')
+    const [successMessage, setSuccessMessage] = useState('');
+    const [isResendDisabled, setIsResendDisabled] = useState(false);
     const navigate = useNavigate()
-    const location = useLocation()// Use location to get state
+    const location = useLocation()
     const email = location.state?.email// Retrieve email from state
 
 
     const handleVerifyOtp = async ()=>{
         setErrMessage('')
+        setSuccessMessage('');
         try {
             await verifyOtp(email,otp)
             navigate('/login')
@@ -21,6 +25,22 @@ const Otp = () => {
             setErrMessage(error.message)
         }
     }
+    const handleResendOtp = async () => {
+            setErrMessage('');
+            setSuccessMessage('');
+            setIsResendDisabled(true); // Temporarily disable button
+    
+            try {
+                await resendOtp(email); 
+                setSuccessMessage('A new OTP has been sent to your email.');
+                setTimeout(() => setIsResendDisabled(false), 60000); // Re-enable after 1 minute
+    
+            } catch (error: any) {
+                console.error('Resend OTP Error:', error.response?.data || error.message);
+                setErrMessage('Failed to resend OTP. Please try again.');
+                setIsResendDisabled(false); // Re-enable immediately on error
+            }
+        };
   return (
     <Container component="main" maxWidth="xs">
     <Paper
@@ -59,6 +79,11 @@ const Otp = () => {
                     {errMessage}
                 </Typography>
             )}
+            {successMessage && (
+                        <Typography color="success" sx={{ mt: 1 }}>
+                            {successMessage}
+                        </Typography>
+                    )}
             <Button
                 type="button"
                 fullWidth
@@ -68,6 +93,16 @@ const Otp = () => {
             >
                 Verify OTP
             </Button>
+            <Button
+                        type="button"
+                        fullWidth
+                        variant="outlined"
+                        sx={{ mt: 2 }}
+                        onClick={handleResendOtp}
+                        disabled={isResendDisabled} 
+                    >
+                        Resend OTP
+                    </Button>
         </Box>
     </Paper>
 </Container>

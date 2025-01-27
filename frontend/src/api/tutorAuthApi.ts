@@ -36,21 +36,30 @@ export const verifyOtp  =  async (email:string,otp:string)=>{
         
     }
 }
+export const resendOtp = async (email:string):Promise<void>=>{
+    const response = await axiosInstance.post('/tutor/resendOtp', { email });
+    return response.data;
+}
 
 export const login = async(email:string,password:string)=>{
     try {
-        const reponse = await axiosInstance.post('/tutor/login',{email,password})
+        const response = await axiosInstance.post('/tutor/login',{email,password})
+        console.log(response.data,"resssssssssssssss");
 
-        const {token}= reponse.data 
+        const {token}= response.data 
         if(token){
             store.dispatch(tutorLoginSuccess({
                 token,
-                tutor:reponse.data.tutor
+                tutor:response.data.tutor
             }))
+            console.log('tutorrrr', response.data?.tutor);
             Cookies.set('authtoken',token,{expires:1/24})
 
+        }else{
+            console.log('not logged in');
+            
         }
-        return reponse.data
+        return response.data
 
     } catch (error) {
         if( error instanceof AxiosError){

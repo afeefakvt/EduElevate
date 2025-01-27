@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from "react";
 import { logout } from "../../store/authSlice";
 
+
 const Navbar = () => {
 
     const navigate = useNavigate()

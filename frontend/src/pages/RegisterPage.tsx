@@ -8,27 +8,14 @@ const RegisterPage = () => {
 
   
   return (
-    <Box
-    sx={{
-        display: "flex",
-        flexDirection: "column",
-        width:"100vw",
-       
-    }}
->
+    <Box>
     <Navbar />
-    <Box sx={{  marginTop: {
-            xs: '56px', 
-            md: '64px', 
-          },
-          width:"100%"}}> 
+    <Box sx={{  marginTop:15}}> 
         <Register />
     </Box>
-    <Box sx={{marginTop:"54px",width:"100%"}}>
     <Footer />
     </Box>
    
-</Box>
   )
 }
 

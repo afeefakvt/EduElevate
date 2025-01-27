@@ -7,10 +7,8 @@ const Sidebar = () => {
     { text: 'Students', path: '/admin/students' },
     { text: 'Tutors', path: '/admin/tutors' },
     { text: 'Courses', path: '/admin/courses' },
-    { text: 'Categories', path: '/admin/categories' },
-    { text: 'Payment Management', path: '/admin/payments' },
     { text: 'Course Applications', path: '/admin/courseApplications' },
-    { text: 'Tutor Applications', path: '/admin/tutorApplications' },
+    { text: 'Payment Management', path: '/admin/payments' },
     { text: 'Logout', path: '/admin/logout' },
   ];
 
@@ -20,10 +18,10 @@ const Sidebar = () => {
       sx={{
         width: 240,
         flexShrink: 0,
-        '& .MuiDrawer-paper': { width: 240, boxSizing: 'border-box' },
+        '& .MuiDrawer-paper': { width: 240, boxSizing: 'border-box' ,marginTop:{xs:'64px',md:'80px'}},
       }}
     >
-      <Toolbar />
+      <Toolbar  />
       <List>
         {menuItems.map((item) => (
           <ListItemButton

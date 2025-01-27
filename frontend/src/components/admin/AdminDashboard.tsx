@@ -1,44 +1,34 @@
 import { Box, Toolbar } from '@mui/material';
 import Navbar from './AdminNavbar';
 import Sidebar from './Sidebar';
-// import { Outlet } from 'react-router-dom';
-// import logo from '../../assets/Eduelevate.png'
 
 
 const AdminDashboard = () => {
+  const navbarHeight = { xs: '64px', md: '80px' };
  
   return (
     
-    <Box sx={{ display: 'flex' }}>
-    <Sidebar />
-    <Box sx={{ flexGrow: 1 }}>
-      <Navbar />
+    <Box sx={{ display: 'flex',flexDirection:'column' }}>
+      
+     <Navbar/>
+     <Box sx={{ display: 'flex', marginTop: navbarHeight }}>
+        <Sidebar />
       <Toolbar />
-      {/* <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 2,
-        }}
-      >
-          <img
-          src={logo}
-          alt="Logo"
-          style={{
-            width: '100px',
-            height: 'auto',
-            objectFit: 'contain',
-          }}
-        />
-      </Box> */}
 
-      {/* <Box p={3}>
-        <Outlet /> This will render the routed component
-      </Box> */}
-
-
+      <Box sx={{ flexGrow: 1, p: 3 }}>
+          <Toolbar /> {/* Optional spacing */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <h4>Admin Dashboard</h4>
+      </Box>
     </Box>
+  </Box>
   </Box>
   );
 };

@@ -69,6 +69,21 @@ export class StudentController  {
         }
 
     }
+    async resendOtp(req:Request,res:Response):Promise<void>{
+        try {
+            const {email} = req.body
+            
+            const otp = await sendOtptoEmail(email)
+            storeOtp(email,otp)
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Failed to resend OTP.',
+                error: error instanceof Error ? error.message : error,
+            });
+            
+        }
+    }
     async login(req:Request,res:Response):Promise<void>{
         try {
             console.log("loginnnn");
