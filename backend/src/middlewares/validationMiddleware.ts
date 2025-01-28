@@ -19,10 +19,10 @@ export const validateStudentRegistration = [
         .matches(/[0-9]/).withMessage("Password must contain at least one number")
         .trim(),
 
-    body("confirmPassword")
-        .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long")
-        .matches(/[0-9]/).withMessage("Password must contain at least one number")
-        .trim(),
+    // body("confirmPassword")
+    //     .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long")
+    //     .matches(/[0-9]/).withMessage("Password must contain at least one number")
+    //     .trim(),
 
 
     // Error Handling Middleware
@@ -50,8 +50,8 @@ export const validateStudentLogin = [
 
     // Password Validation
     body("password")
-        .notEmpty().withMessage("Password is required")
-        .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
+        .notEmpty().withMessage("Password is required"),
+        // .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
 
     // Error Handling Middleware
     (req: Request, res: Response, next: NextFunction) => {
@@ -112,8 +112,8 @@ export const validateTutorLogin = [
 
     // Password Validation
     body("password")
-        .notEmpty().withMessage("Password is required")
-        .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
+        .notEmpty().withMessage("Password is required"),
+        // .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
 
     // Error Handling Middleware
     (req: Request, res: Response, next: NextFunction) => {

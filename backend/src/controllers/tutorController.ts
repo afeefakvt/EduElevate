@@ -70,11 +70,33 @@ export class TutorController {
         }
 
       async loginTutor(req:Request,res:Response):Promise<void>{
-        const {email,password} = req.body
-        
-        const tutor = await this.tutorService.loginTutor(email,password)
-        console.log(tutor,'asjydgsuj');
-        
+
+        try {
+            const {email,password} = req.body
+            const {token,tutor} = await this.tutorService.loginTutor(email,password)
+            if(!token){
+                res.status(404).json({message:"tutor not found"})
+                return;
+            }
+            if(tutor.isBlocked){
+                res.status(403).json({ message: 'Your account is blocked ' });
+                return
+               
+            }
+            console.log("genretaeeee");
+    
+            res.status(200).json({message:'Login successful',token,tutor})
+            return;
+            
+            
+        } catch (error:any) {
+            console.error("Login Error:", error.message);
+
+         res.status(400).json({ success: false, message: error.message });
+         return;
+            
+        }
+      
       }
     
 }

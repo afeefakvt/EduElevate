@@ -31,7 +31,7 @@ export const tutorLogin  = async(email:string,password:string,repository:ITutorR
     }
 
     const tutor = await repository.findTutorByEmail(email)
-    console.log("tutorrr",tutor);
+    console.log("Tutor during login:", tutor);
     
     if(!tutor){
         throw new Error('Email cannot found')
@@ -49,6 +49,7 @@ export const tutorLogin  = async(email:string,password:string,repository:ITutorR
         throw new Error('Your cannot login. Your approval is rejected by admin')
       }
 
+      console.log(tutor,'hvhyhgbijmp;l')
     const token = generateToken({id:tutor._id,email:tutor.email,isBlocked:tutor.isBlocked,isApproved:tutor.isApproved,status:tutor.status,title:tutor.title,bio:tutor.bio,});
     return {token,tutor}
 }

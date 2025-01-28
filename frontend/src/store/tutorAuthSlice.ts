@@ -1,4 +1,4 @@
-import { createSlice,PayloadAction } from "@reduxjs/toolkit";
+import { createSlice,isAction,PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 
 
@@ -29,9 +29,14 @@ const tutorAuthSlice = createSlice({
             state.token = action.payload.token,
             state.tutor = action.payload.tutor
             Cookies.set('authToken',action.payload.token,{expires:7})
+        },
+        tutorLogout:(state)=>{
+            state.token = null
+            state.tutor = null
+            Cookies.remove('authToken')
         }
     }
 
 })
-export const{tutorLoginSuccess} = tutorAuthSlice.actions;
+export const{tutorLoginSuccess,tutorLogout} = tutorAuthSlice.actions;
 export default tutorAuthSlice.reducer

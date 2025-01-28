@@ -4,14 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { RootState, store } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from "react";
-import { logout } from "../../store/authSlice";
-
+import { tutorLogout } from "../../store/tutorAuthSlice";
 
 const Navbar = () => {
 
     const navigate = useNavigate()
-    const token = useSelector((state: RootState) => state.auth.token)
-    const tutor = useSelector((state: RootState) => state.auth.student)
+    const token = useSelector((state: RootState) => state.tutorAuth.token)
+    const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -20,7 +19,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         try {
-            dispatch(logout())
+            dispatch(tutorLogout())
             console.log('logged out');
             navigate('/tutor/login')
 

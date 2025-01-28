@@ -32,6 +32,8 @@ export class TutorService implements ITutorService{
     }
 
     async loginTutor(email: string, password: string): Promise<{ token: string; tutor: ITutor; }> {
+
         return await tutorLogin(email,password,this.tutorRepository)
+        
     }
 }

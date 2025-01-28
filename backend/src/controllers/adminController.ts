@@ -77,6 +77,7 @@ export class AdminController {
               tutor.isApproved = true;
               tutor.status = 'approved'
               await tutor.save()
+              console.log('Tutor after approval:', tutor);
 
               await sendEmail(
                 tutor.email,

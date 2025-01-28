@@ -92,29 +92,29 @@ export class StudentController  {
             const {token,student} = await this.studentService.loginStudent(email,password)
 
             if(!token){
-                res.status(404).json({message:'student not found'})
-                return
-              
+                res.status(404).json({message:'student not found'}) 
+                return;
             }
             
             if(student.role=='admin'){
                 res.status(404).json({message:'Cant login email id is already used  for admin '})
-                return
-              
+                return;
+                      
             }
             if(student.isBlocked){
                 res.status(403).json({ message: 'Your account is blocked ' });
-                return
+                return;
                
             }
             console.log("genretaeeee");
             
             res.status(200).json({message:'Login successful',token,student})
-            console.log(token,student);
+            return;
           
         } catch (error:any) {
             const message = error.message || 'Internal server error';
             res.status(400).json({ message });
+            return;
             
         }
     }

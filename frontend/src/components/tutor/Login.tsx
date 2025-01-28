@@ -22,11 +22,13 @@ const Login = () => {
       setErrMessage('') //clear previouserror message
       try {
         const tutorData = await login(email,password)
-
+        console.log(tutorData,'tutor keriiii')
         if(tutorData){
             navigate('/tutor/home')
         }
       } catch (error:any) {
+        console.log('errrrrrrro');
+        
         setErrMessage(error.message)
         console.error(errMessage)
       }

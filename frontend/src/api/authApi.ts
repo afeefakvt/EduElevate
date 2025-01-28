@@ -13,6 +13,11 @@ export const signUp = async(name:string,email:string,password:string,confirmPass
     } catch (error) {
         
         if(error instanceof AxiosError){
+            const errResponse = error.response?.data;
+            if (errResponse?.errors) {
+                const validationErrors = errResponse.errors.map((err: any) => err.msg).join(", ");
+                throw new Error(validationErrors);
+            }
             const errMessage = error.response?.data.message || ' something went wrong'
             throw new Error(errMessage)
             
@@ -60,6 +65,12 @@ export const login =  async(email:string,password:string)=>{
         return response.data
     } catch (error) {
         if( error instanceof AxiosError){
+
+            const validationErrors = error.response?.data.errors; // Extract validation errors
+            if (validationErrors) {
+                const errorMessage = validationErrors.map((err: any) => err.msg).join(', ');
+                throw new Error(errorMessage); // Join all validation messages into a single string
+            }
             const errMessage = error.response?.data.message || 'something went wrong';
             throw new Error(errMessage)
             
