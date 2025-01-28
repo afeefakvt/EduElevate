@@ -7,7 +7,7 @@ export class TutorRepository implements ITutorRepository{
         return await tutor.save()
     }
     async findTutorByEmail(email: string): Promise<ITutor | null> {
-        return await Tutor.findOne({email})
+        return await Tutor.findOne({email}).exec()
     }
 
 }

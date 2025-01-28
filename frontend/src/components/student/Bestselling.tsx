@@ -2,9 +2,13 @@ import { Box, Grid, Card, CardMedia, CardContent, Typography, Button } from "@mu
 import support from '../../assets/support.webp'
 import trainers from '../../assets/trainers.webp'
 import worldwide from '../../assets/worldwide.webp'
+import { useNavigate } from "react-router-dom";
 
 
 const Bestselling = () => {
+
+  const navigate= useNavigate()
+
     const courses = [
         {
           id: 1,
@@ -146,6 +150,25 @@ const Bestselling = () => {
         ))}
       </Grid>
     </Box>
+    <Box
+  sx={{
+    display: "flex",
+    justifyContent: "center", 
+    alignItems: "center",
+  }}
+>
+  <Button
+    variant="contained"
+    color="primary"
+    sx={{ margin: "1rem", backgroundColor: "#550A8A" }}
+    onClick={() => navigate('/tutor/register')}
+  >
+    Become A Tutor
+  </Button>
+</Box>
+
+  
+      
     </Box>
 
   )

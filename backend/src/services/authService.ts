@@ -31,6 +31,8 @@ export const tutorLogin  = async(email:string,password:string,repository:ITutorR
     }
 
     const tutor = await repository.findTutorByEmail(email)
+    console.log("tutorrr",tutor);
+    
     if(!tutor){
         throw new Error('Email cannot found')
     }
@@ -39,7 +41,7 @@ export const tutorLogin  = async(email:string,password:string,repository:ITutorR
     if(!isValidPassword){
         throw new Error('invalid password')
     }
-    if (!tutor.isApproved) {
+    if (tutor.isApproved===false) {
         throw new Error('You cannot login. Your account is waiting admin approval')
         
       }

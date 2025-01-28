@@ -6,7 +6,7 @@ import { axiosInstance } from '../../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 
 interface Tutor {
-  id: string; 
+  _id: string; 
   name: string;
   email: string;
   status: string;
@@ -36,7 +36,7 @@ const Tutors = () => {
   }, []);
 
   const viewDetails = (tutorId:string)=>{
-    navigate(`/admin/tutor/${tutorId}`)
+    navigate(`/admin/tutors/${tutorId}`)
   }
 
   return (
@@ -67,7 +67,7 @@ const Tutors = () => {
                 </TableHead>
                 <TableBody>
                   {tutors.map((tutor) => (
-                    <TableRow key={tutor.id}>
+                    <TableRow key={tutor._id}>
                       <TableCell>{tutor.name}</TableCell>
                       <TableCell>{tutor.email}</TableCell>
                       <TableCell>{tutor.status}</TableCell>
@@ -84,8 +84,7 @@ const Tutors = () => {
                         <Button
                           variant="contained"
                           color="primary"
-                          // Add a link to the tutor details page (e.g., `/tutor/${tutor.id}`)
-                          onClick={()=>viewDetails(tutor.id)}
+                          onClick={()=>viewDetails(tutor._id)}
                         >
                           View
                         </Button>

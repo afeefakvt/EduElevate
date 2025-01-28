@@ -71,7 +71,10 @@ export class TutorController {
 
       async loginTutor(req:Request,res:Response):Promise<void>{
         const {email,password} = req.body
+        
         const tutor = await this.tutorService.loginTutor(email,password)
+        console.log(tutor,'asjydgsuj');
+        
       }
     
 }

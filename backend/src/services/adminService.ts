@@ -17,4 +17,12 @@ export class AdminService implements IAdminService {
         return this.adminRepository.getAllTutors();
         
     }
+    async getTutorDetails(tutorId:string):Promise<ITutor>{
+        const tutor =  await this.adminRepository.findTutorById(tutorId)
+        if (!tutor) {
+            throw new Error(`Tutor with ID ${tutorId} not found`);
+          }
+          return tutor
+      
+    }
 }

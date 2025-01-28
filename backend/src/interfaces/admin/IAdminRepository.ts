@@ -6,4 +6,5 @@ export interface IAdminRepository{
     getAllTutors():Promise<ITutor[]>;
     findTutorById(id:String):Promise<ITutor | null>
     
+    
 }

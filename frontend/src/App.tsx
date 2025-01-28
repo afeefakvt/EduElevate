@@ -8,6 +8,8 @@ import AdminLogin from "./components/admin/AdminLogin"
 import AdminDashboard from "./components/admin/AdminDashboard"
 import Students from "./components/admin/Students"
 import Tutors from "./components/admin/tutors"
+import TutorDetails from "./components/admin/tutorDetails"
+
 
 
 import TutorHome from "./components/tutor/tutorHome"
@@ -34,6 +36,7 @@ function App() {
         <Route path="/admin/home" element = {<AdminDashboard/>}/>
         <Route path="/admin/students" element = {<Students/>}/>
         <Route path="/admin/tutors" element = {<Tutors/>}/>
+        <Route path="/admin/tutors/:tutorId" element = {<TutorDetails/>}/>
 
 
         <Route path="/tutor/register" element = {<TutorRegisterPage/>}/>

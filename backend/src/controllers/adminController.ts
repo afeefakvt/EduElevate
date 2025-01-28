@@ -3,6 +3,7 @@ import { IAdminService } from "../interfaces/admin/IAdminService";
 import { TutorRepository } from "../repositories/tutorRepository";
 import { IAdminRepository } from "../interfaces/admin/IAdminRepository";
 import { sendEmail } from "../utils/mail";
+import { TutorService } from "../services/tutorService";
 
 
 export class AdminController {
@@ -41,6 +42,27 @@ export class AdminController {
             
         }
 
+    }
+
+
+    async getTutorDetails(req:Request,res:Response):Promise<void>{
+        try {
+            const {tutorId} = req.params
+            const tutor = await this.adminService.getTutorDetails(tutorId)
+            console.log("tutorrrr",'tutor');
+            
+            if(tutor){
+                res.status(200).json({ success: true, tutor:tutor });
+
+            }
+            else{
+                res.status(404).json({ success: false, message: "No tutor found" });
+            }
+
+        } catch (error:any) {
+            res.status(404).json({ success: false, message: error.message });
+           
+        }
     }
     async approveTutor(req:Request,res:Response):Promise<void>{
         try {
