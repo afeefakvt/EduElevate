@@ -2,6 +2,9 @@ import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui
 import  { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../api/tutorAuthApi';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
+import { googleSignIn } from '../../api/authApi';
+
 
 const Login = () => {
     const [email,setEmail] = useState('')
@@ -26,14 +29,25 @@ const Login = () => {
         if(tutorData){
             navigate('/tutor/home')
         }
-      } catch (error:any) {
-        console.log('errrrrrrro');
-        
+      } catch (error:any) {        
         setErrMessage(error.message)
         console.error(errMessage)
       }
 
     }
+
+    
+  const handleGoogleLogin = async(credentialResponse:CredentialResponse)=>{
+    try {
+        if(credentialResponse.credential){
+            const studentData = await googleSignIn(credentialResponse.credential);
+            navigate('/')
+        }
+    } catch (error) {
+        setErrMessage("Your account is temporarily suspended");
+        console.log(errMessage);   
+    }   
+  }
     return (
         <Container component="main" maxWidth="xs">
             <Paper
@@ -94,6 +108,10 @@ const Login = () => {
                     >
                         Login
                     </Button>
+                    <Button fullWidth sx={{mt:2,mb:2}}>
+                    <GoogleLogin onSuccess={handleGoogleLogin} onError={() => setErrMessage("Google Sign-In Failed")} />
+
+                    </Button> 
 
                     {/* Sign up link */}
                     <Typography variant="body2" align="center">

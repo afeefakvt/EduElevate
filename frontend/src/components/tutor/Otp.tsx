@@ -1,19 +1,35 @@
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { verifyOtp } from '../../api/tutorAuthApi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { resendOtp } from '../../api/tutorAuthApi';
 import Navbar from './Navbar';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { startOtpTimer,decrementOtpTimer,resetOtpTimer } from '@/store/otpSlice';
 
 const Otp = () => {
     const [otp, setOtp] = useState('');
     const [errMessage, setErrMessage] = useState('')
     const [successMessage, setSuccessMessage] = useState('');
-    const [isResendDisabled, setIsResendDisabled] = useState(false);
     const navigate = useNavigate()
     const location = useLocation()
     const email = location.state?.email// Retrieve email from state
+
+
+    //redux state
+    const dispatch = useDispatch();
+    const timer = useSelector((state:RootState)=>state.otp.timer);
+    const isResendEnabled = useSelector((state:RootState)=>state.otp.isResendEnabled)
+
+    useEffect(()=>{
+        if(timer>0){
+            const interval = setInterval(()=>{
+                dispatch(decrementOtpTimer());
+            },1000)
+            return ()=>clearInterval(interval)
+        }
+    },[timer,dispatch])
 
 
     const handleVerifyOtp = async () => {
@@ -32,17 +48,17 @@ const Otp = () => {
     const handleResendOtp = async () => {
         setErrMessage('');
         setSuccessMessage('');
-        setIsResendDisabled(true); // Temporarily disable button
+
 
         try {
             await resendOtp(email); 
             setSuccessMessage('A new OTP has been sent to your email.');
-            setTimeout(() => setIsResendDisabled(false), 60000); // Re-enable after 1 minute
+            dispatch(resetOtpTimer()); // Reset timer
+            dispatch(startOtpTimer(60));
 
         } catch (error: any) {
             console.error('Resend OTP Error:', error.response?.data || error.message);
             setErrMessage('Failed to resend OTP. Please try again.');
-            setIsResendDisabled(false); // Re-enable immediately on error
         }
     };
 
@@ -113,9 +129,9 @@ const Otp = () => {
                         variant="outlined"
                         sx={{ mt: 2 }}
                         onClick={handleResendOtp}
-                        disabled={isResendDisabled} // Disable button when necessary
+                        disabled={isResendEnabled} 
                     >
-                        Resend OTP
+                        Resend OTP  {isResendEnabled && `(${timer}s)`}
                     </Button>
                 </Box>
             </Paper>

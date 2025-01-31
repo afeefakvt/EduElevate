@@ -81,3 +81,20 @@ export const login = async(email:string,password:string)=>{
         
     }
 }
+
+export const googleSignIn = async(idToken:string)=>{
+    const response = await fetch('http://localhost:3000/auth/google',{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({idToken}),
+    });
+    if(!response.ok){
+        throw new Error("google sign-in failed")
+    }
+    const data = await response.json();
+    const {token,tutor} = data;
+    Cookies.set('authToken',token,{expires:7})
+    store.dispatch(tutorLoginSuccess({token,tutor}))
+
+    return data;
+}

@@ -1,4 +1,4 @@
-import logo from "../../assets/Eduelevate.png"
+import logo from "../../assets/afeefalogo.png"
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { RootState, store } from "../../store/store";
@@ -55,9 +55,9 @@ const Navbar = () => {
 
                     style={
                         {
-                            height: "79px",
-                            width: "100px",
-                            paddingLeft: "3rem",
+                            height: "300px",
+                            width: "330px",
+                            paddingLeft: "2rem",
                             marginRight: "8px",
                         }
                     }

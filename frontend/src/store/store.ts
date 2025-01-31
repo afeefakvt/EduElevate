@@ -3,6 +3,7 @@ import authReducer from './authSlice'
 import tutorAuthReducer from './tutorAuthSlice'
 import storage from 'redux-persist/lib/storage';
 import { persistReducer,persistStore } from "redux-persist";
+import otpReducer from './otpSlice'
 
 const persistConfig = {
     key:'root',
@@ -11,11 +12,13 @@ const persistConfig = {
 
 const persistedAuthReducer = persistReducer(persistConfig,authReducer);
 const persistedTutorAuthReducer = persistReducer(persistConfig,tutorAuthReducer)
+const persistedOtpReducer = persistReducer(persistConfig,otpReducer)
 
 export const store = configureStore({
     reducer:{
         auth:persistedAuthReducer,
-        tutorAuth:persistedTutorAuthReducer
+        tutorAuth:persistedTutorAuthReducer,
+        otp:persistedOtpReducer
     }
 })
 export const persistor = persistStore(store)

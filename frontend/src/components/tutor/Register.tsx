@@ -25,7 +25,6 @@ const Register = () => {
   const handleSignUp = async()=>{
     setErrMessage('') 
     try {
-      console.log('tfvyhjvbjhhbikjmnk,');
       console.log({ name, email,password,bio,title })
       
        const response=await signUp(name,email,password,title,bio)

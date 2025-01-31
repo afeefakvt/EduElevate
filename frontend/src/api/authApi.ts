@@ -48,7 +48,7 @@ export const login =  async(email:string,password:string)=>{
     try {
         const response =  await axiosInstance.post('/login',{email,password})
 
-        console.log(response.data,"resssssssssssssss");
+        console.log(response.data);
         
         const {token} = response.data
         if(token){
@@ -85,7 +85,7 @@ export const loginAdmin =  async(email:string,password:string)=>{
     try {
         const response =  await axiosInstance.post('/admin/login',{email,password})
 
-        console.log(response.data,"resssssssssssssss");
+        console.log(response.data);
         
         const {token} = response.data
         if(token){
@@ -125,4 +125,21 @@ export const getStudents = async()=>{
         throw new Error((error as Error).message); 
         
     }
+}
+
+export const googleSignIn = async(idToken:string)=>{
+        const response = await fetch('http://localhost:3000/auth/google',{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({idToken}),
+        });
+        if(!response.ok){
+            throw new Error("google sign-in failed")
+        }
+        const data = await response.json();
+        const {token,student} = data;
+        Cookies.set('authToken',token,{expires:7})
+        store.dispatch(loginSuccess({token,student}))
+
+        return data;
 }

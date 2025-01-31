@@ -6,6 +6,7 @@ const Sidebar = () => {
     { text: 'Dashboard', path: '/admin/home' },
     { text: 'Students', path: '/admin/students' },
     { text: 'Tutors', path: '/admin/tutors' },
+    { text: 'Category', path: '/admin/categories' },
     { text: 'Courses', path: '/admin/courses' },
     { text: 'Course Applications', path: '/admin/courseApplications' },
     { text: 'Payment Management', path: '/admin/payments' },

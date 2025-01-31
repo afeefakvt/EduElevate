@@ -6,5 +6,6 @@ export interface IStudentService{
     loginStudent(email:string,password:string):Promise<{
         token:string,
         student:IStudent
-    }>
+    }>;
+    findStudentByEmail(email:string):Promise<IStudent | null>
 }

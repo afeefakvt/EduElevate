@@ -6,5 +6,6 @@ export interface ITutorService{
     loginTutor(email:string,password:string):Promise<{
         token:string,
         tutor:ITutor
-    }>
+    }>;
+    findTutorByEmail(email:string):Promise<ITutor | null>
 }

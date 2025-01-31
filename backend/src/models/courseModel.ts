@@ -23,9 +23,9 @@ const CourseSchema:Schema = new Schema<ICourse>(
             required:true,
         },
         categoryId:{
+            type:mongoose.Schema.Types.ObjectId,
             required:true,
-            enum:['web development','mobile development','game development',' AI and ML'],
-            default:'web development'
+            ref:"Category"
 
         },
         tutorId:{

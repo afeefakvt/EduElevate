@@ -31,5 +31,8 @@ export class StudentService  {
     async loginStudent(email:string,password:string):Promise<{token:string, student:IStudent}>{
         return await login(email,password,this.studentRepository)
     }
+    async findStudentByEmail(email:string):Promise<IStudent | null>{
+        return this.studentRepository.findStudentByEmail(email);
+    }
 
 }

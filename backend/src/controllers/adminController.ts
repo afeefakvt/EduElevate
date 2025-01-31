@@ -126,5 +126,29 @@ export class AdminController {
             
         }
     }
+
+    async blockTutor(req:Request,res:Response):Promise<void>{
+        const{tutorId} =req.params
+        const {isBlocked} = req.body;
+        
+        try {
+            const updatedTutor = await this.adminService.updateTutor(tutorId,{isBlocked})
+
+            if(!updatedTutor){
+                res.status(404).json({message:"tutor not found"});
+                return;
+            }
+
+            res.status(200).json(updatedTutor)
+            return;
+            
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Internal server error",
+                error: error instanceof Error ? error.message : error,
+              });
+        }
+    }
 }
 

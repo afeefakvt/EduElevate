@@ -31,7 +31,7 @@
 // export default AdminNavbar;
 
 
-import logo from "../../assets/Eduelevate.png"
+import logo from "../../assets/afeefalogo.png"
 import { AppBar, Box,  Toolbar, Typography } from "@mui/material";
 
 const AdminNavbar = () => {
@@ -62,9 +62,9 @@ const AdminNavbar = () => {
 
                     style={
                         {
-                            height: "79px",
-                            width: "100px",
-                            paddingLeft: "3rem",
+                            height: "300px",
+                            width: "330px",
+                            paddingLeft: "2rem",
                             marginRight: "8px",
                         }
                     }

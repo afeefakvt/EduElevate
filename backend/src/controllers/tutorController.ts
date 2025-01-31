@@ -4,6 +4,14 @@ import { sendOtptoEmail, storeOtp } from "../utils/otp";
 import { TutorRepository } from "../repositories/tutorRepository";
 import { ITutorRepository } from "../interfaces/tutor/ITutorRepository";
 import {sendEmail} from "../utils/mail"
+import { generateToken } from "../utils/jwt";
+import { OAuth2Client } from "google-auth-library";
+import { title } from "process";
+
+
+
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 export class TutorController {
     
@@ -99,4 +107,54 @@ export class TutorController {
       
       }
     
+    //    async googleLogin(req:Request,res:Response):Promise<void>{
+    //           try {
+    //               const {idToken} = req.body
+    //               if(!idToken){
+    //                   res.status(400).json({error:"google id token is required"})
+    //                   return;
+    //               }
+      
+    //               const ticket = await client.verifyIdToken({
+    //                   idToken,
+    //                   audience:process.env.GOOGLE_CLIENT_ID
+    //               });
+    //               const payload = ticket.getPayload()
+    //               if(!payload){
+    //                   res.status(400).json({error:'invalid google id token'});
+    //                   return;
+    //               }
+      
+    //               const {email,name} = payload
+    //               if(!email){
+    //                   res.status(400).json({error:'google account must have an email'});
+    //                   return;
+    //               }
+      
+    //               let tutor = await this.tutorService.findTutorByEmail(email)
+    //               if(!tutor){
+    //                   const tutorData = {
+    //                       name,
+    //                       email,
+    //                       password:"",
+    //                       title:"developer",
+    //                       bio:"developer",
+    //                       isBlocked: false,
+    //                       isApproved: false, 
+    //                       status: "pending"
+                          
+    //                   }
+    //                   tutor = await this.tutorService.registerTutor(tutorData)
+    //               }
+      
+    //               const token = generateToken({id:tutor._id,email:tutor.email})
+    //               res.status(200).json({message:"google sign in success",token,tutor})
+      
+    //           } catch (error) {
+    //               console.error("Error in Google Sign-In:", error);
+    //               res.status(500).json({ error: (error as Error).message });
+                  
+    //           }
+    //       }
+      
 }

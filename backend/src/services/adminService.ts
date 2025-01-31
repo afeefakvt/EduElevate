@@ -25,4 +25,11 @@ export class AdminService implements IAdminService {
           return tutor
       
     }
+    async findTutorById(tutorId:string):Promise<ITutor | null>{
+         return this.adminRepository.findTutorById(tutorId)
+    }
+
+    async updateTutor(tutorId:string,tutorData:Partial<ITutor>):Promise<void | null>{
+        return this.adminRepository.updateTutor(tutorId,tutorData)
+    } 
 }

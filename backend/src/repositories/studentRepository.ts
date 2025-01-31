@@ -9,4 +9,5 @@ export class StudentRepository implements IStudentRepository {
     async findStudentByEmail(email:string):Promise<IStudent | null>{
         return await Student.findOne({email})
     }
+    
 }

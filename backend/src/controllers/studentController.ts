@@ -5,9 +5,12 @@ import { storeOtp,sendOtptoEmail } from "../utils/otp";
 import { generateToken } from "../utils/jwt";
 import { IStudentService } from "../interfaces/student/IStudentService";
 import { IStudentRepository } from "../interfaces/student/IStudentRepository";
+import { OAuth2Client } from "google-auth-library";
+import { Student } from "../models/studentModel";
 
 
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 
 export class StudentController  {
@@ -147,6 +150,51 @@ export class StudentController  {
         } catch (error:any) {
             const message = error.message || 'Internal server error';
             res.status(400).json({ message });
+            
+        }
+    }
+
+    async googleLogin(req:Request,res:Response):Promise<void>{
+        try {
+            const {idToken} = req.body
+            if(!idToken){
+                res.status(400).json({error:"google id token is required"})
+                return;
+            }
+
+            const ticket = await client.verifyIdToken({
+                idToken,
+                audience:process.env.GOOGLE_CLIENT_ID
+            });
+            const payload = ticket.getPayload()
+            if(!payload){
+                res.status(400).json({error:'invalid google id token'});
+                return;
+            }
+
+            const {email,name} = payload
+            if(!email){
+                res.status(400).json({error:'google account must have an email'});
+                return;
+            }
+
+            let student = await this.studentService.findStudentByEmail(email)
+            if(!student){
+                const studentData = {
+                    name,
+                    email,
+                    password:"",
+                    role:"student"
+                }
+                student = await this.studentService.createStudent(studentData)
+            }
+
+            const token = generateToken({id:student._id,email:student.email,role:student.role})
+            res.status(200).json({message:"google sign in success",token,student})
+
+        } catch (error) {
+            console.error("Error in Google Sign-In:", error);
+            res.status(500).json({ error: (error as Error).message });
             
         }
     }

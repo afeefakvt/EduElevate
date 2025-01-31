@@ -36,4 +36,7 @@ export class TutorService implements ITutorService{
         return await tutorLogin(email,password,this.tutorRepository)
         
     }
+    async findTutorByEmail(email:string):Promise<ITutor | null>{
+        return this.tutorRepository.findTutorByEmail(email)
+    }
 }
