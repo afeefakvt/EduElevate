@@ -7,5 +7,6 @@ export interface IAdminService{
     getTutors():Promise<ITutor[]>
     getTutorDetails(tutorId:string):Promise<ITutor>;
     updateTutor(tutorId:string,tutorData:Partial<ITutor>):Promise<ITutor | null>;
+    updateStudent(studentId:string,studentData:Partial<IStudent>):Promise<IStudent | null>;
 
 }

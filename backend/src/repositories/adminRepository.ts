@@ -17,5 +17,8 @@ export class AdminRepository implements IAdminRepository{
     async updateTutor(tutorId:string,tutorData:Partial<ITutor>):Promise<ITutor |null >{
         return await Tutor.findByIdAndUpdate(tutorId,tutorData,{new:true});
     }
+    async updateStudent(studentId: string, studentData: Partial<IStudent>): Promise<IStudent | null> {
+        return await Student.findByIdAndUpdate(studentId,studentData,{new:true})
+    }
 
 }

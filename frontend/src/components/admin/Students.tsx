@@ -6,7 +6,7 @@ import axios from 'axios';
 import { axiosInstance } from '../../api/axiosInstance';
 
 interface Student {
-  id: string; 
+  _id: string; 
   name: string;
   email: string;
   isBlocked: boolean;
@@ -35,21 +35,21 @@ const Students = () => {
   }, []);
 
 
-  // // Handle block/unblock toggle
-  // const handleBlockToggle = async (id: string, isBlocked: boolean) => {
-  //   try {
-  //     const response = await axios.patch(`/api/students/${id}`, { isBlocked: !isBlocked }); // Replace with your API endpoint
-  //     if (response.status === 200) {
-  //       setStudents((prevStudents) =>
-  //         prevStudents.map((student) =>
-  //           student.id === id ? { ...student, isBlocked: !isBlocked } : student
-  //         )
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to update student status:', error);
-  //   }
-  // };
+  // Handle block/unblock toggle
+  const handleBlockToggle = async (studentId: string, isCurrentlyBlocked: boolean) => {
+    try {
+      const response = await axiosInstance.patch(`/admin/students/${studentId}/update`, { isBlocked: !isCurrentlyBlocked });
+
+        setStudents((prevStudents) =>
+          prevStudents.map((student) =>
+            student._id === studentId ? { ...student, isBlocked: !isCurrentlyBlocked } : student
+          )
+        );
+      
+    } catch (error) {
+      console.error('Failed to update student status:', error);
+    }
+  };
 
   const filteredStudents = students.filter((student) =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -98,14 +98,14 @@ const Students = () => {
                 </TableHead>
                 <TableBody>
                   {filteredStudents.map((student) => (
-                    <TableRow key={student.id}>
+                    <TableRow key={student._id}>
                       <TableCell>{student.name}</TableCell>
                       <TableCell>{student.email}</TableCell>
                       <TableCell>
                         <Button
                           variant="contained"
                           color={student.isBlocked ? 'success' : 'error'}
-                          // onClick={() => handleBlockToggle(student.id, student.isBlocked)}
+                          onClick={() => handleBlockToggle(student._id, student.isBlocked)}
                         >
                           {student.isBlocked ? 'Unblock' : 'Block'}
                         </Button>

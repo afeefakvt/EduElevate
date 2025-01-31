@@ -39,6 +39,24 @@ const Tutors = () => {
     navigate(`/admin/tutors/${tutorId}`)
   }
 
+
+  const toggleBlockStatus = async(tutorId:string,isCurrentlyBlocked:boolean)=>{
+    try {
+      const response = await axiosInstance.patch(`/admin/tutors/${tutorId}/update`,{
+        isBlocked:!isCurrentlyBlocked,  // Toggle the current status
+      });
+
+      setTutors((prevTutors)=>{
+        return prevTutors.map((tutor) => tutor._id == tutorId ? { ...tutor, isBlocked: !isCurrentlyBlocked } : tutor);
+      })
+      console.log(response.data.message || 'Tutor status updated');
+    } catch (error) {
+      console.error('Failed to update tutor status:', error); 
+      
+    }
+
+  }
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Navbar />
@@ -75,6 +93,7 @@ const Tutors = () => {
                         <Button
                           variant="contained"
                           color={tutor.isBlocked ? 'success' : 'error'}
+                          onClick={() => toggleBlockStatus(tutor._id, tutor.isBlocked)}
                          
                         >
                           {tutor.isBlocked ? 'Unblock' : 'Block'}

@@ -28,6 +28,25 @@ export class AdminController {
         }
     }
 
+    async updateStudent(req:Request,res:Response):Promise<void>{
+        const {studentId} = req.params;
+        const {isBlocked} = req.body;
+        
+        try {
+            const updatedStudent = await this.adminService.updateStudent(studentId,{isBlocked})
+            if(!updatedStudent){
+                res.status(404).json({message:"student not found"})
+                return;
+            }
+            res.status(200).json(updatedStudent)
+            return;
+
+        } catch (error) {
+            res.status(500).json({success:false,message:'internal server error',error: error instanceof Error ? error.message : error,})
+            
+        }
+    }
+
     async getTutors(req:Request,res:Response):Promise<void>{
         try {
             const tutors = await this.adminService.getTutors()
@@ -127,7 +146,7 @@ export class AdminController {
         }
     }
 
-    async blockTutor(req:Request,res:Response):Promise<void>{
+    async updateTutor(req:Request,res:Response):Promise<void>{
         const{tutorId} =req.params
         const {isBlocked} = req.body;
         

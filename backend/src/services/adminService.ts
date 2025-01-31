@@ -29,7 +29,11 @@ export class AdminService implements IAdminService {
          return this.adminRepository.findTutorById(tutorId)
     }
 
-    async updateTutor(tutorId:string,tutorData:Partial<ITutor>):Promise<void | null>{
+    async updateTutor(tutorId:string,tutorData:Partial<ITutor>):Promise<ITutor | null>{
         return this.adminRepository.updateTutor(tutorId,tutorData)
     } 
+    async updateStudent(studentId: string, studentData: Partial<IStudent>): Promise<IStudent | null> {
+        return this.adminRepository.updateStudent(studentId,studentData)
+    }
+    
 }
