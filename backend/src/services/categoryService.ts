@@ -14,13 +14,14 @@ export class CategoryService implements ICategoryService{
         return await this.categoryRepository.getCategory();
     }
     async addCategory(name: string): Promise<{ success: boolean; message?:string; category?:ICategory}> {
-        const existingCategory = await this.categoryRepository.getCategoryByName(name);
+        const categoryName = name.trim().toLocaleLowerCase()
+        const existingCategory = await this.categoryRepository.getCategoryByName(categoryName);
 
         if(existingCategory){
             return {success:false,message:"Category with this name already exists"};
         }
         
-        const category = await this.categoryRepository.addCategory(name);
+        const category = await this.categoryRepository.addCategory(categoryName);
         return {success:true,category}
     }
     async listUnlistCategory(id: string, categoryData: Partial<ICategory>): Promise<ICategory | null> {

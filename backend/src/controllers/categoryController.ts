@@ -3,6 +3,7 @@ import { ICategoryService } from "../interfaces/category/ICategoryService";
 import { ICategoryRepository } from "../interfaces/category/ICategoryRepository";
 import { CategoryRepository } from "../repositories/categoryRepository";
 import { CategoryService } from "../services/categoryService";
+import { log } from "console";
 
 
 export class CategoryController{
@@ -29,7 +30,12 @@ export class CategoryController{
     }
 
     async addCategory(req:Request,res:Response):Promise<void>{
+
+        console.log("jhgui");
+        
         try {
+            console.log("categroy request");
+            
             const {name} = req.body
 
             if(!name || typeof name !=='string'){

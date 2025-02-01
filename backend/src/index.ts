@@ -5,6 +5,7 @@ import connectDB from './config/db'
 import studentRoutes from './routes/studentRoutes'
 import adminRoutes from './routes/adminRoutes'
 import tutorRoutes from './routes/tutorRoutes'
+import categoryRoutes from './routes/categoryRoutes'
 
 
 
@@ -24,6 +25,7 @@ app.use(cookieParser())
 app.use('/',studentRoutes)
 app.use('/',adminRoutes)
 app.use('/',tutorRoutes)
+app.use('/',categoryRoutes)
 
 app.get('/',(req,res)=>{
     res.send('hello')
