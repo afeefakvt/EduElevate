@@ -2,6 +2,9 @@ import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui
 import  { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../api/tutorAuthApi';
+import { RootState } from "../../store/store";
+import { useSelector } from "react-redux";
+
 
 
 const Login = () => {
@@ -10,6 +13,8 @@ const Login = () => {
     const [errMessage,setErrMessage] = useState('')
 
     const navigate = useNavigate()
+    const token = useSelector((state: RootState) => state.tutorAuth.token);
+
 
     useEffect(()=>{
         if(email!=='' || password !==''){
@@ -18,12 +23,18 @@ const Login = () => {
     },[email,password])
 
 
+    useEffect(() => {
+        if (token) {
+          navigate("/tutor/home", { replace: true });  
+        }
+      }, [token, navigate]);
+    
+
+
     const handleLogin =async ()=>{
-      
       setErrMessage('') //clear previouserror message
       try {
         const tutorData = await login(email,password)
-        console.log(tutorData,'tutor keriiii')
         if(tutorData){
             navigate('/tutor/home')
         }

@@ -63,6 +63,9 @@ import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui
 import  { useEffect, useState } from 'react';
 import {  useNavigate } from 'react-router-dom';
 import { loginAdmin } from '../../api/authApi';
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+
 
 const adminLogin = () => {
     const [email,setEmail] = useState('')
@@ -70,12 +73,23 @@ const adminLogin = () => {
     const [errMessage,setErrMessage] = useState('')
 
     const navigate = useNavigate()
+    const token = useSelector((state: RootState) => state.auth.token);
 
     useEffect(()=>{
         if(email!=='' || password !==''){
             setErrMessage('')
         }
     },[email,password])
+
+
+    
+    useEffect(() => {
+        if (token) {
+          navigate("/admin/home", { replace: true });  
+        }
+      }, [token, navigate]);
+
+
 
 
     const handleLogin =async ()=>{

@@ -2,6 +2,8 @@ import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui
 import  { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../api/authApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const Login = () => {
     const [email,setEmail] = useState('')
@@ -9,6 +11,7 @@ const Login = () => {
     const [errMessage,setErrMessage] = useState('')
 
     const navigate = useNavigate()
+    const token = useSelector((state:RootState)=>state.auth.token)
 
     useEffect(()=>{
         if(email!=='' || password !==''){
@@ -17,8 +20,14 @@ const Login = () => {
     },[email,password])
     
 
-    const handleLogin =async ()=>{
-      
+    useEffect(()=>{
+        if(token){
+            navigate('/',{replace:true});
+        }
+    },[token,navigate]);
+
+
+    const handleLogin =async ()=>{  
       setErrMessage('') //clear previouserror message
       try {
         const studentData = await login(email,password)
