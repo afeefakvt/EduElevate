@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signUp } from '../../api/authApi';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { googleSignIn } from '../../api/authApi';
+import { validateStudentRegisterForm } from '../../utils/validations'
+;
 
 const Register = () => {
   const [name,setName] = useState("")
@@ -11,6 +13,7 @@ const Register = () => {
   const [password,setPassword] = useState("")
   const [confirmPassword,setConfirmPassword] = useState("")
   const [errMessage,setErrMessage] = useState('')
+  const [formErrors,setFormErrors] = useState<{name?:string,email?:string,password?:string,confirmPassword?:string}>({})
 
   const navigate = useNavigate() 
 
@@ -25,6 +28,14 @@ const Register = () => {
 
   const handleSignUp = async()=>{
     setErrMessage('') 
+
+    const errors = validateStudentRegisterForm(name,email,password,confirmPassword)
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+        return;
+      }
+
     try {
       console.log({ name, email,password, confirmPassword })
       
@@ -83,6 +94,8 @@ const Register = () => {
                         autoComplete="name"
                         value={name}
                         onChange={(e)=>setName(e.target.value)}
+                        error={Boolean(formErrors.name)}
+                        helperText={formErrors.name}
                     />
                     
                     <TextField
@@ -96,6 +109,8 @@ const Register = () => {
                         autoFocus
                         value={email}
                         onChange={(e)=>setEmail(e.target.value)}
+                        error={Boolean(formErrors.email)}
+                        helperText={formErrors.email}
                     />
                   
                     <TextField
@@ -109,6 +124,8 @@ const Register = () => {
                         autoComplete="password"
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
+                        error={Boolean(formErrors.password)}
+                        helperText={formErrors.password}
                     />
                      <TextField
                         margin="normal"
@@ -121,6 +138,8 @@ const Register = () => {
                         autoComplete="confirmPassword"
                         value={confirmPassword}
                         onChange={(e)=>setConfirmPassword(e.target.value)}
+                        error={Boolean(formErrors.confirmPassword)}
+                        helperText={formErrors.confirmPassword}
                     />
                     <Button
                         type="submit"

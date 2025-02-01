@@ -25,8 +25,6 @@ import AdminProtected from "./components/protectedRoutes/AdminProtected"
 
 
 function App() {
-
-
   return (
     <>
      <Router>

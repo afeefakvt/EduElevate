@@ -2,6 +2,7 @@ import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUp } from '../../api/tutorAuthApi';
+import { validateRegisterForm } from '@/utils/validations';
 
 const Register = () => {
   const [name,setName] = useState("")
@@ -10,6 +11,7 @@ const Register = () => {
   const [title,setTitle] = useState("")
   const [bio,setBio] = useState("")
   const [errMessage,setErrMessage] = useState('')
+  const [formErrors, setFormErrors] = useState<{ name?: string; email?: string; password?: string; title?: string; bio?: string }>({});
 
   const navigate = useNavigate() 
 
@@ -23,12 +25,20 @@ const Register = () => {
   },[name,email,password,title,bio])
 
   const handleSignUp = async()=>{
+    
     setErrMessage('') 
+
+    const errors = validateRegisterForm(name, email, password, title, bio);
+    setFormErrors(errors)
+
+
+    // Stop submission if errors exist
+    if (Object.keys(errors).length > 0) {
+        return;
+      }
+
     try {
-      console.log({ name, email,password,bio,title })
-      
        const response=await signUp(name,email,password,title,bio)
-       console.log('Sign up response:', response);
        navigate('/tutor/verifyOtp',{state:{email}})   //pass email to the otp page
     } catch (error:any) {
       setErrMessage(error.message)
@@ -70,6 +80,8 @@ const Register = () => {
                         autoComplete="name"
                         value={name}
                         onChange={(e)=>setName(e.target.value)}
+                        error= {Boolean(formErrors.name)}
+                        helperText ={formErrors.name}
                     />
                     
                     <TextField
@@ -83,6 +95,8 @@ const Register = () => {
                         autoFocus
                         value={email}
                         onChange={(e)=>setEmail(e.target.value)}
+                        error= {Boolean(formErrors.email)}
+                        helperText ={formErrors.email}
                     />
                   
                     <TextField
@@ -96,6 +110,8 @@ const Register = () => {
                         autoComplete="password"
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
+                        error= {Boolean(formErrors.password)}
+                        helperText ={formErrors.password}
                     />
                      
                      <TextField
@@ -109,6 +125,8 @@ const Register = () => {
                         autoComplete="title"
                         value={title}
                         onChange={(e)=>setTitle(e.target.value)}
+                        error= {Boolean(formErrors.title)}
+                        helperText ={formErrors.title}
                     />
                      
                      <TextField
@@ -122,6 +140,8 @@ const Register = () => {
                         autoComplete="bio"
                         value={bio}
                         onChange={(e)=>setBio(e.target.value)}
+                        error= {Boolean(formErrors.bio)}
+                        helperText ={formErrors.bio}
                     />
                   
                     <Button

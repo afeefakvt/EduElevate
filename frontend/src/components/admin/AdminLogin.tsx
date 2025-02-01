@@ -66,12 +66,15 @@ import { loginAdmin } from '../../api/authApi';
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import AdminNavbar from './AdminNavbar';
+import { validateLoginForm } from '../../utils/validations';
 
 
 const adminLogin = () => {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [errMessage,setErrMessage] = useState('')
+    const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
+
 
     const navigate = useNavigate()
     const token = useSelector((state: RootState) => state.auth.token);
@@ -96,6 +99,14 @@ const adminLogin = () => {
     const handleLogin =async ()=>{
       
       setErrMessage('') //clear previouserror message
+      const errors = validateLoginForm(email, password);
+      setFormErrors(errors); 
+
+      // Stop submission if there are errors
+      if (Object.keys(errors).length > 0) {
+          return;
+      }
+
       try {
         const studentData = await loginAdmin(email,password)
 
@@ -144,6 +155,8 @@ const adminLogin = () => {
                         autoFocus
                         value={email}
                         onChange={(e)=>setEmail(e.target.value)}
+                        error= {Boolean(formErrors.email)}
+                        helperText ={formErrors.email}
                     />
                     <TextField
                         margin="normal"
@@ -156,6 +169,8 @@ const adminLogin = () => {
                         autoComplete="current-password"
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
+                        error= {Boolean(formErrors.password)}
+                        helperText ={formErrors.password}
                     />
                     <Button
                         type="submit"
