@@ -1,0 +1,7 @@
+{"level":"info","message":""}
+{"level":"info","message":"Server is running on port 3000"}
+{"level":"info","message":"::1 - - [01/Feb/2025:12:06:12 +0000] \"POST /admin/login HTTP/1.1\" 200 588 \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
+{"level":"info","message":"::1 - - [01/Feb/2025:12:06:14 +0000] \"GET /admin/students HTTP/1.1\" 304 - \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
+{"level":"info","message":"::1 - - [01/Feb/2025:12:06:14 +0000] \"GET /admin/students HTTP/1.1\" 304 - \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
+{"level":"info","message":"::1 - - [01/Feb/2025:12:06:16 +0000] \"PATCH /admin/students/6797ad451178ccdda06e5f32/update HTTP/1.1\" 200 274 \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
+{"level":"info","message":"::1 - - [01/Feb/2025:12:06:17 +0000] \"PATCH /admin/students/6797ad451178ccdda06e5f32/update HTTP/1.1\" 200 273 \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}

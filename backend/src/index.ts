@@ -6,6 +6,7 @@ import studentRoutes from './routes/studentRoutes'
 import adminRoutes from './routes/adminRoutes'
 import tutorRoutes from './routes/tutorRoutes'
 import categoryRoutes from './routes/categoryRoutes'
+import { morganMiddleware,logger } from './middlewares/centralisedLogs'
 
 
 
@@ -22,6 +23,9 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 
+//add morgan middleware for logging
+app.use(morganMiddleware);
+
 app.use('/',studentRoutes)
 app.use('/',adminRoutes)
 app.use('/',tutorRoutes)
@@ -33,6 +37,7 @@ app.get('/',(req,res)=>{
 
 const port  = process.env.PORT || 3000
 app.listen(port,()=>{
+    logger.info(`Server is running on port ${port}`);
     console.log(`server is running on port ${port}`);
     
-})
+});

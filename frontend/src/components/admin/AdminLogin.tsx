@@ -65,6 +65,7 @@ import {  useNavigate } from 'react-router-dom';
 import { loginAdmin } from '../../api/authApi';
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import AdminNavbar from './AdminNavbar';
 
 
 const adminLogin = () => {
@@ -109,10 +110,11 @@ const adminLogin = () => {
     }
     return (
         <Container component="main" maxWidth="xs">
+            <AdminNavbar/>
             <Paper
                 elevation={4}
                 sx={{
-                    marginTop: 8,
+                    marginTop: 22,
                     padding: 4,
                     display: 'flex',
                     flexDirection: 'column',
