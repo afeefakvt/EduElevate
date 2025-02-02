@@ -20,6 +20,8 @@ studentRouter.post('/verifyOtp',studentController.verifyOtp.bind(studentControll
 studentRouter.post('/resendOtp',studentController.resendOtp.bind(studentController))
 studentRouter.post('/login',validateStudentLogin,studentController.login.bind(studentController))
 studentRouter.post('/auth/google',studentController.googleLogin.bind(studentController))
+studentRouter.post('/forgotPassword',studentController.forgotPassword.bind(studentController))
+studentRouter.post('/resetPassword',studentController.resetPassword.bind(studentController))
 
 // studentRouter.post('/logout',studentController.logoutStudent.bind(studentController))
 

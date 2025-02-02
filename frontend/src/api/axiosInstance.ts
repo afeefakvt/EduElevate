@@ -1,11 +1,10 @@
 import axios from 'axios'
 import cookies from 'js-cookie'
+import { handleForbiddenError } from '@/utils/forbidden';
 
 export const axiosInstance = axios.create({
-    baseURL:"http://localhost:3000/",
-    headers:{
-        'Content-Type':'application/json'
-    }
+    baseURL:import.meta.env.VITE_BASE_URL,
+    withCredentials:true
 
 })
 
@@ -22,3 +21,15 @@ axiosInstance.interceptors.request.use(
     }
     
 );
+
+axiosInstance.interceptors.response.use(
+    (response)=>{
+        return response
+    },
+    (error)=>{
+        if(error.repsonse && error.response.status===403){
+            handleForbiddenError(error)
+        }
+        return Promise.reject(error);
+    }
+)

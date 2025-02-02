@@ -5,6 +5,7 @@ import { RootState, store } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from "react";
 import { logout } from "../../store/authSlice";
+import { ModeToggle } from "../ui/modeToggle";
 
 const Navbar = () => {
 
@@ -42,8 +43,7 @@ const Navbar = () => {
                 zIndex: 1000,
 
             }}
-        >
-
+        >   
             <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Box
                     //   display="flex"

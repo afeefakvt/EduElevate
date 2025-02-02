@@ -23,10 +23,14 @@ import AddCourse from "./components/tutor/AddCourse"
 import AddLecture from "./components/tutor/AddLecture"
 import AdminProtected from "./components/protectedRoutes/AdminProtected"
 
+import { ThemeProvider} from './components/ui/themeProvider'
+import PasswordReset from "./components/common/PasswordReset"
 
 function App() {
   return (
     <>
+    <ThemeProvider>
+
      <Router>
       <Routes>
      
@@ -34,6 +38,7 @@ function App() {
         <Route path="/register" element = {<RegisterPage/>}/>
         <Route path="/verifyOtp" element = {<OtpPage/>}/>
         <Route path="/login" element = {<LoginPage/>}/>
+        <Route path="/resetPassword/:token" element = {<PasswordReset/>}/>
         <Route element={<StudentProtected/>}>
          <Route path="/" element = {<Home/>}/>
         </Route>
@@ -60,6 +65,8 @@ function App() {
        
       </Routes>
      </Router>
+     </ThemeProvider>
+
     </>
   )
 }

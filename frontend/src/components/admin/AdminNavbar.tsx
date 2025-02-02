@@ -50,6 +50,7 @@ const AdminNavbar = () => {
 
             }}
         >
+            
 
             <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Box
@@ -87,7 +88,9 @@ const AdminNavbar = () => {
                         }}
                     >
                         Admin
+
                     </Typography>
+
                         <Box display={"flex"} justifyContent="center" alignItems="center">
                            
                         </Box>

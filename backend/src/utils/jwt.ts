@@ -19,6 +19,18 @@ export const verifyToken = (token:string)=>{
     }
 } 
 
+export const generatePasswordResetToken = (studentId:string):string=>{
+    return jwt.sign({studentId},JWT_SECRET,{expiresIn:"15m"})
+}
+export const verifyPasswordResetToken = (token:string):any=>{
+    try {
+        return jwt.verify(token,JWT_SECRET)
+    } catch (error) {
+        throw new Error('invalid token')
+        
+    }
+}
+
 
 
 

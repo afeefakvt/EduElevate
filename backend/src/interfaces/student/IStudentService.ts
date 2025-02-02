@@ -7,5 +7,7 @@ export interface IStudentService{
         token:string,
         student:IStudent
     }>;
-    findStudentByEmail(email:string):Promise<IStudent | null>
+    findStudentByEmail(email:string):Promise<IStudent | null>;
+    handleForgotPassword(email:string):Promise<string | null>;
+    updatePassword(studentId:string,newPassword:string):Promise<IStudent | null>
 }

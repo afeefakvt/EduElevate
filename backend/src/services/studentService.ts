@@ -5,6 +5,9 @@ import { IStudentRepository } from "../interfaces/student/IStudentRepository";
 import { hashPassword,comparePassword } from "../utils/password";
 import { validateOtp } from "../utils/otp";
 import { login } from "./authService";
+import { generatePasswordResetToken } from "../utils/jwt";
+import { sendEmail } from "../utils/resetPassword";
+
 
 export class StudentService  {
     private studentRepository: IStudentRepository;
@@ -32,6 +35,22 @@ export class StudentService  {
     }
     async findStudentByEmail(email:string):Promise<IStudent | null>{
         return this.studentRepository.findStudentByEmail(email);
+    }
+    async handleForgotPassword(email:string):Promise<string | null>{
+        const student = await this.studentRepository.findStudentByEmail(email);
+
+        if(!student){
+            return null
+        }
+        const resetToken = generatePasswordResetToken(student.id.toString());
+        console.log("reset token is", resetToken);
+
+        await sendEmail(email,resetToken)
+        return resetToken
+
+    }
+    async updatePassword(studentId:string,newPassword:string):Promise<IStudent | null>{
+        return this.studentRepository.updatePassword(studentId,newPassword)
     }
 
 }
