@@ -92,9 +92,7 @@ export class TutorController {
                 res.status(403).json({ message: 'Your account is blocked ' });
                 return
                
-            }
-            console.log("genretaeeee");
-    
+            }    
             res.status(200).json({message:'Login successful',token,tutor})
             return;
             

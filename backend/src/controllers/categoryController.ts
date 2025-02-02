@@ -3,7 +3,6 @@ import { ICategoryService } from "../interfaces/category/ICategoryService";
 import { ICategoryRepository } from "../interfaces/category/ICategoryRepository";
 import { CategoryRepository } from "../repositories/categoryRepository";
 import { CategoryService } from "../services/categoryService";
-import { log } from "console";
 
 
 export class CategoryController{
@@ -88,11 +87,26 @@ export class CategoryController{
 
             res.status(200).json({message:"Category updated sccessfully",updatedCategory})            
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Internal server error",
-                error: error instanceof Error ? error.message : error,
-              });
+
+            if (error instanceof Error && error.message === "category name already exists") {
+                res.status(400).json({
+                    success: false,
+                    message: "Category name already exists",
+                });
+            } else if (error instanceof Error && error.message === "Category not found") {
+                res.status(404).json({
+                    success: false,
+                    message: "Category not found",
+                });
+            } else{
+                res.status(500).json({
+                    success: false,
+                    message: "Internal server error",
+                    error: error instanceof Error ? error.message : error,
+                  });
+
+             }   
+            
         }
     }
 

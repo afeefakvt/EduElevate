@@ -68,7 +68,6 @@ export class AdminController {
         try {
             const {tutorId} = req.params
             const tutor = await this.adminService.getTutorDetails(tutorId)
-            console.log("tutorrrr",'tutor');
             
             if(tutor){
                 res.status(200).json({ success: true, tutor:tutor });

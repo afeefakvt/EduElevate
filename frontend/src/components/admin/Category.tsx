@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -54,6 +53,12 @@ export default function Categories() {
     } catch (error) {
       console.error("Error updating category:", error);
     }
+  };
+
+  const handleAddCategoryOpen = () => {
+    setErrMessage("");  // Reset error message
+    setNewCategoryName(""); // Reset input field
+    setOpen(true);
   };
 
   const handleAddCategory = async () => {
@@ -132,7 +137,7 @@ export default function Categories() {
         
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="default">+ Add Category</Button>
+            <Button variant="default" onClick={handleAddCategoryOpen}>+ Add Category</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
