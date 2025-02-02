@@ -22,12 +22,8 @@ export class StudentController  {
 
     async createStudent(req:Request,res:Response):Promise<void>{
         try {
-
-            console.log("wegsfwj");
             
-            const {name,email,password,confirmPassword} = req.body
-            console.log("afefcf");
-            
+            const {name,email,password,confirmPassword} = req.body;
 
             if(password!== confirmPassword){
                 res.status(400).json({message:"passwords do not match"})
@@ -40,7 +36,6 @@ export class StudentController  {
             
 
             const student = await this.studentService.createStudent({name,email,password} as any)
-            console.log("ugduysjhan");
             
             res.status(201).json({message:'student created successfully, otp is send to the email address'})
         } catch (error:any) {
@@ -78,6 +73,8 @@ export class StudentController  {
             
             const otp = await sendOtptoEmail(email)
             storeOtp(email,otp)
+            console.log('otp is',otp);
+
         } catch (error) {
             res.status(500).json({
                 success: false,
@@ -88,9 +85,7 @@ export class StudentController  {
         }
     }
     async login(req:Request,res:Response):Promise<void>{
-        try {
-            console.log("loginnnn");
-            
+        try {            
             const {email,password} = req.body
             const {token,student} = await this.studentService.loginStudent(email,password)
 

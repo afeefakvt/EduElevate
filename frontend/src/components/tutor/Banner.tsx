@@ -33,7 +33,7 @@ const Banner = () => {
             color:"#2e2e2e",
             lineHeight:"1.2"
         }}>
-             <span style={{color:"#6A0DAD"}}>Educate!</span>,<br/>
+             <span style={{color:"#6A0DAD"}}>Educate!</span>  <br/>
             Smart Is Great.
         </Typography>
         <Typography variant='body1'

@@ -6,7 +6,6 @@ import { ITutorRepository } from "../interfaces/tutor/ITutorRepository";
 import {sendEmail} from "../utils/mail"
 import { generateToken } from "../utils/jwt";
 import { OAuth2Client } from "google-auth-library";
-import { title } from "process";
 
 
 
@@ -27,6 +26,7 @@ export class TutorController {
                 const otp = await sendOtptoEmail(email)
         
                 storeOtp(email,otp)
+                console.log('otp is',otp);
              
                 const tutor  = await this.tutorService.registerTutor({name,email,password,title,bio} as any)
                 res.status(201).json({message:"tutor created,otp is send to your email address"})
@@ -67,6 +67,8 @@ export class TutorController {
                 
                 const otp = await sendOtptoEmail(email)
                 storeOtp(email,otp)
+                console.log('otp is',otp);
+
             } catch (error) {
                 res.status(500).json({
                     success: false,

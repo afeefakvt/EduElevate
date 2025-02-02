@@ -20,4 +20,11 @@ export class CategoryRepository implements ICategoryRepository{
         return await Category.findByIdAndUpdate(id,categoryData,{new:true});
     }
 
+    async getCategoryById(id: string): Promise<ICategory | null> {
+        return await Category.findById(id)
+    }
+    async editCategory(id: string, name:string): Promise<ICategory | null> {
+        return await Category.findByIdAndUpdate(id, {name} , {new:true})
+    }
+
 }

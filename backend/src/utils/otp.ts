@@ -1,4 +1,4 @@
-import { log } from 'console';
+
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
@@ -13,12 +13,8 @@ const transporter = nodemailer.createTransport({
 
 })
 
-export const sendOtptoEmail = async (email:string):Promise<string> =>{
-    console.log("awgdvghsb");
-    
-    const otp = generateOtp()
-    console.log("otpppp vannu");
-    
+export const sendOtptoEmail = async (email:string):Promise<string> =>{    
+    const otp = generateOtp()    
 
     const mailOptions = {
         from:process.env.GMAIL_USER,
@@ -28,14 +24,12 @@ export const sendOtptoEmail = async (email:string):Promise<string> =>{
     }
     await transporter.sendMail(mailOptions)
 
-    console.log("otpppppppppppppp");
     
 
     return otp;
 }
 
 const generateOtp= () : string => {
-    console.log("afefggb");
     
     const otp = Math.floor(100000  + Math.random()* 900000).toString()
     return otp
@@ -48,22 +42,18 @@ export const validateOtp = async(email:string,otp:string):Promise<boolean> =>{
     const storedOtp = otpStore[email]
 
     if(!storedOtp){
-        console.log('falseee');
         return false
-        
-        
     }
+    
     const isExpired = Date.now()>storedOtp.expiresAt
 
     if(isExpired){
         delete otpStore[email]  // Cleanup expired OTP
         console.log('expiredd');
-        
         return false
     }
     if(storedOtp.otp===otp){
         delete otpStore[email] // Cleanup used OTP
-        console.log('trueee');
         
         return true
     }

@@ -30,9 +30,7 @@ export class CategoryController{
     }
 
     async addCategory(req:Request,res:Response):Promise<void>{
-
-        console.log("jhgui");
-        
+                
         try {
             console.log("categroy request");
             
@@ -79,6 +77,22 @@ export class CategoryController{
                 error: error instanceof Error ? error.message : error,
               });
             
+        }
+    }
+
+    async editCategory(req:Request,res:Response):Promise<void>{
+        try {
+            const {id} = req.params;
+            const {name} = req.body;
+            const updatedCategory = await this.categoryService.editCategory(id,name)
+
+            res.status(200).json({message:"Category updated sccessfully",updatedCategory})            
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Internal server error",
+                error: error instanceof Error ? error.message : error,
+              });
         }
     }
 

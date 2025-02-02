@@ -1,6 +1,5 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Switch } from "@/components/ui/switch";
@@ -26,6 +25,9 @@ export default function Categories() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [errMessage,setErrMessage] = useState('')
   const [open, setOpen] = useState(false); 
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editCategory, setEditCategory] = useState<Category | null>(null);
+  const [editCategoryName, setEditCategoryName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const categoriesPerPage = 5;
@@ -48,7 +50,7 @@ export default function Categories() {
   const handleToggle = async (id: string, isListed: boolean) => {
     try {
       await axiosInstance.patch(`/admin/category/${id}/listUnlistCategory`, { isListed: !isListed });
-      fetchCategories(); // Refresh table
+      fetchCategories(); 
     } catch (error) {
       console.error("Error updating category:", error);
     }
@@ -72,6 +74,30 @@ export default function Categories() {
 
     }
   };
+
+
+  const handleEdit = (category: Category) => {
+    setEditCategory(category);
+    setEditCategoryName(category.name);
+    setErrMessage(""); 
+    setOpenEdit(true);
+  };
+  const handleEditCategory = async () => {
+    if (!editCategory || !editCategoryName.trim()) {
+      setErrMessage("Category name cannot be empty.");
+      return;
+    }
+    try {
+      await axiosInstance.put(`/admin/category/${editCategory._id}/editCategory`, { name: editCategoryName });
+      setErrMessage("");
+      setOpenEdit(false);
+      fetchCategories();
+    } catch (error: any) {
+      console.error("Error updating category:", error);
+      setErrMessage(error.response?.data?.message || "Failed to update category.");
+    }
+  };
+
 
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase()) 
@@ -132,6 +158,7 @@ export default function Categories() {
                 <TableRow>
                   <TableHead>Category Name</TableHead>
                   <TableHead>Listed</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -143,6 +170,9 @@ export default function Categories() {
                         checked={category.isListed}
                         onCheckedChange={() => handleToggle(category._id, category.isListed)}
                       />
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="default" onClick={()=>handleEdit(category)}>Edit</Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -170,6 +200,24 @@ export default function Categories() {
           </>
         )} 
       </div>
+      <Dialog open={openEdit} onOpenChange={setOpenEdit}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Category</DialogTitle>
+            </DialogHeader>
+            <Input
+              type="text"
+              placeholder="Enter category name"
+              value={editCategoryName}
+              onChange={(e) => setEditCategoryName(e.target.value)}
+            />
+             {errMessage && <p className="text-red-500 text-sm mt-1">{errMessage}</p>}
+            <Button onClick={handleEditCategory} className="mt-2 w-full">
+              Update
+            </Button>
+          </DialogContent>
+        </Dialog>
+      
     </div>
   );
 }

@@ -17,7 +17,6 @@ export class StudentService  {
         const existingStudent = await this.studentRepository.findStudentByEmail(studentData.email);
         if(existingStudent){
             throw new Error("email id already exists")
-
         }
         const hashedPassword = await hashPassword(studentData.password as string);
         studentData.password = hashedPassword

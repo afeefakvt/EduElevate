@@ -18,6 +18,7 @@ const categoryRouter = Router()
 categoryRouter.get('/admin/category',categoryController.getCategory.bind(categoryController));
 categoryRouter.post('/admin/category/addCategory',categoryController.addCategory.bind(categoryController));
 categoryRouter.patch('/admin/category/:id/listUnlistCategory',categoryController.listUnlistCategory.bind(categoryController));
+categoryRouter.put('/admin/category/:id/editCategory',categoryController.editCategory.bind(categoryController));
 
 
 

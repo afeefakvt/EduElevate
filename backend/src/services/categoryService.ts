@@ -29,4 +29,19 @@ export class CategoryService implements ICategoryService{
     }
 
 
+    async editCategory(id: string, name: string): Promise<ICategory | null> {
+
+        const existingCategory = await this.categoryRepository.getCategoryByName(name);
+        if (existingCategory) {
+           throw new Error("category name already exists");
+        }
+        
+        const category = await this.categoryRepository.getCategoryById(id)
+        if (!category) {
+            throw new Error("Category not found");
+        }
+        return this.categoryRepository.editCategory(id,name)
+    }
+
+
 }

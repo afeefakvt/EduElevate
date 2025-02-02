@@ -104,3 +104,9 @@
 {"level":"info","message":"::1 - - [01/Feb/2025:15:51:36 +0000] \"PATCH /admin/tutors/679b0941e91424af2ae8fd90/update HTTP/1.1\" 200 278 \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
 {"level":"info","message":"::1 - - [01/Feb/2025:15:51:44 +0000] \"POST /tutor/login HTTP/1.1\" 200 695 \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
 {"level":"info","message":"::1 - - [01/Feb/2025:15:52:31 +0000] \"POST /login HTTP/1.1\" 200 584 \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
+{"level":"info","message":"::1 - - [01/Feb/2025:15:56:45 +0000] \"POST /auth/google HTTP/1.1\" 200 573 \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
+{"level":"info","message":"::1 - - [01/Feb/2025:16:06:36 +0000] \"POST /tutor/register HTTP/1.1\" 201 61 \"http://localhost:5173/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36\""}
+{"level":"info","message":"Server is running on port 3000"}
+{"level":"info","message":"Server is running on port 3000"}
+{"level":"info","message":"Server is running on port 3000"}
+{"level":"info","message":"Server is running on port 3000"}
