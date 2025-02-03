@@ -128,3 +128,34 @@ export const validateTutorLogin = [
         next();
     },
 ];
+
+
+export const validateForgotPassword = [
+    body("newPassword")
+      .isLength({ min: 6 })
+      .withMessage("Password should contain atleast 6 charecters")
+      .matches(/[0-9]/)
+      .withMessage("Password should contain atleast one number")
+      // .matches(/[a-zA-Z]/).withMessage('Password must contain a letter')
+      .trim(),
+    body("confirmPassword")
+      .isLength({ min: 6 })
+      .withMessage("Password should contain atleast 6 charecters")
+      .matches(/[0-9]/)
+      .withMessage("Password should contain atleast one number")
+      // .matches(/[a-zA-Z]/).withMessage('Password must contain a letter')
+      .trim(),
+
+       // Error Handling Middleware
+    (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+             res.status(400).json({
+                success: false,
+                errors: errors.array(),
+            });
+            return;
+        }
+        next();
+    },
+  ];

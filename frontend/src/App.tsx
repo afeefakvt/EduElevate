@@ -12,7 +12,7 @@ import Students from "./components/admin/Students"
 import Tutors from "./components/admin/Tutors"
 import TutorDetails from "./components/admin/TutorDetails"
 import Category from "./components/admin/Category"
-import TutorProtected from "./components/protectedRoutes/TutorProtected"
+import AdminProtected from "./components/protectedRoutes/AdminProtected"
 
  
 import TutorHome from "./components/tutor/tutorHome"
@@ -21,7 +21,9 @@ import TutorOtp from "./components/tutor/Otp"
 import TutorLoginPage from './components/tutor/LoginPage'
 import AddCourse from "./components/tutor/AddCourse"
 import AddLecture from "./components/tutor/AddLecture"
-import AdminProtected from "./components/protectedRoutes/AdminProtected"
+import TutorProtected from "./components/protectedRoutes/TutorProtected"
+import TutorResetPassword from "./components/tutor/TutorResetPassword"
+
 
 import { ThemeProvider} from './components/ui/themeProvider'
 import PasswordReset from "./components/common/PasswordReset"
@@ -57,6 +59,7 @@ function App() {
         <Route path="/tutor/register" element = {<TutorRegisterPage/>}/>
         <Route path="/tutor/verifyOtp" element = {<TutorOtp/>}/>
         <Route path="/tutor/login" element = {<TutorLoginPage/>}/>
+        <Route path="/tutor/resetPassword/:token" element = {<TutorResetPassword/>}/>
         <Route element={<TutorProtected/>}>
          <Route path="/tutor/home" element = {<TutorHome/>}/>
          <Route path="/tutor/addCourse" element = {<AddCourse/>}/>

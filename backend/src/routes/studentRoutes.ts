@@ -4,7 +4,7 @@ import { StudentService } from "../services/studentService";
 import { authenticateToken } from "../middlewares/authToken";
 import { Student } from "../models/studentModel";
 import { StudentRepository } from "../repositories/studentRepository";
-import { validateStudentRegistration,validateStudentLogin } from "../middlewares/validationMiddleware";
+import { validateStudentRegistration,validateStudentLogin,validateForgotPassword } from "../middlewares/validationMiddleware";
 
 
 
@@ -21,7 +21,7 @@ studentRouter.post('/resendOtp',studentController.resendOtp.bind(studentControll
 studentRouter.post('/login',validateStudentLogin,studentController.login.bind(studentController))
 studentRouter.post('/auth/google',studentController.googleLogin.bind(studentController))
 studentRouter.post('/forgotPassword',studentController.forgotPassword.bind(studentController))
-studentRouter.post('/resetPassword',studentController.resetPassword.bind(studentController))
+studentRouter.post('/resetPassword',validateForgotPassword,studentController.resetPassword.bind(studentController))
 
 // studentRouter.post('/logout',studentController.logoutStudent.bind(studentController))
 

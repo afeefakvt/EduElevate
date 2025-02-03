@@ -6,7 +6,7 @@ import { ITutorRepository } from "../interfaces/tutor/ITutorRepository";
 import {sendEmail} from "../utils/mail"
 import { generateToken } from "../utils/jwt";
 import { OAuth2Client } from "google-auth-library";
-
+import { verifyPasswordResetToken } from "../utils/jwt";
 
 
 
@@ -106,5 +106,51 @@ export class TutorController {
         }
       
       }
+      async forgotPassword(req: Request, res: Response): Promise<void> {
+        try {
+
+            const { email } = req.body;
+            console.log("Received request for forgot password:", email);
+
+
+            const resetToken = await this.tutorService.handleForgotPassword(email)
+            if (!resetToken) {
+                res.status(404).json({ message: "no student found" })
+                return;
+            }
+            res.status(200).json({ message: "Password reset link send to registered email" })
+        } catch (error) {
+            res.status(500).json({ message: "Error in sending link", error });
+        }
+    }
+    async resetPassword(req: Request, res: Response): Promise<void> {
+            try {
+                const { token, newPassword, confirmPassword } = req.body
+                console.log("Received Token:", req.body.token);
+    
+    
+                const decoded = verifyPasswordResetToken(token)
+                if (!decoded) {
+                    res.status(400).json({ message: "Invalid or expired token" })
+                    return;
+                }
+                if (newPassword !== confirmPassword) {
+                    res.status(400).json({ error: "Password does not match" });
+                    return;
+                }
+    
+                const student = await this.tutorService.updatePassword(decoded.studentId, newPassword);
+    
+                if (!student) {
+                    res.status(404).json({ message: "Student not found" })
+                    return;
+                }
+                res.status(200).json({ message: "Passoword reset succcessful" })
+            } catch (error) {
+                console.error("Error resetting password:", error);
+                res.status(500).json({ message: "Error resetting password", error });
+    
+            }
+        }
     
 }

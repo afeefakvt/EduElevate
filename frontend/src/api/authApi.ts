@@ -143,3 +143,9 @@ export const googleSignIn = async(idToken:string)=>{
 
         return data;
 }
+
+
+export const resetPassword = async(token:string | undefined,newPassword:string,confirmPassword:string)=>{
+    await axiosInstance.post('/resetPassword',{token,newPassword,confirmPassword})
+
+}

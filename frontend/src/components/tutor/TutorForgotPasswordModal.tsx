@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 
 
 
-const ForgotPasswordModal = ({open,handleClose}:{open:boolean,handleClose:()=>void}) => {
+const TutorForgotPasswordModal = ({open,handleClose}:{open:boolean,handleClose:()=>void}) => {
     const [email,setEmail] = useState('');
     const [errMessage,setErrMessage] = useState("")
     const [successMessage,setSuccessMessage] = useState('')
@@ -15,7 +15,7 @@ const ForgotPasswordModal = ({open,handleClose}:{open:boolean,handleClose:()=>vo
     const handleSubmit = async()=>{
         try {
             setStatus("loading")
-            await axiosInstance.post('/forgotPassword',{email})
+            await axiosInstance.post('/tutor/forgotPassword',{email})
             setSuccessMessage('Reset link send to your email');
             setStatus("idle");
             setErrMessage('');
@@ -104,4 +104,4 @@ const ForgotPasswordModal = ({open,handleClose}:{open:boolean,handleClose:()=>vo
   )
 }
 
-export default ForgotPasswordModal
+export default TutorForgotPasswordModal

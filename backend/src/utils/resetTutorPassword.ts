@@ -10,7 +10,7 @@ export const sendEmail = async(email:string,resetToken:string)=>{
     })
     console.log("tokennnnn",resetToken)
 
-    const resetLink = `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`
+    const resetLink = `${process.env.FRONTEND_URL}/tutor/resetPassword/${resetToken}`
 
     const mailOptions = {
         from:process.env.GMAIL_USER,

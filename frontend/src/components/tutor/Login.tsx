@@ -5,7 +5,7 @@ import { login } from '../../api/tutorAuthApi';
 import { RootState } from "../../store/store";
 import { useSelector } from "react-redux";
 import { validateLoginForm } from '../../utils/validations';
-
+import TutorForgotPasswordModal from './TutorForgotPasswordModal';
 
 
 
@@ -14,6 +14,8 @@ const Login = () => {
     const [password,setPassword] = useState('')
     const [errMessage,setErrMessage] = useState('')
     const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
+    const [isModalOpen,setIsModalOpen] = useState(false)
+
 
 
     const navigate = useNavigate()
@@ -32,6 +34,9 @@ const Login = () => {
           navigate("/tutor/home", { replace: true });  
         }
       }, [token, navigate]);
+
+      const handleOpenModal = ()=>setIsModalOpen(true)
+      const handleCloseModal = ()=>setIsModalOpen(false)
     
 
 
@@ -108,6 +113,15 @@ const Login = () => {
                         error= {Boolean(formErrors.password)}
                         helperText ={formErrors.password}
                     />
+                    <Typography
+                        variant="body2"
+                        textAlign="end"
+                        sx={{ marginBottom: 1, color: "#1e90ff", cursor: "pointer" }}
+                      onClick={handleOpenModal}
+                    >
+                        Forgot password?
+                    </Typography>
+                    <TutorForgotPasswordModal open={isModalOpen} handleClose={handleCloseModal} />
                     <Button
                         type="submit"
                         fullWidth

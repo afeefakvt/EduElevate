@@ -8,4 +8,6 @@ export interface ITutorService{
         tutor:ITutor
     }>;
     findTutorByEmail(email:string):Promise<ITutor | null>
+    handleForgotPassword(email:string):Promise<string | null>;
+    updatePassword(studentId:string,newPassword:string):Promise<ITutor | null>
 }

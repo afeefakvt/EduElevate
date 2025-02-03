@@ -30,7 +30,6 @@ const Login = () => {
         }
     }, [token, navigate]);
 
-
     const handleOpenModal = ()=>setIsModalOpen(true)
     const handleCloseModal = ()=>setIsModalOpen(false)
 
@@ -115,7 +114,7 @@ const Login = () => {
                         sx={{ marginBottom: 1, color: "#1e90ff", cursor: "pointer" }}
                       onClick={handleOpenModal}
                     >
-                        Forgot password?
+                        Forgot Password?
                     </Typography>
                     <ForgotPasswordModal open = {isModalOpen} handleClose={handleCloseModal}/>
 

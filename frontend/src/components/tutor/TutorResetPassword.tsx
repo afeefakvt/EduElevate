@@ -1,9 +1,9 @@
 import { Box, Button, Container, TextField, Typography, Paper, Alert } from '@mui/material';
 import { useState } from 'react';
-import { resetPassword } from '../../api/authApi'; // API to reset password
+import { resetPassword } from '../../api/adminApi'; // API to reset password
 import { useNavigate, useParams } from 'react-router-dom';
 
-const ResetPassword = () => {
+const TutorResetPassword = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -32,7 +32,7 @@ const ResetPassword = () => {
         try {
             await resetPassword(token, password,confirmPassword);
             setMessage('Password reset successful! Redirecting to login...');
-            setTimeout(() => navigate('/login'), 3000);
+            setTimeout(() => navigate('/tutor/login'), 3000);
         } catch (err: any) {
             setError(err.message || 'Error resetting password');
         }
@@ -79,4 +79,4 @@ const ResetPassword = () => {
     );
 };
 
-export default ResetPassword;
+export default TutorResetPassword;

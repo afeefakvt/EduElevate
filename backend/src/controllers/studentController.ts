@@ -211,6 +211,8 @@ export class StudentController {
     async resetPassword(req: Request, res: Response): Promise<void> {
         try {
             const { token, newPassword, confirmPassword } = req.body
+            console.log("Received Token:", req.body.token);
+
 
             const decoded = verifyPasswordResetToken(token)
             if (!decoded) {
