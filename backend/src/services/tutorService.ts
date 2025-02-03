@@ -10,17 +10,17 @@ import { sendEmail } from "../utils/resetTutorPassword";
 
 
 
-export class TutorService implements ITutorService{
+export class TutorService implements ITutorService {
     private tutorRepository: ITutorRepository;
 
-    constructor(tutorRepository:ITutorRepository){
+    constructor(tutorRepository: ITutorRepository) {
         this.tutorRepository = tutorRepository
     }
 
     async registerTutor(tutorData: ITutor): Promise<ITutor> {
 
         const existingTutor = await this.tutorRepository.findTutorByEmail(tutorData.email)
-        if(existingTutor){
+        if (existingTutor) {
             throw new Error('email id already exists')
 
         }
@@ -30,32 +30,32 @@ export class TutorService implements ITutorService{
     }
 
     async verifyOtp(email: string, otp: string): Promise<boolean> {
-        return validateOtp(email,otp)
+        return validateOtp(email, otp)
     }
 
     async loginTutor(email: string, password: string): Promise<{ token: string; tutor: ITutor; }> {
 
-        return await tutorLogin(email,password,this.tutorRepository)
-        
+        return await tutorLogin(email, password, this.tutorRepository)
+
     }
-    async findTutorByEmail(email:string):Promise<ITutor | null>{
+    async findTutorByEmail(email: string): Promise<ITutor | null> {
         return this.tutorRepository.findTutorByEmail(email)
     }
 
-     async handleForgotPassword(email:string):Promise<string | null>{
-            const student = await this.tutorRepository.findTutorByEmail(email);
-    
-            if(!student){
-                return null
-            }
-            const resetToken = generatePasswordResetToken(student.id.toString());
-            // console.log("reset token is", resetToken);
-    
-            await sendEmail(email,resetToken)
-            return resetToken
-    
+    async handleForgotPassword(email: string): Promise<string | null> {
+        const student = await this.tutorRepository.findTutorByEmail(email);
+
+        if (!student) {
+            return null
         }
-        async updatePassword(studentId:string,newPassword:string):Promise<ITutor | null>{
-            return this.tutorRepository.updatePassword(studentId,newPassword)
-        }
+        const resetToken = generatePasswordResetToken(student.id.toString());
+        // console.log("reset token is", resetToken);
+
+        await sendEmail(email, resetToken)
+        return resetToken
+
+    }
+    async updatePassword(studentId: string, newPassword: string): Promise<ITutor | null> {
+        return this.tutorRepository.updatePassword(studentId, newPassword)
+    }
 }

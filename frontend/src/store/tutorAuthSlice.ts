@@ -17,7 +17,7 @@ interface AuthState {
 }
 
 const initialState: AuthState= {
-    token:Cookies.get('authToken') || null,
+    token:Cookies.get('tutorAuthToken') || null,
     tutor:null
 }
 
@@ -28,12 +28,12 @@ const tutorAuthSlice = createSlice({
         tutorLoginSuccess:(state,action:PayloadAction<{token:string,tutor:Tutor}>)=>{
             state.token = action.payload.token,
             state.tutor = action.payload.tutor
-            Cookies.set('authToken',action.payload.token,{expires:7})
+            Cookies.set('tutorAuthToken',action.payload.token,{expires:7})
         },
         tutorLogout:(state)=>{
             state.token = null
             state.tutor = null
-            Cookies.remove('authToken')
+            Cookies.remove('tutorAuthToken')
         }
     }
 

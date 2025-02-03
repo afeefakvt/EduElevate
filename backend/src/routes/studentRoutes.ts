@@ -8,7 +8,7 @@ import { validateStudentRegistration,validateStudentLogin,validateForgotPassword
 
 
 
-const studentRepository = new StudentRepository(Student)
+const studentRepository = new StudentRepository()
 const studentService = new StudentService(studentRepository)
 const studentController = new StudentController(studentService,studentRepository) 
 

@@ -10,10 +10,10 @@ import { sendEmail } from "../utils/resetPassword";
 
 
 export class StudentService  {
-    private studentRepository: IStudentRepository;
+    private studentRepository: IStudentRepository; //abstarction
 
     constructor(studentRepository:IStudentRepository){
-        this.studentRepository = studentRepository
+        this.studentRepository = studentRepository //injecting deendency
     }
 
     async createStudent(studentData:IStudent):Promise<IStudent>{

@@ -2,24 +2,22 @@ import { Model } from "mongoose";
 import { ITutorRepository } from "../interfaces/tutor/ITutorRepository";
 import Tutor, { ITutor } from "../models/tutorModel";
 import bcrypt from 'bcryptjs'
+import { BaseRepository } from "./baseRepository";
 
-export class TutorRepository implements ITutorRepository{
+export class TutorRepository extends BaseRepository<ITutor> implements ITutorRepository{
 
-    private tutorModel:Model<ITutor>
-
-    constructor(tutorModel:Model<ITutor>){
-        this.tutorModel= tutorModel
-    }
+        constructor(){
+            super(Tutor)
+      }
     async registerTutor(tutorData: ITutor): Promise<ITutor> {
-        const tutor = new this.tutorModel(tutorData) 
-        return await tutor.save()
+        return await this.create(tutorData)
     }
     async findTutorByEmail(email: string): Promise<ITutor | null> {
-        return await this.tutorModel.findOne({email})
+        return await this.findOne({email})
     }
      async updatePassword(studentId: string, newPassword: string): Promise<ITutor | null> {
             const hashedPassword = await bcrypt.hash(newPassword,10)
-            return await this.tutorModel.findByIdAndUpdate(studentId,{password:hashedPassword},{new:true});
+            return await this.findByIdAndUpdate(studentId,{password:hashedPassword});
         }
 
 }

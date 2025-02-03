@@ -6,7 +6,7 @@ import { validateTutorRegistration ,validateTutorLogin,validateForgotPassword} f
 import Tutor from "../models/tutorModel";
 
 
-const tutorepository = new TutorRepository(Tutor)
+const tutorepository = new TutorRepository()
 const tutorService = new TutorService(tutorepository)
 const tutorController  = new TutorController(tutorService,tutorepository)
 

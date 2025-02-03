@@ -1,26 +1,22 @@
 import {Student,IStudent} from "../models/studentModel";
 import { IStudentRepository } from "../interfaces/student/IStudentRepository";
 import bcrypt from 'bcryptjs'
-import { Model } from "mongoose";
+import { BaseRepository } from "./baseRepository";
 
-export class StudentRepository implements IStudentRepository {
-
-    private studentModel:Model<IStudent> //abstraction
-
-    constructor(studentModel:Model<IStudent>){
-        this.studentModel = studentModel //injecting dependency
+export class StudentRepository extends BaseRepository<IStudent> implements IStudentRepository {
+    constructor(){
+        super(Student)
     }
     
     async createStudent(studentData:IStudent):Promise<IStudent>{
-        const student = new this.studentModel(studentData)
-        return await student.save()
+        return await this.create(studentData)
     }
     async findStudentByEmail(email:string):Promise<IStudent | null>{
-        return await this.studentModel.findOne({email})
+        return await this.findOne({email})
     }
     
     async updatePassword(studentId: string, newPassword: string): Promise<IStudent | null> {
         const hashedPassword = await bcrypt.hash(newPassword,10)
-        return await this.studentModel.findByIdAndUpdate(studentId,{password:hashedPassword},{new:true});
+        return await this.findByIdAndUpdate(studentId,{password:hashedPassword});
     }
 }

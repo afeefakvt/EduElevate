@@ -10,12 +10,12 @@ import Tutor from "../models/tutorModel";
 import { authenticateToken } from "../middlewares/authToken";
 
 
-const adminRepository = new AdminRepository(Student,Tutor)
+const adminRepository = new AdminRepository()
 const adminService = new AdminService(adminRepository)
 const adminController = new AdminController(adminService,adminRepository)
 
 
-const studentRepository = new StudentRepository(Student)
+const studentRepository = new StudentRepository()
 const studentService = new StudentService(studentRepository)
 const studentController = new StudentController(studentService,studentRepository) 
 

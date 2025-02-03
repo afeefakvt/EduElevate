@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { AxiosInstance } from "axios";
+import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../api/axiosInstance";
 
 
 
@@ -35,21 +37,22 @@ const AddCourse = () => {
 
     const [categories,setCategories] = useState([])
     const levels = ['beginner','intermediate','advanced'];
+    const  navigate = useNavigate()
 
     // useEffect(() => {
     //     // Fetch categories from backend
-    //     axios.get("/api/categories")
-    //       .then((response) => setCategories(response.data))
+    //     axiosInstance.get("/admin/category")
+    //       .then((response) => setCategories(response.categories))
     //       .catch((error) => console.error("Error fetching categories", error));
     //   }, []);
 
 
-    // const handleChange = (e:React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>)=>{
-    //     setFormData((prev)=>({
-    //         ...prev,
-    //         [e.target.name]:e.target.value
-    //     }))
-    // }
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>)=>{
+        setFormData((prev)=>({
+            ...prev,
+            [e.target.name]:e.target.value
+        }))
+    }
 
 
     // const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -119,7 +122,7 @@ const AddCourse = () => {
               </Select>
             </FormControl>
     
-            <Button type="submit" variant="contained" sx={{ mt: 2,backgroundColor: "#6A0DAD" } }>
+            <Button type="submit" variant="contained" sx={{ mt: 2,backgroundColor: "#6A0DAD" } } onClick={()=>navigate('/tutor/addLecture')}>
               Save and Next
             </Button>
           </Box>

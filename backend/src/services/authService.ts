@@ -31,7 +31,7 @@ export const tutorLogin  = async(email:string,password:string,repository:ITutorR
     }
 
     const tutor = await repository.findTutorByEmail(email)
-    console.log("Tutor during login:", tutor);
+    // console.log("Tutor during login:", tutor);
     
     if(!tutor){
         throw new Error('Email cannot found')

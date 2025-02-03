@@ -6,7 +6,7 @@ import Category from "../models/categoryModel";
 
 
 
-const categoryRepository = new CategoryRepository(Category);
+const categoryRepository = new CategoryRepository();
 const categoryService = new CategoryService(categoryRepository);
 const categoryController = new CategoryController(categoryService,categoryRepository);
 
