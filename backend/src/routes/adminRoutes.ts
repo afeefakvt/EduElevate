@@ -5,14 +5,16 @@ import { AdminRepository } from "../repositories/adminRepository";
 import { StudentController } from "../controllers/studentController";
 import { StudentRepository } from "../repositories/studentRepository";
 import { StudentService } from "../services/studentService";
+import { Student } from "../models/studentModel";
+import Tutor from "../models/tutorModel";
 
 
-const adminRepository = new AdminRepository()
+const adminRepository = new AdminRepository(Student,Tutor)
 const adminService = new AdminService(adminRepository)
 const adminController = new AdminController(adminService,adminRepository)
 
 
-const studentRepository = new StudentRepository()
+const studentRepository = new StudentRepository(Student)
 const studentService = new StudentService(studentRepository)
 const studentController = new StudentController(studentService,studentRepository) 
 

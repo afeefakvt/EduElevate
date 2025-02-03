@@ -43,7 +43,7 @@ export class StudentService  {
             return null
         }
         const resetToken = generatePasswordResetToken(student.id.toString());
-        console.log("reset token is", resetToken);
+        // console.log("reset token is", resetToken);
 
         await sendEmail(email,resetToken)
         return resetToken

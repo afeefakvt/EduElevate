@@ -2,10 +2,11 @@ import { Router } from "express";
 import { CategoryController } from "../controllers/categoryController";
 import { CategoryRepository } from "../repositories/categoryRepository";
 import { CategoryService } from "../services/categoryService";
+import Category from "../models/categoryModel";
 
 
 
-const categoryRepository = new CategoryRepository();
+const categoryRepository = new CategoryRepository(Category);
 const categoryService = new CategoryService(categoryRepository);
 const categoryController = new CategoryController(categoryService,categoryRepository);
 

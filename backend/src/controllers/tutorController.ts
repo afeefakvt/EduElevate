@@ -110,7 +110,7 @@ export class TutorController {
         try {
 
             const { email } = req.body;
-            console.log("Received request for forgot password:", email);
+            // console.log("Received request for forgot password:", email);
 
 
             const resetToken = await this.tutorService.handleForgotPassword(email)
@@ -126,7 +126,7 @@ export class TutorController {
     async resetPassword(req: Request, res: Response): Promise<void> {
             try {
                 const { token, newPassword, confirmPassword } = req.body
-                console.log("Received Token:", req.body.token);
+                // console.log("Received Token:", req.body.token);
     
     
                 const decoded = verifyPasswordResetToken(token)

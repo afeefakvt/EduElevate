@@ -158,7 +158,7 @@ const Register = () => {
 
                     
                     <Typography variant="body2" align="center">
-                        Don't have an account?{' '}
+                        Already have an account?{' '}
                         <Link to="/tutor/login" style={{ textDecoration: 'none', color: 'primary.main' }}>
                             Login
                         </Link>

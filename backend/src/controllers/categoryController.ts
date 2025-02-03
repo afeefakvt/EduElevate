@@ -31,7 +31,7 @@ export class CategoryController{
     async addCategory(req:Request,res:Response):Promise<void>{
                 
         try {
-            console.log("categroy request");
+            // console.log("categroy request");
             
             const {name} = req.body
 

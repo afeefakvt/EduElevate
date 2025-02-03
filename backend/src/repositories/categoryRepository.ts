@@ -1,30 +1,37 @@
+import { Model } from "mongoose";
 import { ICategoryRepository } from "../interfaces/category/ICategoryRepository";
 import Category, { ICategory } from "../models/categoryModel";
+import { Mode } from "fs";
 
 
 export class CategoryRepository implements ICategoryRepository{
+
+    private categoryModel:Model<ICategory>
+    constructor(categoryModel:Model<ICategory>){
+        this.categoryModel = categoryModel
+    }
     async getCategory(): Promise<ICategory[]> {
-        return await Category.find()
+        return await this.categoryModel.find()
     }
 
     async getCategoryByName(name: string): Promise<ICategory | null> {
-        return await Category.findOne({name});
+        return await this.categoryModel.findOne({name});
     }
 
     async addCategory(name: string): Promise<ICategory> {
-        const newCategory = new Category({name});
+        const newCategory = new this.categoryModel({name});
         return await newCategory.save()
     } 
 
     async listUnlistCategory(id: string, categoryData: Partial<ICategory>): Promise<ICategory | null> {
-        return await Category.findByIdAndUpdate(id,categoryData,{new:true});
+        return await this.categoryModel.findByIdAndUpdate(id,categoryData,{new:true});
     }
 
     async getCategoryById(id: string): Promise<ICategory | null> {
-        return await Category.findById(id)
+        return await this.categoryModel.findById(id)
     }
     async editCategory(id: string, name:string): Promise<ICategory | null> {
-        return await Category.findByIdAndUpdate(id, {name} , {new:true})
+        return await this.categoryModel.findByIdAndUpdate(id, {name} , {new:true})
     }
 
 }

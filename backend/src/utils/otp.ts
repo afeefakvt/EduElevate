@@ -24,8 +24,6 @@ export const sendOtptoEmail = async (email:string):Promise<string> =>{
     }
     await transporter.sendMail(mailOptions)
 
-    
-
     return otp;
 }
 
@@ -49,7 +47,7 @@ export const validateOtp = async(email:string,otp:string):Promise<boolean> =>{
 
     if(isExpired){
         delete otpStore[email]  // Cleanup expired OTP
-        console.log('expiredd');
+        // console.log('expiredd');
         return false
     }
     if(storedOtp.otp===otp){
@@ -57,7 +55,7 @@ export const validateOtp = async(email:string,otp:string):Promise<boolean> =>{
         
         return true
     }
-    console.log("Invalid OTP for email:", email);
+    // console.log("Invalid OTP for email:", email);
     return false
 }
 
@@ -67,7 +65,6 @@ export const storeOtp = (email:string,otp:string)=>{
         otp,
         expiresAt: Date.now()+ 1 * 60 * 1000
     }
-    console.log('storeddd otp');
     
 }
 

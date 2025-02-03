@@ -24,7 +24,7 @@ export const generatePasswordResetToken = (studentId:string):string=>{
 }
 export const verifyPasswordResetToken = (token:string):any=>{
     try {
-        console.log("Received Token:", token);
+        // console.log("Received Token:", token);
 
         return jwt.verify(token,JWT_SECRET)
     } catch (error) {

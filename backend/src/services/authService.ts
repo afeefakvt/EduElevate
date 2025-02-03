@@ -49,7 +49,7 @@ export const tutorLogin  = async(email:string,password:string,repository:ITutorR
         throw new Error('Your cannot login. Your approval is rejected by admin')
       }
 
-      console.log(tutor,'hvhyhgbijmp;l')
+    //   console.log(tutor,'hvhyhgbijmp;l')
     const token = generateToken({id:tutor._id,email:tutor.email,isBlocked:tutor.isBlocked,isApproved:tutor.isApproved,status:tutor.status,title:tutor.title,bio:tutor.bio,});
     return {token,tutor}
 }
