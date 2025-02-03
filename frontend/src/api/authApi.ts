@@ -47,8 +47,6 @@ export const resendOtp = async (email:string):Promise<void>=>{
 export const login =  async(email:string,password:string)=>{
     try {
         const response =  await axiosInstance.post('/login',{email,password})
-
-        console.log(response.data);
         
         const {token} = response.data
         if(token){
@@ -56,7 +54,6 @@ export const login =  async(email:string,password:string)=>{
                 token,
                 student:response.data.student
             }))
-            console.log('studenttttttt', response.data?.student);
             Cookies.set('authToken', token, {expires: 1/24})
         } else{
             console.log(' not logged in ');
@@ -93,7 +90,6 @@ export const loginAdmin =  async(email:string,password:string)=>{
                 token,
                 student:response.data.student
             }))
-            console.log('studenttttt', response.data?.student);
             Cookies.set('authToken', token, {expires: 1/24})
         } else{
             console.log(' not logged in ');

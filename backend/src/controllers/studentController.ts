@@ -18,7 +18,7 @@ export class StudentController {
     constructor(
         private studentService: IStudentService,
         private studentRepository: IStudentRepository
-    ) { }
+    ){}
 
     async createStudent(req: Request, res: Response): Promise<void> {
         try {
@@ -57,8 +57,10 @@ export class StudentController {
                     await student.save()
                 }
                 res.status(200).json({ student, message: 'otp verified successfully' })
+                return;
             }
             res.status(400).json({ message: 'invalid otp' })
+            return;
 
         } catch (error: any) {
             const message = error.message || 'Internal server error';
@@ -104,7 +106,7 @@ export class StudentController {
                 return;
 
             }
-            console.log("genretaeeee");
+            // console.log("genretaeeee");
 
             res.status(200).json({ message: 'Login successful', token, student })
             return;

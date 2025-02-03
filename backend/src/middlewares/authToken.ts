@@ -15,7 +15,7 @@ export const authenticateToken = async(req:Request,res:Response,next:NextFunctio
     }
     try {
         const decoded  = verifyToken(token) as DecodedToken
-        console.log("12233w223qwdwads",decoded);
+        // console.log("12233w223qwdwads",decoded);
         const student  = await Student.findById(decoded.id)
         
         if(!student){
@@ -28,7 +28,7 @@ export const authenticateToken = async(req:Request,res:Response,next:NextFunctio
             return; 
         }
 
-        req.student = student;
+        (req as any).student = student;
         next()
     } catch (error) {
         res.status(403).json({message:'invalid token'})

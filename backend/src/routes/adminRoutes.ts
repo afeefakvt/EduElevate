@@ -7,6 +7,7 @@ import { StudentRepository } from "../repositories/studentRepository";
 import { StudentService } from "../services/studentService";
 import { Student } from "../models/studentModel";
 import Tutor from "../models/tutorModel";
+import { authenticateToken } from "../middlewares/authToken";
 
 
 const adminRepository = new AdminRepository(Student,Tutor)
@@ -22,13 +23,13 @@ const studentController = new StudentController(studentService,studentRepository
 const adminRouter = Router()
 
 adminRouter.post('/admin/login',studentController.adminLogin.bind(studentController))
-adminRouter.get('/admin/students',adminController.getStudents.bind(adminController))
-adminRouter.patch('/admin/students/:studentId/update',adminController.updateStudent.bind(adminController))
-adminRouter.get('/admin/tutors',adminController.getTutors.bind(adminController))
-adminRouter.get('/admin/tutors/:tutorId',adminController.getTutorDetails.bind(adminController))
-adminRouter.patch('/admin/tutors/:tutorId/approve',adminController.approveTutor.bind(adminController))
-adminRouter.patch('/admin/tutors/:tutorId/reject',adminController.rejectTutor.bind(adminController))
-adminRouter.patch('/admin/tutors/:tutorId/update',adminController.updateTutor.bind(adminController))
+adminRouter.get('/admin/students',authenticateToken,adminController.getStudents.bind(adminController))
+adminRouter.patch('/admin/students/:studentId/update',authenticateToken,adminController.updateStudent.bind(adminController))
+adminRouter.get('/admin/tutors',authenticateToken,adminController.getTutors.bind(adminController))
+adminRouter.get('/admin/tutors/:tutorId',authenticateToken,adminController.getTutorDetails.bind(adminController))
+adminRouter.patch('/admin/tutors/:tutorId/approve',authenticateToken,adminController.approveTutor.bind(adminController))
+adminRouter.patch('/admin/tutors/:tutorId/reject',authenticateToken,authenticateToken,adminController.rejectTutor.bind(adminController))
+adminRouter.patch('/admin/tutors/:tutorId/update',authenticateToken,adminController.updateTutor.bind(adminController))
 
 
 
