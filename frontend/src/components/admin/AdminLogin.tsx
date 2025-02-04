@@ -69,7 +69,7 @@ import AdminNavbar from './AdminNavbar';
 import { validateLoginForm } from '../../utils/validations';
 
 
-const adminLogin = () => {
+const AdminLogin = () => {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [errMessage,setErrMessage] = useState('')
@@ -192,4 +192,4 @@ const adminLogin = () => {
     );
 };
 
-export default adminLogin;
+export default AdminLogin;

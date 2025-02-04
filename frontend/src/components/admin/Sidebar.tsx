@@ -23,7 +23,7 @@ import {
   ExitToApp as LogoutIcon,
   Menu as MenuIcon,
 } from "@mui/icons-material";
-import { logout } from "@/store/authSlice";
+import { logout } from "../../store/authSlice";
 import { useDispatch } from "react-redux";
 
 const menuItems = [

@@ -5,7 +5,8 @@ export interface IStudentService{
     verifyOtp(email:string,otp:string):Promise<boolean>;
     loginStudent(email:string,password:string):Promise<{
         token:string,
-        student:IStudent
+        student:IStudent,
+        role:string
     }>;
     findStudentByEmail(email:string):Promise<IStudent | null>;
     handleForgotPassword(email:string):Promise<string | null>;

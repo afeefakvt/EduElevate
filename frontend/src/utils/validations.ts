@@ -1,4 +1,3 @@
-import { string } from "yup";
 
 export const validateLoginForm = (email: string, password: string) => {
     const errors: { email?: string; password?: string } = {};

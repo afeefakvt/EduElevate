@@ -16,7 +16,7 @@ interface AuthState {
 
 const initialState :AuthState = {
     token : Cookies.get('authToken') || null,
-    student:null
+    student:null,
 }
 
 const authSlice = createSlice({

@@ -43,7 +43,7 @@ const Navbar = () => {
                 zIndex: 1000,
 
             }}
-        >   
+        >
             <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Box
                     //   display="flex"

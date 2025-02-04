@@ -3,6 +3,7 @@ import { CategoryController } from "../controllers/categoryController";
 import { CategoryRepository } from "../repositories/categoryRepository";
 import { CategoryService } from "../services/categoryService";
 import Category from "../models/categoryModel";
+import { authenticateToken } from "../middlewares/authToken";
 
 
 
@@ -16,10 +17,10 @@ const categoryRouter = Router()
 
 
 
-categoryRouter.get('/admin/category',categoryController.getCategory.bind(categoryController));
-categoryRouter.post('/admin/category/addCategory',categoryController.addCategory.bind(categoryController));
-categoryRouter.patch('/admin/category/:id/listUnlistCategory',categoryController.listUnlistCategory.bind(categoryController));
-categoryRouter.put('/admin/category/:id/editCategory',categoryController.editCategory.bind(categoryController));
+categoryRouter.get('/admin/category',authenticateToken,categoryController.getCategory.bind(categoryController));
+categoryRouter.post('/admin/category/addCategory',authenticateToken,categoryController.addCategory.bind(categoryController));
+categoryRouter.patch('/admin/category/:id/listUnlistCategory',authenticateToken,categoryController.listUnlistCategory.bind(categoryController));
+categoryRouter.put('/admin/category/:id/editCategory',authenticateToken,categoryController.editCategory.bind(categoryController));
 
 
 

@@ -36,7 +36,7 @@ export class CategoryController{
             const {name} = req.body
 
             if(!name || typeof name !=='string'){
-                res.status(400).json({success:false,message:"Category name is required"})
+                res.status(400).json({success:false,message:"Valid Category name is required"})
                 return;
             }
             const result = await this.categoryService.addCategory(name);

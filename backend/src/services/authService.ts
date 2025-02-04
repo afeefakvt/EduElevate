@@ -6,7 +6,7 @@ import { ITutorRepository } from "../interfaces/tutor/ITutorRepository";
 import { ITutor } from "../models/tutorModel";
 
 
-export const login  = async(email:string,password:string,repository:IStudentRepository):Promise<{token:string,student:IStudent}>=>{
+export const login  = async(email:string,password:string,repository:IStudentRepository):Promise<{token:string,student:IStudent,role:string}>=>{
     if(!email ||!password){
         throw new Error('Email and Password cannot be empty')
     }
@@ -15,6 +15,7 @@ export const login  = async(email:string,password:string,repository:IStudentRepo
     if(!student){
         throw new Error('Email cannot found')
     }
+    const role = student.role
 
     const isValidPassword = await comparePassword(password,student.password)
     if(!isValidPassword){
@@ -22,7 +23,7 @@ export const login  = async(email:string,password:string,repository:IStudentRepo
     }
 
     const token = generateToken({id:student._id,email:student.email,isBlocked:student.isBlocked,role:student.role});
-    return {token,student}
+    return {token,student,role}
 }
 
 export const tutorLogin  = async(email:string,password:string,repository:ITutorRepository):Promise<{token:string,tutor:ITutor}>=>{

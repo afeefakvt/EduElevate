@@ -30,7 +30,7 @@ export class StudentService  {
         return validateOtp(email,otp)
     }
 
-    async loginStudent(email:string,password:string):Promise<{token:string, student:IStudent}>{
+    async loginStudent(email:string,password:string):Promise<{token:string, student:IStudent,role:string}>{
         return await login(email,password,this.studentRepository)
     }
     async findStudentByEmail(email:string):Promise<IStudent | null>{

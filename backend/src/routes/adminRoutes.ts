@@ -28,7 +28,7 @@ adminRouter.patch('/admin/students/:studentId/update',authenticateToken,adminCon
 adminRouter.get('/admin/tutors',authenticateToken,adminController.getTutors.bind(adminController))
 adminRouter.get('/admin/tutors/:tutorId',authenticateToken,adminController.getTutorDetails.bind(adminController))
 adminRouter.patch('/admin/tutors/:tutorId/approve',authenticateToken,adminController.approveTutor.bind(adminController))
-adminRouter.patch('/admin/tutors/:tutorId/reject',authenticateToken,authenticateToken,adminController.rejectTutor.bind(adminController))
+adminRouter.patch('/admin/tutors/:tutorId/reject',authenticateToken,adminController.rejectTutor.bind(adminController))
 adminRouter.patch('/admin/tutors/:tutorId/update',authenticateToken,adminController.updateTutor.bind(adminController))
 
 

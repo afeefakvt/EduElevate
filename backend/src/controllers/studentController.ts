@@ -89,14 +89,14 @@ export class StudentController {
     async login(req: Request, res: Response): Promise<void> {
         try {
             const { email, password } = req.body
-            const { token, student } = await this.studentService.loginStudent(email, password)
+            const { token, student ,role} = await this.studentService.loginStudent(email, password)
 
             if (!token) {
                 res.status(404).json({ message: 'student not found' })
                 return;
             }
 
-            if (student.role == 'admin') {
+            if (role == 'admin') {
                 res.status(404).json({ message: 'Cant login email id is already used  for admin ' })
                 return;
 
@@ -133,16 +133,18 @@ export class StudentController {
     async adminLogin(req: Request, res: Response): Promise<void> {
         try {
             const { email, password } = req.body
-            const { token, student } = await this.studentService.loginStudent(email, password)
+            console.log("uyjhncs");
+            
+            const { token, student,role } = await this.studentService.loginStudent(email, password)
             if (!token) {
                 res.status(404).json({ message: "Admin not found" })
                 return;
 
             }
-            if (student.role !== 'admin') {
+            if (role !== 'admin') {
                 throw new Error('Access denied,only admin can login')
             }
-            res.status(200).json({ message: "Login successful", token, student })
+            res.status(200).json({ message: "Login successful", token, student,role })
             return;
         } catch (error: any) {
             const message = error.message || 'Internal server error';
@@ -185,9 +187,10 @@ export class StudentController {
                 }
                 student = await this.studentService.createStudent(studentData)
             }
+            const role = student.role
 
             const token = generateToken({ id: student._id, email: student.email, role: student.role })
-            res.status(200).json({ message: "google sign in success", token, student })
+            res.status(200).json({ message: "google sign in success", token, student,role })
 
         } catch (error) {
             console.error("Error in Google Sign-In:", error);
