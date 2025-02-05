@@ -8,27 +8,28 @@ const Register = () => {
   const [name,setName] = useState("")
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
+  const [confirmPassword,setConfirmPassword] = useState("")
   const [title,setTitle] = useState("")
   const [bio,setBio] = useState("")
   const [errMessage,setErrMessage] = useState('')
-  const [formErrors, setFormErrors] = useState<{ name?: string; email?: string; password?: string; title?: string; bio?: string }>({});
+  const [formErrors, setFormErrors] = useState<{ name?: string; email?: string; password?: string; confirmPassword?:string;title?: string; bio?: string }>({});
 
   const navigate = useNavigate() 
 
 
   useEffect(()=>{
     if(
-      name!== ""||email!==""||password!==""||title!==""||bio!==""
+      name!== ""||email!==""||password!==""||confirmPassword!==""||title!==""||bio!==""
     ){
       setErrMessage('')
     }
-  },[name,email,password,title,bio])
+  },[name,email,password,confirmPassword,title,bio])
 
   const handleSignUp = async()=>{
     
     setErrMessage('') 
 
-    const errors = validateRegisterForm(name, email, password, title, bio);
+    const errors = validateRegisterForm(name, email, password, confirmPassword,title, bio);
     setFormErrors(errors)
 
 
@@ -38,7 +39,7 @@ const Register = () => {
       }
 
     try {
-       const response=await signUp(name,email,password,title,bio)
+       const response=await signUp(name,email,password,confirmPassword,title,bio)
        navigate('/tutor/verifyOtp',{state:{email}})   //pass email to the otp page
     } catch (error:any) {
       setErrMessage(error.message)
@@ -112,6 +113,20 @@ const Register = () => {
                         onChange={(e)=>setPassword(e.target.value)}
                         error= {Boolean(formErrors.password)}
                         helperText ={formErrors.password}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="conifrmPassword"
+                        label="Confirm Password"
+                        type="password"
+                        id="confirmPassword"
+                        autoComplete="password"
+                        value={confirmPassword}
+                        onChange={(e)=>setConfirmPassword(e.target.value)}
+                        error= {Boolean(formErrors.confirmPassword)}
+                        helperText ={formErrors.confirmPassword}
                     />
                      
                      <TextField

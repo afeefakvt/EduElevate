@@ -8,9 +8,7 @@ import { TutorService } from "../services/tutorService";
 
 export class AdminController {
     constructor(
-        private adminService:IAdminService,
-        private adminRepository:IAdminRepository
-        
+        private adminService:IAdminService,        
     ){}
 
     async getStudents(req:Request,res:Response):Promise<void>{
@@ -85,7 +83,7 @@ export class AdminController {
     async approveTutor(req:Request,res:Response):Promise<void>{
         try {
             const {tutorId} = req.params
-            const tutor = await this.adminRepository.findTutorById(tutorId)
+            const tutor = await this.adminService.findTutorById(tutorId)
 
             if (!tutor) {
                  res.status(404).json({ message: "Tutor not found" });
@@ -118,7 +116,7 @@ export class AdminController {
     async rejectTutor(req:Request,res:Response):Promise<void>{
         try {
             const {tutorId} = req.params
-            const tutor = await this.adminRepository.findTutorById(tutorId)
+            const tutor = await this.adminService.findTutorById(tutorId)
             if (!tutor) {
                  res.status(404).json({ message: "Tutor not found" });
                  return;

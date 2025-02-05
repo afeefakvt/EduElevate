@@ -16,19 +16,22 @@ export class TutorController {
 
     constructor(
         private tutorService: ITutorService,
-        private tutorRepository: ITutorRepository
-    ) { }
+    ) {}
 
     async registerTutor(req: Request, res: Response): Promise<void> {
         try {
-            const { name, email, password, title, bio } = req.body
+            const { name, email, password,confirmPassword, title, bio } = req.body
+            if (password !== confirmPassword) {
+                res.status(400).json({ message: "passwords do not match" })
+                return;
+            }
 
             const otp = await sendOtptoEmail(email)
 
             storeOtp(email, otp)
             console.log('otp is', otp);
 
-            const tutor = await this.tutorService.registerTutor({ name, email, password, title, bio } as any)
+            const tutor = await this.tutorService.registerTutor({ name, email, password,confirmPassword, title, bio } as any)
             res.status(201).json({ message: "tutor created,otp is send to your email address" })
 
         } catch (error) {
@@ -43,7 +46,7 @@ export class TutorController {
             const isValidOtp = await this.tutorService.verifyOtp(email, otp)
 
             if (isValidOtp) {
-                const tutor = await this.tutorRepository.findTutorByEmail(email)
+                const tutor = await this.tutorService.findTutorByEmail(email)
                 if (tutor) {
                     tutor.isApproved = false
                     tutor.status = "pending"

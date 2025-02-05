@@ -8,7 +8,6 @@ import { CategoryService } from "../services/categoryService";
 export class CategoryController{
     constructor(
         private categoryService:ICategoryService,
-        private categoryRepository:ICategoryRepository
     ){}
 
     async getCategory(req:Request,res:Response):Promise<void>{

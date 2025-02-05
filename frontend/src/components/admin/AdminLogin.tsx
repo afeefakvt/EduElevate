@@ -62,7 +62,7 @@
 import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui/material';
 import  { useEffect, useState } from 'react';
 import {  useNavigate } from 'react-router-dom';
-import { loginAdmin } from '../../api/authApi';
+import { loginAdmin } from '../../api/adminApi';
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import AdminNavbar from './AdminNavbar';

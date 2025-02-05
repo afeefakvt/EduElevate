@@ -21,8 +21,8 @@ export const validateLoginForm = (email: string, password: string) => {
   };
 
 
-  export const validateRegisterForm = (name: string, email: string, password: string, title: string, bio: string) => {
-    const errors: { name?: string; email?: string; password?: string; title?: string; bio?: string } = {};
+  export const validateRegisterForm = (name: string, email: string, password: string,confirmPassword:string, title: string, bio: string) => {
+    const errors: { name?: string; email?: string; password?: string; confirmPassword?:string; title?: string; bio?: string } = {};
   
     if (!name.trim()) {
       errors.name = "Name is required";
@@ -38,6 +38,13 @@ export const validateLoginForm = (email: string, password: string) => {
       errors.password = "Password is required";
     } else if (password.length < 6) {
       errors.password = "Password must be at least 6 characters";
+    }
+    if (!confirmPassword) {
+      errors.confirmPassword = "Confirm Password is required";
+    } else if (confirmPassword.length < 6) {
+      errors.confirmPassword = "Password must be at least 6 characters";
+    }else if(confirmPassword!==password){
+      errors.confirmPassword = "Confirm Password should be same as entered Password"
     }
   
     if (!title.trim()) {
@@ -83,3 +90,24 @@ export const validateLoginForm = (email: string, password: string) => {
 
     return errors;
 };
+
+
+export const validateResetPasswordForm = ( password: string, confirmPassword: string) => {
+  let errors: {  password?: string; confirmPassword?: string } = {};
+
+
+  if (!password.trim()) {
+      errors.password = "Password is required";
+  } else if (password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+  }
+
+  if (!confirmPassword.trim()) {
+      errors.confirmPassword = "Confirm Password is required";
+  } else if (confirmPassword !== password) {
+      errors.confirmPassword = "Passwords do not match";
+  }
+
+  return errors;
+};
+

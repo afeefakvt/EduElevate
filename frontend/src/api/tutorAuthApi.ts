@@ -5,9 +5,9 @@ import {store} from '../store/store'
 import { tutorLoginSuccess } from "../store/tutorAuthSlice";
 
 
-export const signUp = async(name:string,email:string,password:string,title:string,bio:string)=>{
+export const signUp = async(name:string,email:string,password:string,confirmPassword:string,title:string,bio:string)=>{
     try {
-        const repsonse = await axiosInstance.post('/tutor/register',{name,email,password,title,bio})
+        const repsonse = await axiosInstance.post('/tutor/register',{name,email,password,confirmPassword,title,bio})
         return repsonse.data
     } catch (error) {
           

@@ -9,7 +9,7 @@ import { authenticateToken } from "../middlewares/authToken";
 
 const categoryRepository = new CategoryRepository();
 const categoryService = new CategoryService(categoryRepository);
-const categoryController = new CategoryController(categoryService,categoryRepository);
+const categoryController = new CategoryController(categoryService);
 
 
 const categoryRouter = Router()

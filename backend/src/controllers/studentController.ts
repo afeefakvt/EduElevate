@@ -17,7 +17,6 @@ export class StudentController {
 
     constructor(
         private studentService: IStudentService,
-        private studentRepository: IStudentRepository
     ){}
 
     async createStudent(req: Request, res: Response): Promise<void> {
@@ -52,7 +51,7 @@ export class StudentController {
             const isOtpValid = await this.studentService.verifyOtp(email, otp)
 
             if (isOtpValid) {
-                const student = await this.studentRepository.findStudentByEmail(email);
+                const student = await this.studentService.findStudentByEmail(email);
                 if (student) {
                     await student.save()
                 }

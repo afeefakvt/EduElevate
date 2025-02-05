@@ -12,12 +12,12 @@ import { authenticateToken } from "../middlewares/authToken";
 
 const adminRepository = new AdminRepository()
 const adminService = new AdminService(adminRepository)
-const adminController = new AdminController(adminService,adminRepository)
+const adminController = new AdminController(adminService)
 
 
 const studentRepository = new StudentRepository()
 const studentService = new StudentService(studentRepository)
-const studentController = new StudentController(studentService,studentRepository) 
+const studentController = new StudentController(studentService) 
 
 
 const adminRouter = Router()

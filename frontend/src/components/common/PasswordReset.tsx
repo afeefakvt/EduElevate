@@ -2,40 +2,48 @@ import { Box, Button, Container, TextField, Typography, Paper, Alert } from '@mu
 import { useState } from 'react';
 import { resetPassword } from '../../api/authApi'; // API to reset password
 import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { validateResetPasswordForm } from '@/utils/validations';
 
 const ResetPassword = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
+    const [errMessage,setErrMessage] = useState('')
+    const [formErrors,setFormErrors] = useState<{password?:string; confirmPassword?:string}>({})    
     const { token } = useParams(); // Get token from URL
     const navigate = useNavigate();
 
     console.log("Token from URL:", token);
+
+
+      useEffect(()=>{
+            if(
+              password!==""||confirmPassword!==""
+            ){
+              setErrMessage('')
+            }
+          },[password,confirmPassword])
+
     const handleResetPassword = async () => {
         setMessage('');
-        setError('');
+        setErrMessage('')
 
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
-        if (password.trim()==''||  confirmPassword.trim()=='') {
-            setError('Fields cannot be empty');
-            return;
-        }
-        if (password.length<6 || confirmPassword.length<6) {
-            setError('Password should conatin atleast 6 characters');
-            return;
-        }
+         const errors = validateResetPasswordForm(password,confirmPassword)
+                setFormErrors(errors)
+
+                if (Object.keys(errors).length > 0) {
+                    return;
+                  }
+            
 
         try {
             await resetPassword(token, password,confirmPassword);
             setMessage('Password reset successful! Redirecting to login...');
             setTimeout(() => navigate('/login'), 3000);
         } catch (err: any) {
-            setError(err.message || 'Error resetting password');
-        }
+            setErrMessage(err.message || 'Error resetting password');
+            console.error(errMessage);        }
     };
 
     return (
@@ -45,7 +53,7 @@ const ResetPassword = () => {
                     Reset Password
                 </Typography>
                 {message && <Alert severity="success">{message}</Alert>}
-                {error && <Alert severity="error">{error}</Alert>}
+                {errMessage && <Alert severity="error">{errMessage}</Alert>}
 
                 <Box sx={{ mt: 2 }}>
                     <TextField
@@ -55,6 +63,8 @@ const ResetPassword = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        error= {Boolean(formErrors.password)}
+                        helperText ={formErrors.password}
                     />
                     <TextField
                         fullWidth
@@ -64,6 +74,8 @@ const ResetPassword = () => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                         sx={{ mt: 2 }}
+                        error= {Boolean(formErrors.confirmPassword)}
+                        helperText ={formErrors.confirmPassword}
                     />
                     <Button
                         fullWidth

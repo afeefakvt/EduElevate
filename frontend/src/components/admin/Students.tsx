@@ -138,7 +138,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // ShadCN input field
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
-
+import { getStudents } from "../../api/adminApi";
 
 interface Student {
   _id: string; 
@@ -158,9 +158,9 @@ export default function Students() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axiosInstance.get('/admin/students');
-        console.log('API Response:', response.data); 
-        setStudents(response.data.students);
+        const response = await getStudents()
+        // console.log('API Response:', response.students); 
+        setStudents(response.students);
       } catch (error) {
         console.error('Failed to fetch students:', error);
       } finally {
