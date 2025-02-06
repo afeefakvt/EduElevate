@@ -131,14 +131,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
 import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
-import { axiosInstance } from "@/api/axiosInstance";
 import AdminNavbar from "./AdminNavbar";
 import Sidebar from "./Sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // ShadCN input field
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
-import { getStudents } from "../../api/adminApi";
+import { getStudents, studentBlockUnblock } from "../../api/adminApi";
 
 interface Student {
   _id: string; 
@@ -169,12 +168,12 @@ export default function Students() {
     };
 
     fetchStudents();
-  }, []);
+  }, []); 
 
 
   const handleBlockToggle = async (studentId: string, isCurrentlyBlocked: boolean) => {
     try {
-      const response = await axiosInstance.patch(`/admin/students/${studentId}/update`, { isBlocked: !isCurrentlyBlocked });
+      const response = await studentBlockUnblock(studentId,isCurrentlyBlocked)
 
         setStudents((prevStudents) =>
           prevStudents.map((student) =>

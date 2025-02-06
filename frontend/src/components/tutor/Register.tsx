@@ -1,8 +1,8 @@
 import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signUp } from '../../api/tutorAuthApi';
-import { validateRegisterForm } from '@/utils/validations';
+import { signUp } from '../../api/tutorApi';
+import { validateRegisterForm } from '../../utils/validations';
 
 const Register = () => {
   const [name,setName] = useState("")

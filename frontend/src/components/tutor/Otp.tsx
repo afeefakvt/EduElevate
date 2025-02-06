@@ -1,8 +1,8 @@
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { verifyOtp } from '../../api/tutorAuthApi';
+import { verifyOtp } from '../../api/tutorApi';
 import { useEffect, useState } from 'react';
-import { resendOtp } from '../../api/tutorAuthApi';
+import { resendOtp } from '../../api/tutorApi';
 import Navbar from './Navbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';

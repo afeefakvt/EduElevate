@@ -1,0 +1,45 @@
+import mongoose ,{Schema,Document} from "mongoose";
+
+export interface ILecture extends Document{
+    title:string,
+    description:string,
+    videoUrl:string,
+    duration:number,
+    order:number,
+    courseId:mongoose.Types.ObjectId
+}
+
+const LectureSchems:Schema = new Schema<ILecture>(
+    {
+        title:{
+            type:String,
+            required:true
+        },
+        description:{
+            type:String,
+            required:true
+        },
+        videoUrl:{
+            type:String,
+            required:true
+        },
+        duration:{
+            type:Number,
+            required:true
+        },
+        order:{
+            type:Number,
+            required:true
+        },
+        courseId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Course",
+            required:true
+        }
+    },
+    {timestamps:true}
+)
+
+const Lecture= mongoose.model<ILecture>("Lecture",LectureSchems)
+
+export default Lecture;

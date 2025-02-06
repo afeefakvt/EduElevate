@@ -9,7 +9,7 @@ const Banner = () => {
     flexDirection:{xs:"column",md:"row"},
     alignItems:"center",
     justifyContent:"space-between",
-    bgcolor:"#fdf4f4",
+    bgcolor:"#FBEAEB",
     padding:{xs:"2rem 1rem",md:"4rem"},
     height:"100vh",
     width:"100vw",

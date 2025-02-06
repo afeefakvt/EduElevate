@@ -1,7 +1,7 @@
 import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui/material';
 import  { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../../api/tutorAuthApi';
+import { login } from '../../api/tutorApi';
 import { RootState } from "../../store/store";
 import { useSelector } from "react-redux";
 import { validateLoginForm } from '../../utils/validations';

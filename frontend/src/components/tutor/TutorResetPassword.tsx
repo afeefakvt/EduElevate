@@ -1,6 +1,6 @@
 import { Box, Button, Container, TextField, Typography, Paper, Alert } from '@mui/material';
 import { useState } from 'react';
-import { resetPassword } from '../../api/tutorAuthApi';
+import { resetPassword } from '../../api/tutorApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { validateResetPasswordForm } from '@/utils/validations';
 import { useEffect } from 'react';

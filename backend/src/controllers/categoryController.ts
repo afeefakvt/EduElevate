@@ -1,8 +1,5 @@
 import { Request,Response } from "express";
 import { ICategoryService } from "../interfaces/category/ICategoryService";
-import { ICategoryRepository } from "../interfaces/category/ICategoryRepository";
-import { CategoryRepository } from "../repositories/categoryRepository";
-import { CategoryService } from "../services/categoryService";
 
 
 export class CategoryController{

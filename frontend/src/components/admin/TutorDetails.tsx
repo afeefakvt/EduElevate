@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom';
 import { axiosInstance } from '../../api/axiosInstance';
 import Navbar from './AdminNavbar';
 import Sidebar from './Sidebar';
+import { getTutorDetails,approveTutor,rejectTutor } from '../../api/adminApi';
 
 interface TutorDetails {
     name: string,
     email: string,
     title: string,
-    bio: string,
+    bio: string,    
     status: string
 }
 
@@ -22,27 +23,28 @@ const TutorDetails = () => {
 
     useEffect(() => {
         const fetchTutorDetails = async () => {
+            if (tutorId) {
+                setLoading(true);
             try {
-                const response = await axiosInstance.get(`/admin/tutors/${tutorId}`);
-                console.log('API Responseeeee:', response.data);
-                setTutor(response.data.tutor);
+                const response = await getTutorDetails(tutorId)
+                // console.log('API Responseeeee:', response.data);
+                setTutor(response.tutor);
             } catch (error) {
                 console.error('Failed to fetch tutor details:', error);
             } finally {
                 setLoading(false);
             }
-        };
-        if (tutorId) {
-            fetchTutorDetails();
         }
+        };
+        fetchTutorDetails()
     }, [tutorId]);
 
     const handleApprove = async()=>{
         if (!tutorId) return;
         setActionLoading(true);
         try {
-            await axiosInstance.patch(`/admin/tutors/${tutorId}/approve`)
-            setTutor((prev)=>prev?{...prev,status:'approved'}:prev)
+            const updatedStatus = await approveTutor(tutorId)
+            setTutor((prev)=>prev?{ ...prev,status:updatedStatus.status }:prev)
             
         } catch (error) {
             console.error('Failed to approve tutor:', error);
@@ -56,8 +58,8 @@ const TutorDetails = () => {
         if (!tutorId) return;
         setActionLoading(true)
         try {
-            await axiosInstance.patch(`/admin/tutors/${tutorId}/reject`)
-            setTutor((prev)=>prev?{...prev,status:"rejected"}:prev)
+            const updateStatus = await rejectTutor(tutorId)
+            setTutor((prev)=>prev?{...prev,status:updateStatus.status}:prev)
         } catch (error) {
             console.error('Failed to reject tutor:', error);
             

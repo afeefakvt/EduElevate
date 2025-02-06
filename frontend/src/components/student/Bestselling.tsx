@@ -109,10 +109,11 @@ const Bestselling = () => {
       <Box
         sx={{
           padding: "2rem",
-          backgroundColor: "#fdf4f4",
+          backgroundColor: "#FBEAEB",
           textAlign: "center",
           borderRadius: "8px",
           marginTop: "2rem",
+          width:"100vw"
         }}
       >
         <Typography

@@ -5,12 +5,14 @@ export interface ICourse extends Document{
     categoryId:mongoose.Types.ObjectId,
     tutorId:mongoose.Types.ObjectId,
     description:String,
-    price:Number,
+    price:number,
     thumbnail:String,
     language:String,
-    duration:Number,
+    duration:number,
     level:String,
     status:String,
+    isApproved:Boolean,
+    lectures:mongoose.Types.ObjectId[]
     createdAt:Date,
     updatedAt:Date
 
@@ -61,7 +63,18 @@ const CourseSchema:Schema = new Schema<ICourse>(
             type:String,
             enum:["pending","approved","rejected"],
             default:"pending"
-        }
+        },
+        isApproved:{
+            type:Boolean,
+            default:false
+        },
+        lectures:[
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Lecture",
+                default:[]
+            }
+        ]
 
     },
     {

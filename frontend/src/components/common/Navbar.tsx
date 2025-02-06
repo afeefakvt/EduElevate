@@ -1,4 +1,4 @@
-import logo from "../../assets/afeefalogo.png"
+import logo from "../../assets/logoaf.png"
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { RootState, store } from "../../store/store";

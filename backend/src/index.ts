@@ -7,6 +7,9 @@ import adminRoutes from './routes/adminRoutes'
 import tutorRoutes from './routes/tutorRoutes'
 import categoryRoutes from './routes/categoryRoutes'
 import { morganMiddleware,logger } from './middlewares/centralisedLogs'
+import courseRoutes from './routes/courseRoutes'
+import lectureRoutes from './routes/lectureRoutes'
+import multer from 'multer'
 
 
 
@@ -26,10 +29,13 @@ app.use(cookieParser())
 //add morgan middleware for logging
 app.use(morganMiddleware);
 
-app.use('/',studentRoutes)
-app.use('/',adminRoutes)
-app.use('/',tutorRoutes)
-app.use('/',categoryRoutes)
+
+app.use('/',studentRoutes);
+app.use('/',adminRoutes);
+app.use('/',tutorRoutes);
+app.use('/',categoryRoutes);
+app.use('/',courseRoutes);
+app.use('/',lectureRoutes);
 
 app.get('/',(req,res)=>{
     res.send('hello')

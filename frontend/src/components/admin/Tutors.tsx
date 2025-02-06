@@ -132,14 +132,13 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
-import { axiosInstance } from "@/api/axiosInstance";
 import AdminNavbar from "./AdminNavbar";
 import Sidebar from "./Sidebar";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input"; // ShadCN input field
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
-
+import { getTutors, tutorBlockUnblock } from "../../api/adminApi";
 
 
 
@@ -165,9 +164,9 @@ export default function Tutors() {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const response = await axiosInstance.get('/admin/tutors');
-        console.log('API Response:', response.data);
-        setTutors(response.data.tutors);
+        const response = await getTutors()
+        console.log('API Response:', response.tutors);
+        setTutors(response.tutors);
       } catch (error) {
         console.error('Failed to fetch tutors:', error);
       } finally {
@@ -185,9 +184,7 @@ export default function Tutors() {
 
   const toggleBlockStatus = async (tutorId: string, isCurrentlyBlocked: boolean) => {
     try {
-      const response = await axiosInstance.patch(`/admin/tutors/${tutorId}/update`, {
-        isBlocked: !isCurrentlyBlocked,  // Toggle the current status
-      });
+      const response = await tutorBlockUnblock(tutorId,isCurrentlyBlocked)
 
       setTutors((prevTutors) => {
         return prevTutors.map((tutor) => tutor._id == tutorId ? { ...tutor, isBlocked: !isCurrentlyBlocked } : tutor);
@@ -210,39 +207,6 @@ export default function Tutors() {
   const currentTutors = filteredTutors.slice(indexOfFirstTutor, indexOfLastTutor);
   const totalPages = Math.ceil(filteredTutors.length / tutorsPerPage);
 
-  // // Define table columns
-  // const columns: ColumnDef<Tutor>[] = [
-  //   {
-  //     accessorKey: "name",
-  //     header: "Tutor Name",
-  //   },
-  //   {
-  //     accessorKey: "email",
-  //     header: "Tutor Email",
-  //   },
-
-  //   {
-  //     accessorKey: "isBlocked",
-  //     header: "Blocked",
-  //     cell: ({ row }) => (
-  //       <Switch
-  //         checked={row.original.isBlocked}
-  //         onCheckedChange={() => toggleBlockStatus(row.original._id, row.original.isBlocked)}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     header: "Actions",
-  //     cell: ({ row }) => (
-  //       <Button
-  //         variant="outline"
-  //         onClick={() => viewDetails(row.original._id)}
-  //       >
-  //         View
-  //       </Button>
-  //     ),
-  //   },
-  // ];
 
   return (
     <div className="relative min-h-screen">
