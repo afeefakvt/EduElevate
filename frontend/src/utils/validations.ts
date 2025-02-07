@@ -111,3 +111,70 @@ export const validateResetPasswordForm = ( password: string, confirmPassword: st
   return errors;
 };
 
+
+
+export const validateAddCourseForm = (formData: { 
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+  duration: string;
+  thumbnail: File | null;
+}) => {
+
+
+  const errors: { 
+    title?: string; 
+    description?: string;  
+    category?: string; 
+    price?: string; 
+    duration?: string; 
+    thumbnail?: string;
+  } = {};
+
+  if (!formData.title.trim()) {
+    errors.title = "Title is required";
+  } else if (typeof formData.title !== "string") {
+    errors.title = "Title should be valid characters";
+  }
+
+  if (!formData.description.trim()) {
+    errors.description = "Description is required";
+  } else if (typeof formData.description !== "string") {
+    errors.description = "Description should be valid characters";
+  } else if (formData.description.length < 10) {
+    errors.description = "Description should be at least 10 characters";
+  }
+
+  if (!formData.category.trim()) {
+    errors.category = "Category is required";
+  } else if (typeof formData.category !== "string") {
+    errors.category = "Category should be valid characters";
+  }
+
+  if (!formData.price) {
+    errors.price = "Price is required";
+  } else if (typeof formData.price !== "number" || formData.price < 0) {
+    errors.price = "Price must be a positive number";
+  }
+
+  if (!formData.duration.trim()) {
+    errors.duration = "Duration is required";
+  } else if (!/^\d+\s*(hours?|days?|weeks?|months?)$/i.test(formData.duration)) {
+    errors.duration = "Duration should be in a valid format (e.g., '10 hours', '2 weeks')";
+  }
+
+  if (!formData.thumbnail) {
+    errors.thumbnail = "Thumbnail is required";
+  } else {
+    const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
+    if (!allowedTypes.includes(formData.thumbnail.type)) {
+      errors.thumbnail = "Thumbnail must be in PNG, JPEG, or WEBP format";
+    }
+    if (formData.thumbnail.size > 5 * 1024 * 1024) {
+      errors.thumbnail = "Thumbnail size must be less than 5MB";
+    }
+  }
+
+  return errors;
+};

@@ -23,21 +23,44 @@ export class LectureController {
                 res.status(400).json({message:"video files are required for all lectures"});
                 return;
             }
-            const lectureData = JSON.parse(req.body.lectures) as LectureData[];
+            const lectureDatas = JSON.parse(req.body.lectures) as LectureData[];
 
-            if(!mongoose.Types.ObjectId.isValid(lectureData[0].courseId)){
+            if(!mongoose.Types.ObjectId.isValid(lectureDatas[0].courseId)){
                 res.status(400).json({message:"Invalid courseId format"})
                 return;
             }
             const videos= req.files as Express.Multer.File[];
-            if(videos.length !== lectureData.length){
+            if(videos.length !== lectureDatas.length){
                 res.status(400).json({message:"Each lecture must have corresponding video file "});
                 return;
             }
-            const createLectures = []
-            const courseId = 
-            
+            const addedLectures = []
+            const courseId = lectureDatas[0].courseId
+
+            for(let i=0;i<lectureDatas.length;i++){
+                const lectureData = {
+                    title:lectureDatas[i].title,
+                    description:lectureDatas[i].descrription,
+                    duration:Number(lectureDatas[i].order),
+                    courseId:lectureDatas[i].courseId,
+                    videoUrl:videos[i].path
+                };
+                const newLecture = await this.lectureService.addLecture(lectureData,courseId);
+                if(!newLecture){
+                    res.status(400).json({message:`Failed to add lectures: ${lectureData.title}`});
+                    return;
+
+                }
+                const lectureId : mongoose.Types.ObjectId = newLecture._id as mongoose.Types.ObjectId
+
+                await this.lectureService.addLectureToCourse(lectureData.courseId,lectureId)
+                addedLectures.push(newLecture)
+
+             }
+            res.status(201).json({message:"lectures added successfully",lectures:addedLectures})
         } catch (error) {
+            res.status(500).json({message:(error as Error).message})
+            console.error(error);
             
         }
     }

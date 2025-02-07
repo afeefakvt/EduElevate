@@ -21,6 +21,8 @@ categoryRouter.get('/admin/category',authenticateToken,categoryController.getCat
 categoryRouter.post('/admin/category/addCategory',authenticateToken,categoryController.addCategory.bind(categoryController));
 categoryRouter.patch('/admin/category/:id/listUnlistCategory',authenticateToken,categoryController.listUnlistCategory.bind(categoryController));
 categoryRouter.put('/admin/category/:id/editCategory',authenticateToken,categoryController.editCategory.bind(categoryController));
+categoryRouter.get('/categories', categoryController.getCategory.bind(categoryController));
+
 
 
 

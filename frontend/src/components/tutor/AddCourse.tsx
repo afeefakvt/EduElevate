@@ -1,4 +1,4 @@
-import React,  { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "../common/Footer";
 import {
@@ -14,123 +14,190 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { AxiosInstance } from "axios";
 import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../api/axiosInstance";
+import { addCourse, getCategories } from "../../api/courseApi";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { validateAddCourseForm } from "../../utils/validations";
+
+
 
 
 
 
 const AddCourse = () => {
 
-    const [formData,setFormData] = useState({
-        title:'',
-        categoryId:"",
-        description:"",
-        price:"",
-        language:"",
-        duration:"",
-        level:"intermediate",
-        date:"",
-        thumbnail:null,
-    });
+  const [formData, setFormData] = useState({
+    title: '',
+    categoryId: "",
+    description: "",
+    price: "",
+    language: "",
+    duration: "",
+    level: "intermediate",
+    date: "",
+    thumbnail: null as File | null,
+  });
 
-    const [categories,setCategories] = useState([])
-    const levels = ['beginner','intermediate','advanced'];
-    const  navigate = useNavigate()
+  const [categories, setCategories] = useState<{ _id: string; name: string }[]>([])
+  const levels = ['beginner', 'intermediate', 'advanced'];
+  const [errMessage, setErrMessage] = useState('')
+  const [formErrors,setFormErrors] = useState<{[key:string]:string}>({})
+  const navigate = useNavigate()
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    // useEffect(() => {
-    //     // Fetch categories from backend
-    //     axiosInstance.get("/admin/category")
-    //       .then((response) => setCategories(response.categories))
-    //       .catch((error) => console.error("Error fetching categories", error));
-    //   }, []);
+  // const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
+  // const tutorId = tutor?._id
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await getCategories();
+        console.log("Fetched categories:", categoryData); // Debugging line
+        setCategories(categoryData)
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    }
+    fetchCategories()
+  }, []);
 
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>)=>{
-        setFormData((prev)=>({
-            ...prev,
-            [e.target.name]:e.target.value
-        }))
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
+  const handleSelectChange = (e: SelectChangeEvent<string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFormData((prev) => ({
+        ...prev,
+        thumbnail: file,
+      }));
+      // Create a preview URL
+      const previewURL = URL.createObjectURL(file);
+      setImagePreview(previewURL);
     }
 
+  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrMessage('')
 
-    // const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
-
+    // const validationErrors = validateAddCourseForm(formData);
+    // if (Object.keys(validationErrors).length > 0) {
+    //   setFormErrors(validationErrors);
+    //   return; // Stop form submission if validation fails
     // }
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Form Data:", formData);
-        // Submit data to backend
-      };
-  
-    return (
-        <Box   
-            sx={{
-            display: "flex",
-            flexDirection: "column",
-            minHeight: "100vh", 
-          }}>
-            <Navbar/>
-            
-        <Container maxWidth="md" sx={{
-            flexGrow: 1, // Ensures it takes available space
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            py: 10, // Adds padding to avoid sticking to top
-        }} >
-          <Typography variant="h5" sx={{ my: 3 ,fontWeight:650}}>Add a Course</Typography>
-          <Box
-            component="form"    
-            onSubmit={handleSubmit}
-            sx={{ display: "flex", flexDirection: "column", gap: 2 ,width:"100%"}}
-          >
-            <Box sx={{ display: "flex", justifyContent: "center", }}>
-              <Button sx={{backgroundColor: "#6A0DAD"}} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
-                Upload Thumbnail
-                <input type="file" hidden  />
-              </Button>
-            </Box>
-    
-            <TextField label="Course Title" name="title" fullWidth required />
-            <FormControl fullWidth required>
-              <InputLabel>Category</InputLabel>
-              <Select name="categoryId" value={formData.categoryId} >
-                {/* {categories.map((category) => (
-                  <MenuItem key={category._id} value={category._id}>
-                    {category.name}
-                  </MenuItem>
-                ))} */}
-              </Select>
-            </FormControl>
-            <TextField label="Description" name="description" fullWidth required multiline rows={3}  />
-            <TextField label="Price" name="price" type="number" fullWidth required  />
-            <TextField label="Duration (hours)" name="duration" type="number" fullWidth  />
-            <TextField label="Language" name="language" fullWidth required />
-            <TextField label="Date" name="date" type="date" fullWidth InputLabelProps={{ shrink: true }} />
-            
-            <FormControl fullWidth>
-              <InputLabel>Course Level</InputLabel>
-              <Select name="level" value={formData.level} >
-                {levels.map((level) => (
-                  <MenuItem key={level} value={level}>
-                    {level.charAt(0).toUpperCase() + level.slice(1)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-    
-            <Button type="submit" variant="contained" sx={{ mt: 2,backgroundColor: "#6A0DAD" } } onClick={()=>navigate('/tutor/addLecture')}>
-              Save and Next
-            </Button>
-          </Box>
-        </Container>
-        <Footer />
-        </Box>
 
-      );
+    try {
+      const formattedData = {
+        ...formData,
+        price: Number(formData.price), // Convert price to number before sending
+      };
+      console.log("Submitting:", formData);
+      await addCourse(formData)
+      navigate('/tutor/addLecture')
+
+    } catch (error) {
+      console.error("Failed to add course", error);
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}>
+      <Navbar />
+
+      <Container maxWidth="md" sx={{
+        flexGrow: 1, // Ensures it takes available space
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        py: 10, // Adds padding to avoid sticking to top
+      }} >
+        <Typography variant="h5" sx={{ my: 3, fontWeight: 650 }}>Add a Course</Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}
+        >
+          <Box sx={{ display: "flex", flexDirection:"column" }}>
+            <Button sx={{ backgroundColor: "#6A0DAD" }} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
+              Upload Thumbnail
+              <input type="file" hidden onChange={handleFileChange} />
+            </Button>
+            {imagePreview && (
+              <Box sx={{ mt: 2 ,display:"flex",justifyContent:"center"}}>
+                {/* <Typography variant="body2" color="textSecondary">
+                  Preview:
+                </Typography> */}
+                <img
+                  src={imagePreview}
+                  alt="Thumbnail Preview"
+                  style={{
+                    width: "150px",
+                    height: "auto",
+                    borderRadius: "8px",
+                    border: "1px solid #ddd",
+                    marginTop: "8px",
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
+
+          <TextField label="Course Title" name="title" fullWidth required />
+          <FormControl fullWidth required>
+            <InputLabel>Category</InputLabel>
+            <Select name="categoryId" value={formData.categoryId} onChange={handleSelectChange} >
+              {categories.map((category) => (
+                <MenuItem key={category._id} value={category._id}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <TextField label="Description" name="description" fullWidth required multiline rows={3} onChange={handleChange} />
+          <TextField label="Price" name="price" type="number" fullWidth required onChange={handleChange} />
+          <TextField label="Duration (hours)" name="duration" type="number" fullWidth onChange={handleChange} />
+          <TextField label="Language" name="language" fullWidth required onChange={handleChange} />
+          <TextField label="Date" name="date" type="date" fullWidth InputLabelProps={{ shrink: true }} onChange={handleChange} />
+
+          <FormControl fullWidth>
+            <InputLabel>Course Level</InputLabel>
+            <Select name="level" value={formData.level} onChange={handleSelectChange} >
+              {levels.map((level) => (
+                <MenuItem key={level} value={level}>
+                  {level.charAt(0).toUpperCase() + level.slice(1)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button type="submit" variant="contained" sx={{ mt: 2, backgroundColor: "#6A0DAD" }} onClick={() => navigate('/tutor/addLecture')}>
+            Save and Next
+          </Button>
+        </Box>
+      </Container>
+      <Footer />
+    </Box>
+
+  );
 }
 
 export default AddCourse

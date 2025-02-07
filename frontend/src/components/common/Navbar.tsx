@@ -57,7 +57,7 @@ const Navbar = () => {
                         {
                             height: "300px",
                             width: "330px",
-                            paddingLeft: "1rem",
+                            paddingLeft: "2rem",
                             marginRight: "8px",
                         }
                     }
