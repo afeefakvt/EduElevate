@@ -12,7 +12,7 @@ export interface ICourse extends Document{
     level:String,
     status:String,
     isApproved:Boolean,
-    lectures:mongoose.Types.ObjectId[]
+    // lectures:mongoose.Types.ObjectId[]
     createdAt:Date,
     updatedAt:Date
 
@@ -68,13 +68,13 @@ const CourseSchema:Schema = new Schema<ICourse>(
             type:Boolean,
             default:false
         },
-        lectures:[
-            {
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"Lecture",
-                default:[]
-            }
-        ]
+        // lectures:[
+        //     {
+        //         type:mongoose.Schema.Types.ObjectId,
+        //         ref:"Lecture",
+        //         default:[]
+        //     }
+        // ]
 
     },
     {

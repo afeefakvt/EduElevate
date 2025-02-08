@@ -1,36 +1,16 @@
+import { log } from "console";
 import { axiosInstance } from "./axiosInstance";
 
-
-interface CourseData {
-    title: string;
-    categoryId: string;
-    description: string;
-    price: string;
-    language: string;
-    duration: string;
-    level: string;
-    date: string;
-    thumbnail: File | null;
-  }
-
-export const addCourse =async(courseData:CourseData)=>{
+export const addCourse =async(formData:FormData)=>{
     try {
-        const formData = new FormData();
-
-        for(const key in courseData){
-            if(courseData[key as keyof CourseData]){
-                formData.append(key, courseData[key as keyof CourseData ] as string);
-            } 
-        }
-        if(courseData.thumbnail){
-            formData.append("thumbnail",courseData.thumbnail);
-        }
+        console.log("courseee");        
 
         const response = await axiosInstance.post('tutor/addCourse',formData,{
             headers:{
                 "Content-Type":"multipart/form-data"
             }
         });
+        console.log(response)
         return response.data;
 
     } catch (error) {

@@ -12,14 +12,20 @@ export class CourseService implements ICourseService{
 
     async addCourse(courseData: Partial<ICourse>, file?: Express.Multer.File): Promise<ICourse | null> {
         try {
-            if(file){
+            if(file && file.path){
+                console.log("Uploading file to Cloudinary:", file.path);
+
                 const result = await cloudinary.v2.uploader.upload(file.path,{
                     folder:"course_thumbnails",
                     resource_type:"auto"
                 })
                 courseData.thumbnail= result.secure_url;
+            }else{
+                console.log("No file received for upload");
             }
             const newCourse = await this.courseRepository.addCourse(courseData);
+
+            // console.log(newCourse);
             return newCourse
             
         } catch (error) {

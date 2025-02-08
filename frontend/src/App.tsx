@@ -3,7 +3,10 @@ import Home from "./pages/Home"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import OtpPage from "./pages/OtpPage"
+import Courses from "./components/student/courses"
+import CourseDetails from "./components/student/courseDetails"
 import StudentProtected from "./components/protectedRoutes/Studentprotected"
+
 
 
 import AdminLogin from "./components/admin/AdminLogin"
@@ -13,6 +16,8 @@ import Tutors from "./components/admin/Tutors"
 import TutorDetails from "./components/admin/TutorDetails"
 import Category from "./components/admin/Category"
 import AdminProtected from "./components/protectedRoutes/AdminProtected"
+import ApprovedCourses from "./components/admin/ApprovedCourses"
+import CourseApplications from "./components/admin/CourseApplications"
 
  
 import TutorHome from "./components/tutor/tutorHome"
@@ -20,7 +25,7 @@ import TutorRegisterPage from "./components/tutor/RegisterPage"
 import TutorOtp from "./components/tutor/Otp"
 import TutorLoginPage from './components/tutor/LoginPage'
 import AddCourse from "./components/tutor/AddCourse"
-import AddLecture from "./components/tutor/AddLecture"
+// import AddLecture from "./components/tutor/AddLecture"
 import TutorProtected from "./components/protectedRoutes/TutorProtected"
 import TutorResetPassword from "./components/tutor/TutorResetPassword"
 
@@ -41,6 +46,8 @@ function App() {
         <Route path="/verifyOtp" element = {<OtpPage/>}/>
         <Route path="/login" element = {<LoginPage/>}/>
         <Route path="/resetPassword/:token" element = {<PasswordReset/>}/>
+        <Route path="/courses" element = {<Courses/>}/>
+        <Route path="/courses/courseDetails" element = {<CourseDetails/>}/>
         <Route element={<StudentProtected/>}>
          <Route path="/" element = {<Home/>}/>
         </Route>
@@ -53,6 +60,8 @@ function App() {
          <Route path="/admin/tutors" element = {<Tutors/>}/>
          <Route path="/admin/tutors/:tutorId" element = {<TutorDetails/>}/>
          <Route path="/admin/categories" element = {<Category/>}/>
+         <Route path="/admin/courses" element = {<ApprovedCourses/>}/>
+         <Route path="/admin/courseApplications" element = {<CourseApplications/>}/>
         </Route>
 
        
@@ -63,7 +72,7 @@ function App() {
         <Route element={<TutorProtected/>}>
          <Route path="/tutor/home" element = {<TutorHome/>}/>
          <Route path="/tutor/addCourse" element = {<AddCourse/>}/>
-         <Route path="/tutor/addLecture" element = {<AddLecture/>}/>
+         {/* <Route path="/tutor/addLecture" element = {<AddLecture/>}/> */}
         </Route>
        
       </Routes>

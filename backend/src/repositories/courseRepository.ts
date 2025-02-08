@@ -7,7 +7,8 @@ export class CourseRepository extends BaseRepository<ICourse> implements ICourse
         super(Course)
     }
     async addCourse(courseData: Partial<ICourse>): Promise<ICourse | null> {
-        return await this.create(courseData)
-        
+        const aff =  await this.create(courseData)
+        console.log(aff)
+        return aff
     }
 }

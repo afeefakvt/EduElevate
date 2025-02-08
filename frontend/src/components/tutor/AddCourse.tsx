@@ -45,6 +45,8 @@ const AddCourse = () => {
   const [formErrors,setFormErrors] = useState<{[key:string]:string}>({})
   const navigate = useNavigate()
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
+  const tutorId = tutor?._id
 
   // const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
   // const tutorId = tutor?._id
@@ -83,6 +85,7 @@ const AddCourse = () => {
         ...prev,
         thumbnail: file,
       }));
+
       // Create a preview URL
       const previewURL = URL.createObjectURL(file);
       setImagePreview(previewURL);
@@ -93,6 +96,29 @@ const AddCourse = () => {
     e.preventDefault();
     setErrMessage('')
 
+    const formDataToSend = new FormData();
+formDataToSend.append('title', formData.title);
+formDataToSend.append('categoryId', formData.categoryId);
+formDataToSend.append('description', formData.description);
+formDataToSend.append('price', formData.price);
+formDataToSend.append('language', formData.language);
+formDataToSend.append('duration', formData.duration);
+formDataToSend.append('level', formData.level);
+formDataToSend.append('date', formData.date);
+
+// Append file if it exists
+if (formData.thumbnail) {
+  formDataToSend.append('thumbnail', formData.thumbnail);
+}
+if (tutorId) {
+  formDataToSend.append('tutorId', tutorId);
+} else {
+  console.error("Tutor ID is missing");
+  setErrMessage("Tutor ID is required");
+  return;
+}
+
+
     // const validationErrors = validateAddCourseForm(formData);
     // if (Object.keys(validationErrors).length > 0) {
     //   setFormErrors(validationErrors);
@@ -100,13 +126,10 @@ const AddCourse = () => {
     // }
 
     try {
-      const formattedData = {
-        ...formData,
-        price: Number(formData.price), // Convert price to number before sending
-      };
-      console.log("Submitting:", formData);
-      await addCourse(formData)
+      console.log("Submitting:", formDataToSend);
+      await addCourse(formDataToSend)
       navigate('/tutor/addLecture')
+  
 
     } catch (error) {
       console.error("Failed to add course", error);
@@ -131,6 +154,8 @@ const AddCourse = () => {
         py: 10, // Adds padding to avoid sticking to top
       }} >
         <Typography variant="h5" sx={{ my: 3, fontWeight: 650 }}>Add a Course</Typography>
+
+
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -139,7 +164,7 @@ const AddCourse = () => {
           <Box sx={{ display: "flex", flexDirection:"column" }}>
             <Button sx={{ backgroundColor: "#6A0DAD" }} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
               Upload Thumbnail
-              <input type="file" hidden onChange={handleFileChange} />
+              <input type="file" name="thumbnail" hidden onChange={handleFileChange} />
             </Button>
             {imagePreview && (
               <Box sx={{ mt: 2 ,display:"flex",justifyContent:"center"}}>
@@ -161,7 +186,7 @@ const AddCourse = () => {
             )}
           </Box>
 
-          <TextField label="Course Title" name="title" fullWidth required />
+          <TextField label="Course Title" name="title" fullWidth required onChange={handleChange} />
           <FormControl fullWidth required>
             <InputLabel>Category</InputLabel>
             <Select name="categoryId" value={formData.categoryId} onChange={handleSelectChange} >
@@ -189,7 +214,7 @@ const AddCourse = () => {
             </Select>
           </FormControl>
 
-          <Button type="submit" variant="contained" sx={{ mt: 2, backgroundColor: "#6A0DAD" }} onClick={() => navigate('/tutor/addLecture')}>
+          <Button type="submit" variant="contained" sx={{ mt: 2, backgroundColor: "#6A0DAD" }} >
             Save and Next
           </Button>
         </Box>
