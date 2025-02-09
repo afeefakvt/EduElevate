@@ -1,5 +1,6 @@
 import { IAdminRepository } from "../interfaces/admin/IAdminRepository";
 import { IAdminService } from "../interfaces/admin/IAdminService";
+import { ICourse } from "../models/courseModel";
 import { IStudent } from "../models/studentModel";
 import { ITutor } from "../models/tutorModel";
 
@@ -34,6 +35,19 @@ export class AdminService implements IAdminService {
     } 
     async updateStudent(studentId: string, studentData: Partial<IStudent>): Promise<IStudent | null> {
         return this.adminRepository.updateStudent(studentId,studentData)
+    }
+    async getAllCourseApplications(): Promise<ICourse[]> {
+        return this.adminRepository.getAllCourseApplications()
+    }
+    async getCourseDetails(courseId: string): Promise<ICourse> {
+        const course = await this.adminRepository.findCourseById(courseId)
+        if(!course){
+            throw new Error(`Course with ID ${courseId} not found`);
+        }
+        return course
+    }
+    async findCourseById(courseId: string): Promise<ICourse | null> {
+        return this.adminRepository.findCourseById(courseId)
     }
     
 }

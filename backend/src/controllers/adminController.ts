@@ -166,5 +166,74 @@ export class AdminController {
               });
         }
     }
+    async getCourseApplications(req:Request,res:Response):Promise<void>{
+        try {
+            const courses =  await this.adminService.getAllCourseApplications();
+            res.status(200).json(courses)
+        } catch (error) {
+            res.status(500).json({success:false,message:"internal server error",error:error instanceof Error ? error.message : error,})
+            
+        }
+    }
+
+    async getCourseDetails(req:Request,res:Response):Promise<void>{
+        try {
+            const {courseId} = req.params;
+            const course = await this.adminService.getCourseDetails(courseId);
+
+            if(course){
+                res.status(200).json({success:true,course:course})
+            }else{
+                res.status(404).json({sucess:false,message:"no course found"})
+            } 
+        } catch (error:any) {
+            res.status(404).json({ success: false, message: error.message });     
+        }
+    }
+    async approveCourse(req:Request,res:Response):Promise<void>{
+        try {
+            const {courseId} = req.params
+            const course = await this.adminService.findCourseById(courseId)
+
+            if(!course){
+                res.status(404).json({message:"Course not found"})
+                return;
+            }
+            course.isApproved = true;
+            course.status  = "approved"
+            await course.save()
+
+            res.status(200).json({message:"Course approved successfully"})
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Internal server error",
+                error: error instanceof Error ? error.message : error,
+              });
+            
+        }
+    }
+    async rejectCourse(req:Request,res:Response):Promise<void>{
+        try {
+            const {courseId} = req.params;
+            const course = await this.adminService.findCourseById(courseId)
+
+            if(!course){
+                res.status(404).json({message:"Course not found"});
+                return;
+            }
+            course.isApproved = false;
+            course.status = "rejected";
+            await course.save();
+            res.status(200).json({message:"Course application rejected"})
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Internal server error",
+                error: error instanceof Error ? error.message : error,
+              });
+            
+        }
+    }
 }
 

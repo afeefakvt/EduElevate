@@ -10,7 +10,7 @@ export const addLecture = async(courseId:string,formData:FormData)=>{
         
         return response.data
     } catch (error) {
-        console.log('errror is', error);
+        console.log('error is', error);
         throw handleAxiosError(error)
 
         

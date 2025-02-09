@@ -23,8 +23,8 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T>{
     async findOne(query: FilterQuery<T>): Promise<T | null> {
         return await this.model.findOne(query)
     }
-    async find(filter:FilterQuery<T>,options?:QueryOptions):Promise<T[]>{
-        return await this.model.find(filter,null,options)
+     find(filter:FilterQuery<T>,options?:QueryOptions){
+        return  this.model.find(filter,null,options)
     }
     async findByIdAndUpdate(id:string,data:Partial<T>):Promise<T | null>{
         return await this.model.findByIdAndUpdate(id,data,{new:true})

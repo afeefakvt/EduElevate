@@ -3,8 +3,8 @@ import Home from "./pages/Home"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import OtpPage from "./pages/OtpPage"
-import Courses from "./components/student/courses"
-import CourseDetails from "./components/student/courseDetails"
+import Courses from "./components/student/Courses"
+import CourseDetails from "./components/student/CourseDetails"
 import StudentProtected from "./components/protectedRoutes/Studentprotected"
 
 

@@ -30,6 +30,10 @@ adminRouter.get('/admin/tutors/:tutorId',authenticateToken,adminController.getTu
 adminRouter.patch('/admin/tutors/:tutorId/approve',authenticateToken,adminController.approveTutor.bind(adminController))
 adminRouter.patch('/admin/tutors/:tutorId/reject',authenticateToken,adminController.rejectTutor.bind(adminController))
 adminRouter.patch('/admin/tutors/:tutorId/update',authenticateToken,adminController.updateTutor.bind(adminController))
+adminRouter.get('/admin/courseApplications',authenticateToken,adminController.getCourseApplications.bind(adminController))
+adminRouter.get('/admin/courseApplications/:courseId',authenticateToken,adminController.getCourseDetails.bind(adminController))
+adminRouter.patch('/admin/courseApplications/:courseId/approve',authenticateToken,adminController.approveCourse.bind(adminController))
+adminRouter.patch('/admin/courseApplications/:courseId/reject',authenticateToken,adminController.rejectCourse.bind(adminController))
 
 
 

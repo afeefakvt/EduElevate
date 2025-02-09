@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
-// import { getCourses } from "../../api/adminApi"; // Update this based on your API
+import { getCourseApplications } from "../../api/adminApi";
 
 interface Course {
   _id: string;
-  name: string;
-  tutor: string;
-  category: string;
+  title: string;
+  tutorId: {_id:string; name:string}
+  categoryId: {_id:string; name:string}
   price: number;
   status: string;
 }
@@ -25,25 +25,28 @@ export default function CourseApplications() {
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
 
-//   useEffect(() => {
-//     const fetchCourses = async () => {
-//       try {
-//         const response = await getCourses(); 
-//         setCourses(response.courses);
-//       } catch (error) {
-//         console.error("Failed to fetch courses:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await getCourseApplications();
+        console.log("API Response:", response);
+ 
+        setCourses(response);
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-//     fetchCourses();
-//   }, []);
+    fetchCourses();
+  }, []);
 
-  const filteredCourses = courses.filter((course) =>
-    course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.tutor.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCourses = courses ? courses.filter((course) =>
+    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.tutorId?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.categoryId?.name.toLowerCase().includes(searchTerm.toLowerCase())
+  ) : [];
 
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
@@ -56,7 +59,7 @@ export default function CourseApplications() {
       <Sidebar />
       <div className="container mx-auto mt-5 p-4" style={{ paddingTop: "150px", width: "1100px", marginLeft: "350px" }}>
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Course Apllications</h1>
+          <h1 className="text-2xl font-bold">Course Applications</h1>
           <Input
             type="text"
             placeholder="Search Courses..."
@@ -71,24 +74,29 @@ export default function CourseApplications() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Course Name</TableHead>
+                  <TableHead>Course Title</TableHead>
                   <TableHead>Tutor</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {currentCourses.map((course) => (
                   <TableRow key={course._id}>
-                    <TableCell>{course.name}</TableCell>
-                    <TableCell>{course.tutor}</TableCell>
-                    <TableCell>{course.category}</TableCell>
+                    <TableCell>{course.title}</TableCell>
+                    <TableCell>{course.tutorId?.name}</TableCell>
+                    <TableCell>{course.categoryId?.name}</TableCell>
                     <TableCell>₹{course.price}</TableCell>
                     <TableCell>{course.status}</TableCell>
                     <TableCell>
-                      {/* <Button onClick={() => viewDetails(tutor._id)} size="sm">View</Button> */}
+                      {/* <Button onClick={() => approveCourse(course._id)} size="sm">Approve</Button>
+                      <Button onClick={() => rejectCourse(course._id)} size="sm">Reject</Button> */}
+                    </TableCell>
+                    <TableCell>
+                      {/* <Button onClick={() => viewDetails(course._id)} size="sm">View</Button> */}
                     </TableCell>                  
                     </TableRow>
                 ))}
