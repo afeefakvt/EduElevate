@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "../common/Footer";
+import { Stack } from "@mui/material";
+
 import {
     Container,
     Typography,
@@ -14,13 +16,14 @@ import {
     Alert
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { addLecture } from "@/api/lectureApi";
+import { validateAddLectureForm } from "@/utils/validations";
 
 const AddLecture = () => {
 
 
-    const [lectures, setLectures] = useState<{ title: string; description:string; order:number; duration:number; video: File | null }[]>([]);
+    const [lectures, setLectures] = useState<{ title: string; description: string; order: number; duration: number; video: File | null }[]>([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [order, setOrder] = useState('');
@@ -28,65 +31,90 @@ const AddLecture = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const {courseId} = useParams()
+    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error" | "info" | "warning">("info");
+    const { courseId } = useParams()
+    const navigate = useNavigate()
 
     const handleAddLecture = () => {
-        if (title && description && order && duration && selectedFile) {
-            setLectures([...lectures, { title,description,order:Number(order),duration:Number(duration), video:selectedFile}]);
+
+        const errors = validateAddLectureForm({ title, description, order, duration, video: selectedFile });
+
+        if (Object.keys(errors).length > 0) {
+            setSnackbarMessage(Object.values(errors).join("\n"));
+            setSnackbarSeverity("error");
+            setSnackbarOpen(true);
+            return;
+        }
+
+            setLectures([...lectures, { title, description, order: Number(order), duration: Number(duration), video: selectedFile }]);
             setTitle('');
             setDescription('');
             setOrder('');
             setDuration('');
             setSelectedFile(null);
-        }
+            setSnackbarMessage("Lecture added successfully!");
+            setSnackbarSeverity("success");
+            setSnackbarOpen(true);
+        
     }
 
 
     const handleRemoveLecture = (index: number) => {
         const updatedLectures = lectures.filter((_, i) => i !== index);
         setLectures(updatedLectures);
-      };
+    };
 
-    const handlePublishCourse = async()=>{
-        console.log("Course ID:", courseId); 
+    const handlePublishCourse = async () => {
+        console.log("Course ID:", courseId);
 
-        console.log("publishinggggggggggg")
+        // console.log("publishinggggggggggg")
         if (!courseId) {
             setSnackbarMessage("Course id is missing. Please go back.");
-            setSnackbarOpen(true);            
+            setSnackbarSeverity("error");
+            setSnackbarOpen(true);
             return;
-          }
+        }
         if (lectures.length === 0) {
             setSnackbarMessage("Please add at least one lecture before publishing.");
+            setSnackbarSeverity("error");
             setSnackbarOpen(true);
             return;
         }
 
         const formData = new FormData()
-        formData.append("lectures",JSON.stringify(lectures.map(({title,description,order,duration})=>({
-            title,description,order,duration,courseId
+        formData.append("lectures", JSON.stringify(lectures.map(({ title, description, order, duration }) => ({
+            title, description, order, duration, courseId
         }))))
 
-        lectures.forEach((lecture,index)=>{
-            if(lecture.video){
-                formData.append('videoFiles',lecture.video)
+        lectures.forEach((lecture, index) => {
+            if (lecture.video) {
+                formData.append('videoFiles', lecture.video)
             }
         })
         try {
-            const response = await addLecture(courseId,formData)
-            console.log(response,"lecturessss");
+            const response = await addLecture(courseId, formData)
+            // console.log(response,"lecturessss");
             setLectures([])
-            setSnackbarMessage("Lectures published! Your request for publishing course in EduElevate is under review. We will reach out to you within 24 hours.");
+            setSnackbarMessage("Your request for publishing course in EduElevate is under review. We will reach out to you within 24 hours.");
+            setSnackbarSeverity("success");
             setSnackbarOpen(true);
-        
+
+            setTimeout(() => {
+                navigate("/tutor/home");
+            }, 5000);
+    
+    
+
+
         } catch (error) {
             console.error("Error publishing lectures", error);
             setSnackbarMessage("Error publishing lectures. Please try again.");
+            setSnackbarSeverity("error");
             setSnackbarOpen(true);
-                
+
         }
-        
-      }
+
+    }
 
 
     return (
@@ -115,34 +143,12 @@ const AddLecture = () => {
                 </Typography>
 
                 <Box sx={{ width: "100%" }}>
-                    <TextField
-                        label="Lecture Title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        label="Lecture Description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        label="Lecture Order"
-                        value={order}
-                        onChange={(e) => setOrder(e.target.value)}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        label="Lecture Duration(minutes)"
-                        value={duration}
-                        onChange={(e) => setDuration(e.target.value)}
-                        fullWidth
-                        required
-                    />
+                    <Stack spacing={2} > 
+                        <TextField label="Lecture Title" value={title} onChange={(e) => setTitle(e.target.value)} fullWidth required />
+                        <TextField label="Lecture Description" value={description} onChange={(e) => setDescription(e.target.value)} fullWidth required />
+                        <TextField label="Lecture Order" value={order} onChange={(e) => setOrder(e.target.value)} fullWidth required />
+                        <TextField label="Lecture Duration (minutes/hours)" value={duration} onChange={(e) => setDuration(e.target.value)} fullWidth required />
+                    </Stack>
                     <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
                         <Button variant="contained" component="label" startIcon={<CloudUploadIcon />} sx={{ backgroundColor: "#6A0DAD" }}>
                             Upload Lecture Video
@@ -163,7 +169,7 @@ const AddLecture = () => {
                         fullWidth
                         sx={{ mt: 2, backgroundColor: "#6A0DAD" }}
                         onClick={handleAddLecture}
-                        disabled={!title || !description|| !order || !duration || !selectedFile }
+                        disabled={!title || !description || !order || !duration || !selectedFile}
                     >
                         Add Lecture
                     </Button>
@@ -192,15 +198,15 @@ const AddLecture = () => {
                     <Button
                         variant="contained"
                         fullWidth
-                        sx={{ mt: 3,  backgroundColor: "#6A0DAD"  }}
-                    onClick={handlePublishCourse}
+                        sx={{ mt: 3, backgroundColor: "#6A0DAD" }}
+                        onClick={handlePublishCourse}
                     >
                         Publish Course
                     </Button>
                 )}
             </Container>
-            <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={() => setSnackbarOpen(false)}>
-                <Alert onClose={() => setSnackbarOpen(false)} severity="info">
+            <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+                <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ backgroundColor: "black", color: "white" }}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>

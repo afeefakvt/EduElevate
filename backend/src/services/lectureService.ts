@@ -14,7 +14,7 @@ export class LectureService implements ILectureService{
     async addLecture(lectureData: Partial<ILecture>, courseId: mongoose.Types.ObjectId): Promise<ILecture | null> {
         try {
 
-            console.log("leeeeeeeeeeksfjn");
+            // console.log("leeeeeeeeeeksfjn");
             
            if(lectureData){
             const updatedCourse = await Course.findByIdAndUpdate(

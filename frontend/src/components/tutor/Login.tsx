@@ -96,8 +96,8 @@ const Login = () => {
                         autoFocus
                         value={email}
                         onChange={(e)=>setEmail(e.target.value)}
-                        error= {Boolean(formErrors.email)}
-                        helperText ={formErrors.email}
+                            error= {Boolean(formErrors.email)}
+                            helperText ={formErrors.email}
                     />
                     <TextField
                         margin="normal"

@@ -19,14 +19,14 @@ export class LectureController {
 
     async addLecture(req:Request,res:Response):Promise<void>{
         try {
-            console.log("adddddlectureeeeeee");
+            // console.log("adddddlectureeeeeee");
             
             if(!req.files || !Array.isArray(req.files)){
                 res.status(400).json({message:"video files are required for all lectures"});
                 return;
             }
             const lectureDatas = JSON.parse(req.body.lectures) as LectureData[];
-            console.log(lectureDatas,"khv hn")
+            // console.log(lectureDatas,"khv hn")
 
             if(!lectureDatas.length || !mongoose.Types.ObjectId.isValid(lectureDatas[0].courseId)){
                 res.status(400).json({message:"Invalid courseId format"})

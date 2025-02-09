@@ -49,7 +49,7 @@ const Banner = () => {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#2F3C7E",
+            backgroundColor: "#6A0DAD",
             color: "white",
             padding: "0.8rem 2rem",
             fontSize: "1rem",

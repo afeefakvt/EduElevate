@@ -25,7 +25,7 @@ export class CourseService implements ICourseService{
             }
             const newCourse = await this.courseRepository.addCourse(courseData);
 
-            // console.log(newCourse);
+            // console.log(newCourse,"newwwwwwwww");
             return newCourse
             
         } catch (error) {

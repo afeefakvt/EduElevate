@@ -8,7 +8,7 @@ export interface ICourse extends Document{
     price:number,
     thumbnail:String,
     language:String,
-    duration:number,
+    duration:String,
     level:String,
     status:String,
     isApproved:Boolean,
@@ -45,14 +45,16 @@ const CourseSchema:Schema = new Schema<ICourse>(
         },
         thumbnail:{
             type:String,
+            required:true
 
         },
         language:{
             type:String,
-            required:true
+            enum:["english","malayalam"],
+            default:"english"
         },
         duration:{
-            type:Number
+            type:String
         },
         level:{
             type:String,

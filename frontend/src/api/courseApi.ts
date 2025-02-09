@@ -1,16 +1,15 @@
-import { log } from "console";
 import { axiosInstance } from "./axiosInstance";
 
 export const addCourse =async(formData:FormData)=>{
     try {
-        console.log("courseee");        
+        // console.log("courseee");        
 
         const response = await axiosInstance.post('tutor/addCourse',formData,{
             headers:{
                 "Content-Type":"multipart/form-data"
             }
         });
-        console.log(response)
+        // console.log("ress gottt",response)
         return response.data;
 
     } catch (error) {

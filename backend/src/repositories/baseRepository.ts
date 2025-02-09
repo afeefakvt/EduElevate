@@ -1,5 +1,6 @@
 import { Model,Document, FilterQuery, QueryOptions } from "mongoose";
 import { IBaseRepository } from "../interfaces/base/IBaseRepository";
+import { log } from "console";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T>{
     protected model:Model<T>;
@@ -8,8 +9,8 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T>{
         this.model = model
     }
 
-    async create(data:Partial<T>):Promise<T>{
-        const newItem = new this.model(data)
+    async create(data:Partial<T>):Promise<T>{        
+        const newItem = new this.model(data)        
         return await newItem.save()
     }
     async findById(id:string):Promise<T | null>{

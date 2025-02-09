@@ -12,6 +12,7 @@ import {
   FormControl,
   Box,
   SelectChangeEvent,
+  Alert
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNavigate } from "react-router-dom";
@@ -32,23 +33,23 @@ const AddCourse = () => {
     categoryId: "",
     description: "",
     price: "",
-    language: "",
+    language: "english",
     duration: "",
     level: "intermediate",
-    date: "",
     thumbnail: null as File | null,
   });
 
   const [categories, setCategories] = useState<{ _id: string; name: string }[]>([])
   const levels = ['beginner', 'intermediate', 'advanced'];
+  const languages = ["english", "malayalam"];
   const [errMessage, setErrMessage] = useState('')
-  const [formErrors,setFormErrors] = useState<{[key:string]:string}>({})
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({})
   const navigate = useNavigate()
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
+  const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
   const tutorId = tutor?._id
 
- 
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -64,11 +65,26 @@ const AddCourse = () => {
   }, []);
 
 
+
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [e.target.name]: e.target.value
+  //   }))
+  // }
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({
+    const { name, value } = e.target;
+   setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
-    }))
+      [name]: value
+   }));
+   // Clear errors when user updates the field
+   setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: ""
+   }));
   }
   const handleSelectChange = (e: SelectChangeEvent<string>) => {
     setFormData((prev) => ({
@@ -95,42 +111,50 @@ const AddCourse = () => {
     e.preventDefault();
     setErrMessage('')
 
+    // Validate form data
+    const errors = validateAddCourseForm({
+      ...formData,
+      category: formData.categoryId,
+      price: Number(formData.price),
+    });
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
     const formDataToSend = new FormData();
-formDataToSend.append('title', formData.title);
-formDataToSend.append('categoryId', formData.categoryId);
-formDataToSend.append('description', formData.description);
-formDataToSend.append('price', formData.price);
-formDataToSend.append('language', formData.language);
-formDataToSend.append('duration', formData.duration);
-formDataToSend.append('level', formData.level);
-formDataToSend.append('date', formData.date);
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('categoryId', formData.categoryId);
+    formDataToSend.append('description', formData.description);
+    formDataToSend.append('price', formData.price);
+    formDataToSend.append('language', formData.language);
+    formDataToSend.append('duration', formData.duration);
+    formDataToSend.append('level', formData.level);
 
-// Append file if it exists
-if (formData.thumbnail) {
-  formDataToSend.append('thumbnail', formData.thumbnail);
-}
-if (tutorId) {
-  formDataToSend.append('tutorId', tutorId);
-} else {
-  console.error("Tutor ID is missing");
-  setErrMessage("Tutor ID is required");
-  return;
-}
+    // Append file if it exists
+    if (formData.thumbnail) {
+      formDataToSend.append('thumbnail', formData.thumbnail);
+    }
+    if (tutorId) {
+      formDataToSend.append('tutorId', tutorId);
+    } else {
+      console.error("Tutor ID is missing");
+      setErrMessage("Tutor ID is required");
+      return;
+    }
 
 
-    // const validationErrors = validateAddCourseForm(formData);
-    // if (Object.keys(validationErrors).length > 0) {
-    //   setFormErrors(validationErrors);
-    //   return; // Stop form submission if validation fails
-    // }
+ // Debugging: Log the FormData being sent
+ console.log("FormData being sent:", Object.fromEntries(formDataToSend.entries()));
 
     try {
       console.log("Submitting:", formDataToSend);
       const response = await addCourse(formDataToSend)
-      const courseId  = response.newCourse._id
+      const courseId = response.newCourse._id
 
       navigate(`/tutor/addLecture/${courseId}`)
-  
+
 
     } catch (error) {
       console.error("Failed to add course", error);
@@ -162,13 +186,18 @@ if (tutorId) {
           onSubmit={handleSubmit}
           sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}
         >
-          <Box sx={{ display: "flex", flexDirection:"column" }}>
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Button sx={{ backgroundColor: "#6A0DAD" }} variant="contained" component="label" startIcon={<CloudUploadIcon />}>
               Upload Thumbnail
-              <input type="file" name="thumbnail" hidden onChange={handleFileChange} />
+              <input type="file" name="thumbnail" accept="image/*" hidden onChange={handleFileChange} />
             </Button>
+            {formErrors.thumbnail && (
+              <Typography variant="caption" color="error" sx={{ mt: 1 }}>
+                {formErrors.thumbnail}
+              </Typography>
+            )}
             {imagePreview && (
-              <Box sx={{ mt: 2 ,display:"flex",justifyContent:"center"}}>
+              <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
                 {/* <Typography variant="body2" color="textSecondary">
                   Preview:
                 </Typography> */}
@@ -186,9 +215,15 @@ if (tutorId) {
               </Box>
             )}
           </Box>
+          {errMessage && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {errMessage}
+            </Alert>
+          )}
 
-          <TextField label="Course Title" name="title" fullWidth required onChange={handleChange} />
-          <FormControl fullWidth required>
+          <TextField label="Course Title" name="title" fullWidth required onChange={handleChange} error={!!formErrors.title}
+            helperText={formErrors.title} />
+          <FormControl fullWidth required error={!!formErrors.categoryId}>
             <InputLabel>Category</InputLabel>
             <Select name="categoryId" value={formData.categoryId} onChange={handleSelectChange} >
               {categories.map((category) => (
@@ -197,14 +232,41 @@ if (tutorId) {
                 </MenuItem>
               ))}
             </Select>
+            {formErrors.categoryId && (
+              <Typography variant="caption" color="error">
+                {formErrors.categoryId}
+              </Typography>
+            )}
           </FormControl>
-          <TextField label="Description" name="description" fullWidth required multiline rows={3} onChange={handleChange} />
-          <TextField label="Price" name="price" type="number" fullWidth required onChange={handleChange} />
-          <TextField label="Duration (hours)" name="duration" type="number" fullWidth onChange={handleChange} />
-          <TextField label="Language" name="language" fullWidth required onChange={handleChange} />
-          <TextField label="Date" name="date" type="date" fullWidth InputLabelProps={{ shrink: true }} onChange={handleChange} />
+          <TextField label="Description" name="description" fullWidth required multiline rows={3} onChange={handleChange}
+            error={!!formErrors.description}
+            helperText={formErrors.description} />
+          <TextField label="Price(₹)" name="price" fullWidth required onChange={handleChange}
+            error={!!formErrors.price}
+            helperText={formErrors.price} />
+          <TextField label="Duration (hours )" name="duration" fullWidth onChange={handleChange}
+            error={!!formErrors.duration}
+            helperText={formErrors.duration} />
+          {/* <TextField label="Language" name="language" fullWidth required onChange={handleChange}
+            error={!!formErrors.language}
+            helperText={formErrors.language} /> */}
 
-          <FormControl fullWidth>
+          <FormControl fullWidth error={!!formErrors.language}>
+            <InputLabel>Course Language</InputLabel>
+            <Select name="language" value={formData.language} onChange={handleSelectChange} >
+              {languages.map((language) => (
+                <MenuItem key={language} value={language}>
+                  {language.charAt(0).toUpperCase() + language.slice(1)}
+                </MenuItem>
+              ))}
+            </Select>
+            {formErrors.language && (
+              <Typography variant="caption" color="error">
+                {formErrors.language}
+              </Typography>
+            )}
+          </FormControl>
+          <FormControl fullWidth error={!!formErrors.level}>
             <InputLabel>Course Level</InputLabel>
             <Select name="level" value={formData.level} onChange={handleSelectChange} >
               {levels.map((level) => (
@@ -213,6 +275,11 @@ if (tutorId) {
                 </MenuItem>
               ))}
             </Select>
+            {formErrors.level && (
+              <Typography variant="caption" color="error">
+                {formErrors.level}
+              </Typography>
+            )}
           </FormControl>
 
           <Button type="submit" variant="contained" sx={{ mt: 2, backgroundColor: "#6A0DAD" }} >
