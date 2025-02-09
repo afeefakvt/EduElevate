@@ -25,7 +25,7 @@ import TutorRegisterPage from "./components/tutor/RegisterPage"
 import TutorOtp from "./components/tutor/Otp"
 import TutorLoginPage from './components/tutor/LoginPage'
 import AddCourse from "./components/tutor/AddCourse"
-// import AddLecture from "./components/tutor/AddLecture"
+import AddLecture from "./components/tutor/AddLecture"
 import TutorProtected from "./components/protectedRoutes/TutorProtected"
 import TutorResetPassword from "./components/tutor/TutorResetPassword"
 
@@ -72,7 +72,7 @@ function App() {
         <Route element={<TutorProtected/>}>
          <Route path="/tutor/home" element = {<TutorHome/>}/>
          <Route path="/tutor/addCourse" element = {<AddCourse/>}/>
-         {/* <Route path="/tutor/addLecture" element = {<AddLecture/>}/> */}
+         <Route path="/tutor/addLecture/:courseId" element = {<AddLecture/>}/>
         </Route>
        
       </Routes>

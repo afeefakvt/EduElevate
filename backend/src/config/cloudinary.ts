@@ -18,7 +18,7 @@ const storage = new CloudinaryStorage({
         folder:"uploads/images",
         format:file.mimetype.split('/')[1] || "jpg",
         transformation:[{width:500,height:500,crop:"limit"}],
-        resourse_type:"image"
+        resource_type:"image"
 
     })
 })

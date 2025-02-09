@@ -24,3 +24,5 @@ export class LectureRepository extends BaseRepository<ILecture> implements ILect
         }
     }
 }
+
+

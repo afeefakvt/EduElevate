@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 interface LectureData{
     title:string,
-    descrription:string,
+    description:string,
     videoUrl:string,
     duration:number,
     order:number,
@@ -19,13 +19,16 @@ export class LectureController {
 
     async addLecture(req:Request,res:Response):Promise<void>{
         try {
+            console.log("adddddlectureeeeeee");
+            
             if(!req.files || !Array.isArray(req.files)){
                 res.status(400).json({message:"video files are required for all lectures"});
                 return;
             }
             const lectureDatas = JSON.parse(req.body.lectures) as LectureData[];
+            console.log(lectureDatas,"khv hn")
 
-            if(!mongoose.Types.ObjectId.isValid(lectureDatas[0].courseId)){
+            if(!lectureDatas.length || !mongoose.Types.ObjectId.isValid(lectureDatas[0].courseId)){
                 res.status(400).json({message:"Invalid courseId format"})
                 return;
             }
@@ -40,8 +43,9 @@ export class LectureController {
             for(let i=0;i<lectureDatas.length;i++){
                 const lectureData = {
                     title:lectureDatas[i].title,
-                    description:lectureDatas[i].descrription,
-                    duration:Number(lectureDatas[i].order),
+                    description:lectureDatas[i].description,
+                    duration:Number(lectureDatas[i].duration),
+                    order:Number(lectureDatas[i].order),
                     courseId:lectureDatas[i].courseId,
                     videoUrl:videos[i].path
                 };
@@ -60,7 +64,7 @@ export class LectureController {
             res.status(201).json({message:"lectures added successfully",lectures:addedLectures})
         } catch (error) {
             res.status(500).json({message:(error as Error).message})
-            console.error(error);
+            console.error("error adding lectures",error);
             
         }
     }

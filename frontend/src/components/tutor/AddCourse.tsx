@@ -48,8 +48,7 @@ const AddCourse = () => {
   const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
   const tutorId = tutor?._id
 
-  // const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
-  // const tutorId = tutor?._id
+ 
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -127,8 +126,10 @@ if (tutorId) {
 
     try {
       console.log("Submitting:", formDataToSend);
-      await addCourse(formDataToSend)
-      navigate('/tutor/addLecture')
+      const response = await addCourse(formDataToSend)
+      const courseId  = response.newCourse._id
+
+      navigate(`/tutor/addLecture/${courseId}`)
   
 
     } catch (error) {

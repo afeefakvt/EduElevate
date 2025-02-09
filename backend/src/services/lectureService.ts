@@ -3,6 +3,7 @@ import { ILecture } from "../models/lectureModel";
 import { ILectureRepository } from "../interfaces/lecture/ILectureRepository";
 import Course from "../models/courseModel";
 import mongoose from "mongoose";
+import { log } from "console";
 
 export class LectureService implements ILectureService{
     private lectureRepository:ILectureRepository
@@ -12,10 +13,13 @@ export class LectureService implements ILectureService{
     }
     async addLecture(lectureData: Partial<ILecture>, courseId: mongoose.Types.ObjectId): Promise<ILecture | null> {
         try {
+
+            console.log("leeeeeeeeeeksfjn");
+            
            if(lectureData){
             const updatedCourse = await Course.findByIdAndUpdate(
                 courseId,
-                {isApproved:"pending"},
+                {isApproved:"false"},
                 {new:true}
             );
             if(!updatedCourse){
