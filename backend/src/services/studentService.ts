@@ -7,9 +7,11 @@ import { validateOtp } from "../utils/otp";
 import { login } from "./authService";
 import { generatePasswordResetToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetPassword";
+import { ICourse } from "../models/courseModel";
+import { CourseRepository } from "../repositories/courseRepository";
 
 
-export class StudentService  {
+export class StudentService implements IStudentService  {
     private studentRepository: IStudentRepository; //abstarction
 
     constructor(studentRepository:IStudentRepository){
@@ -51,6 +53,10 @@ export class StudentService  {
     }
     async updatePassword(studentId:string,newPassword:string):Promise<IStudent | null>{
         return this.studentRepository.updatePassword(studentId,newPassword)
+    }
+    
+    async getCourses(): Promise<ICourse[]> {
+        return this.studentRepository.getCourses()
     }
 
 }

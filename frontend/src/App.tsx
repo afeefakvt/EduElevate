@@ -16,7 +16,7 @@ import Tutors from "./components/admin/Tutors"
 import TutorDetails from "./components/admin/TutorDetails"
 import Category from "./components/admin/Category"
 import AdminProtected from "./components/protectedRoutes/AdminProtected"
-import ApprovedCourses from "./components/admin/ApprovedCourses"
+import AdminCourses from "./components/admin/Courses"
 import CourseApplications from "./components/admin/CourseApplications"
 import CourseDetailsAdmin from "./components/admin/CourseDetails"
 
@@ -61,7 +61,7 @@ function App() {
          <Route path="/admin/tutors" element = {<Tutors/>}/>
          <Route path="/admin/tutors/:tutorId" element = {<TutorDetails/>}/>
          <Route path="/admin/categories" element = {<Category/>}/>
-         <Route path="/admin/courses" element = {<ApprovedCourses/>}/>
+         <Route path="/admin/courses" element = {<AdminCourses/>}/>
          <Route path="/admin/courseApplications" element = {<CourseApplications/>}/>
          <Route path="/admin/courseApplications/:courseId" element = {<CourseDetailsAdmin/>}/>
         </Route>

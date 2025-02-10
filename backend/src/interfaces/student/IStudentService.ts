@@ -1,3 +1,4 @@
+import { ICourse } from "../../models/courseModel";
 import { IStudent}  from "../../models/studentModel";
 
 export interface IStudentService{
@@ -10,5 +11,6 @@ export interface IStudentService{
     }>;
     findStudentByEmail(email:string):Promise<IStudent | null>;
     handleForgotPassword(email:string):Promise<string | null>;
-    updatePassword(studentId:string,newPassword:string):Promise<IStudent | null>
+    updatePassword(studentId:string,newPassword:string):Promise<IStudent | null>;
+    getCourses():Promise<ICourse[]>
 }

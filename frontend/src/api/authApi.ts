@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { axiosInstance } from "./axiosInstance";
 import {store} from '../store/store'
 import { loginSuccess } from "../store/authSlice";
-
+import { handleAxiosError } from "@/utils/errorHandler";
 
 export const signUp = async(name:string,email:string,password:string,confirmPassword:string)=>{
     try {
@@ -100,4 +100,14 @@ export const googleSignIn = async(idToken:string)=>{
 export const resetPassword = async(token:string | undefined,newPassword:string,confirmPassword:string)=>{
     await axiosInstance.post('/resetPassword',{token,newPassword,confirmPassword})
 
+}
+
+export const getCourses = async()=>{
+    try {
+        const response = await axiosInstance.get('/courses')
+        return response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error);   
+    }
 }

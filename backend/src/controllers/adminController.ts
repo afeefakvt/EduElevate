@@ -253,5 +253,16 @@ export class AdminController {
             
         }
     }
-}
+
+//     async getCourses (req:Request,res:Response):Promise<void>{
+//         try {
+//             const courses = await this.adminService.getCourse
+//         } catch (error) {
+            
+//         }
+//     }
+
+
+
+ }
 

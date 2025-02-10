@@ -188,3 +188,13 @@ export const rejectCourse = async(courseId:string)=>{
         
     }
 }
+
+// export const getCourses = async()=>{
+//     try {
+//        const response =  await axiosInstance.get('/admin/courses')
+//        return response.data
+//     } catch (error) {
+//         console.log("error is", error);
+//         throw handleAxiosError(error)
+//     }
+// }

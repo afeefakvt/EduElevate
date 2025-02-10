@@ -34,6 +34,7 @@ adminRouter.get('/admin/courseApplications',authenticateToken,adminController.ge
 adminRouter.get('/admin/courseApplications/:courseId',authenticateToken,adminController.getCourseDetails.bind(adminController))
 adminRouter.patch('/admin/courseApplications/:courseId/approve',authenticateToken,adminController.approveCourse.bind(adminController))
 adminRouter.patch('/admin/courseApplications/:courseId/reject',authenticateToken,adminController.rejectCourse.bind(adminController))
+// adminRouter.get('/admin/courses',authenticateToken,adminController.getCourses.bind(adminController))
 
 
 

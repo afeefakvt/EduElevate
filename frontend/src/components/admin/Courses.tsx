@@ -7,43 +7,45 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
-// import { getCourses } from "../../api/adminApi"; // Update this based on your API
+import { getCourseApplications } from "../../api/adminApi"; 
 
 interface Course {
   _id: string;
-  name: string;
-  tutor: string;
-  category: string;
+  title: string;
+  tutorId: {_id:string; name:string}
+  categoryId: {_id:string; name:string}
   price: number;
   totalRatings: number;
   studentsEnrolled: number;
+  status:string;
 }
 
-export default function ApprovedCourses() {
+export default function AdminCourses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
 
-//   useEffect(() => {
-//     const fetchCourses = async () => {
-//       try {
-//         const response = await getCourses(); 
-//         setCourses(response.courses);
-//       } catch (error) {
-//         console.error("Failed to fetch courses:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await getCourseApplications(); 
+        const filteredCourses = response.filter((course:Course)=>course.status!=="pending")
+        setCourses(filteredCourses);
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-//     fetchCourses();
-//   }, []);
+    fetchCourses();
+  }, []);
 
   const filteredCourses = courses.filter((course) =>
-    course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.tutor.toLowerCase().includes(searchTerm.toLowerCase())
+    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.tutorId.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastCourse = currentPage * coursesPerPage;
@@ -57,7 +59,7 @@ export default function ApprovedCourses() {
       <Sidebar />
       <div className="container mx-auto mt-5 p-4" style={{ paddingTop: "150px", width: "1100px", marginLeft: "350px" }}>
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Manage Courses</h1>
+          <h1 className="text-2xl font-bold">Courses</h1>
           <Input
             type="text"
             placeholder="Search Courses..."
@@ -76,6 +78,7 @@ export default function ApprovedCourses() {
                   <TableHead>Tutor</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Total Ratings</TableHead>
                   <TableHead>Students Enrolled</TableHead>
                 </TableRow>
@@ -83,10 +86,11 @@ export default function ApprovedCourses() {
               <TableBody>
                 {currentCourses.map((course) => (
                   <TableRow key={course._id}>
-                    <TableCell>{course.name}</TableCell>
-                    <TableCell>{course.tutor}</TableCell>
-                    <TableCell>{course.category}</TableCell>
+                    <TableCell>{course.title}</TableCell>
+                    <TableCell>{course.tutorId.name}</TableCell>
+                    <TableCell>{course.categoryId.name}</TableCell>
                     <TableCell>₹{course.price}</TableCell>
+                    <TableCell>{course.status}</TableCell>
                     <TableCell>{course.totalRatings}</TableCell>
                     <TableCell>{course.studentsEnrolled}</TableCell>
                   </TableRow>

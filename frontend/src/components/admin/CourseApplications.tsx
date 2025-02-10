@@ -17,6 +17,7 @@ interface Course {
   categoryId: {_id:string; name:string}
   price: number;
   duration:string;
+  status:string;
 
 }
 
@@ -32,9 +33,9 @@ export default function CourseApplications() {
     const fetchCourses = async () => {
       try {
         const response = await getCourseApplications();
-        console.log("API Response:", response);
- 
-        setCourses(response);
+        // console.log("API Response:", response);
+        const filteredCourses = response.filter((course:Course)=>course.status==="pending")
+        setCourses(filteredCourses);
       } catch (error) {
         console.error("Failed to fetch courses:", error);
       } finally {
