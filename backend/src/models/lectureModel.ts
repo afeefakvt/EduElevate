@@ -4,7 +4,7 @@ export interface ILecture extends Document{
     title:string,
     description:string,
     videoUrl:string,
-    duration:number,
+    duration:string,
     order:number,
     courseId:mongoose.Types.ObjectId
 }
@@ -24,7 +24,7 @@ const LectureSchems:Schema = new Schema<ILecture>(
             required:true
         },
         duration:{
-            type:Number,
+            type:String,
             required:true
         },
         order:{

@@ -18,6 +18,7 @@ import Category from "./components/admin/Category"
 import AdminProtected from "./components/protectedRoutes/AdminProtected"
 import ApprovedCourses from "./components/admin/ApprovedCourses"
 import CourseApplications from "./components/admin/CourseApplications"
+import CourseDetailsAdmin from "./components/admin/CourseDetails"
 
  
 import TutorHome from "./components/tutor/tutorHome"
@@ -62,6 +63,7 @@ function App() {
          <Route path="/admin/categories" element = {<Category/>}/>
          <Route path="/admin/courses" element = {<ApprovedCourses/>}/>
          <Route path="/admin/courseApplications" element = {<CourseApplications/>}/>
+         <Route path="/admin/courseApplications/:courseId" element = {<CourseDetailsAdmin/>}/>
         </Route>
 
        

@@ -7,7 +7,7 @@ interface LectureData{
     title:string,
     description:string,
     videoUrl:string,
-    duration:number,
+    duration:string,
     order:number,
     courseId:mongoose.Types.ObjectId;
 }
@@ -44,7 +44,7 @@ export class LectureController {
                 const lectureData = {
                     title:lectureDatas[i].title,
                     description:lectureDatas[i].description,
-                    duration:Number(lectureDatas[i].duration),
+                    duration:lectureDatas[i].duration,
                     order:Number(lectureDatas[i].order),
                     courseId:lectureDatas[i].courseId,
                     videoUrl:videos[i].path

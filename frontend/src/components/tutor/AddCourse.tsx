@@ -244,7 +244,7 @@ const AddCourse = () => {
           <TextField label="Price(₹)" name="price" fullWidth required onChange={handleChange}
             error={!!formErrors.price}
             helperText={formErrors.price} />
-          <TextField label="Duration (hours )" name="duration" fullWidth onChange={handleChange}
+          <TextField label="Duration " name="duration" fullWidth onChange={handleChange}
             error={!!formErrors.duration}
             helperText={formErrors.duration} />
           {/* <TextField label="Language" name="language" fullWidth required onChange={handleChange}

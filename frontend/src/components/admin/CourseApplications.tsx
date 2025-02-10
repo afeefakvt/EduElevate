@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
 import { getCourseApplications } from "../../api/adminApi";
+import { useNavigate } from "react-router-dom";
 
 interface Course {
   _id: string;
@@ -15,7 +16,8 @@ interface Course {
   tutorId: {_id:string; name:string}
   categoryId: {_id:string; name:string}
   price: number;
-  status: string;
+  duration:string;
+
 }
 
 export default function CourseApplications() {
@@ -24,6 +26,7 @@ export default function CourseApplications() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const coursesPerPage = 5;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -53,6 +56,11 @@ export default function CourseApplications() {
   const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
   const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
 
+  const viewDetails = (courseId:string)=>{
+    navigate(`/admin/courseApplications/${courseId}`)
+  }
+
+
   return (
     <div className="relative min-h-screen">
       <AdminNavbar />
@@ -78,9 +86,8 @@ export default function CourseApplications() {
                   <TableHead>Tutor</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Duration</TableHead>
                   <TableHead>Actions</TableHead>
-                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -90,13 +97,14 @@ export default function CourseApplications() {
                     <TableCell>{course.tutorId?.name}</TableCell>
                     <TableCell>{course.categoryId?.name}</TableCell>
                     <TableCell>₹{course.price}</TableCell>
-                    <TableCell>{course.status}</TableCell>
+                    <TableCell>{course.duration}</TableCell>
+                    {/* <TableCell>
+                      
+                      <Button disabled={course?.status==="approved" || course?.status==="pending"} onClick={() => approveCourse(course._id)} size="sm" style={{marginRight:"3px"}}>Approve</Button>
+                      <Button disabled={course?.status==="approved" || course?.status==="pending"} onClick={() => rejectCourse(course._id)} size="sm">Reject</Button>
+                    </TableCell> */}
                     <TableCell>
-                      {/* <Button onClick={() => approveCourse(course._id)} size="sm">Approve</Button>
-                      <Button onClick={() => rejectCourse(course._id)} size="sm">Reject</Button> */}
-                    </TableCell>
-                    <TableCell>
-                      {/* <Button onClick={() => viewDetails(course._id)} size="sm">View</Button> */}
+                      <Button onClick={() => viewDetails(course._id)} size="sm">View</Button>
                     </TableCell>                  
                     </TableRow>
                 ))}

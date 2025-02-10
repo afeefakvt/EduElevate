@@ -19,11 +19,12 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNavigate, useParams } from "react-router-dom";
 import { addLecture } from "@/api/lectureApi";
 import { validateAddLectureForm } from "@/utils/validations";
+import { log } from "console";
 
 const AddLecture = () => {
 
 
-    const [lectures, setLectures] = useState<{ title: string; description: string; order: number; duration: number; video: File | null }[]>([]);
+    const [lectures, setLectures] = useState<{ title: string; description: string; order: number; duration: string; video: File | null }[]>([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [order, setOrder] = useState('');
@@ -46,7 +47,7 @@ const AddLecture = () => {
             return;
         }
 
-            setLectures([...lectures, { title, description, order: Number(order), duration: Number(duration), video: selectedFile }]);
+            setLectures([...lectures, { title, description, order: Number(order), duration: duration, video: selectedFile }]);
             setTitle('');
             setDescription('');
             setOrder('');
@@ -92,6 +93,9 @@ const AddLecture = () => {
             }
         })
         try {
+
+            console.log(formData,"formdata");
+            
             const response = await addLecture(courseId, formData)
             // console.log(response,"lecturessss");
             setLectures([])
@@ -147,7 +151,7 @@ const AddLecture = () => {
                         <TextField label="Lecture Title" value={title} onChange={(e) => setTitle(e.target.value)} fullWidth required />
                         <TextField label="Lecture Description" value={description} onChange={(e) => setDescription(e.target.value)} fullWidth required />
                         <TextField label="Lecture Order" value={order} onChange={(e) => setOrder(e.target.value)} fullWidth required />
-                        <TextField label="Lecture Duration (minutes/hours)" value={duration} onChange={(e) => setDuration(e.target.value)} fullWidth required />
+                        <TextField label="Lecture Duration" value={duration} onChange={(e) => setDuration(e.target.value)} fullWidth required />
                     </Stack>
                     <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
                         <Button variant="contained" component="label" startIcon={<CloudUploadIcon />} sx={{ backgroundColor: "#6A0DAD" }}>

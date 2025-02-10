@@ -4,6 +4,8 @@ import { TutorRepository } from "../repositories/tutorRepository";
 import { IAdminRepository } from "../interfaces/admin/IAdminRepository";
 import { sendEmail } from "../utils/mail";
 import { TutorService } from "../services/tutorService";
+import { send } from "process";
+import mongoose from "mongoose";
 
 
 export class AdminController {
@@ -203,6 +205,14 @@ export class AdminController {
             course.status  = "approved"
             await course.save()
 
+            const tutor = course.tutorId as {_id:mongoose.Types.ObjectId; email:string;}
+
+            await sendEmail(
+                tutor.email,
+                "Your Course Publishing request has approved",
+                `Dear ${tutor.email},\n\nCongratulations! Your application to publish a course in EduElevate has been approved.\n\nBest regards,\nEduElevate Team`
+            )
+
             res.status(200).json({message:"Course approved successfully"})
         } catch (error) {
             res.status(500).json({
@@ -225,6 +235,14 @@ export class AdminController {
             course.isApproved = false;
             course.status = "rejected";
             await course.save();
+
+            const tutor = course.tutorId as { _id: mongoose.Types.ObjectId; email: string };
+            await sendEmail(
+                tutor.email,
+                "Your course publishing request has rejected",
+                `Dear ${tutor.email},\n\nWe regret to inform you that your application to publish a course in EduElevate has been rejected.\n\nBest regards,\nEduElevate Team`    
+
+            )
             res.status(200).json({message:"Course application rejected"})
         } catch (error) {
             res.status(500).json({

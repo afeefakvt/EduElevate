@@ -159,7 +159,7 @@ export const getCourseApplications = async()=>{
 export const getCourseDetails = async (courseId:string)=>{
     try {
         const response = await axiosInstance.get(`/admin/courseApplications/${courseId}`)
-        return response .data
+        return response.data
     } catch (error) {
         console.log("error is", error);
         throw handleAxiosError(error)

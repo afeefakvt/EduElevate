@@ -194,14 +194,12 @@ export const validateAddLectureForm = (lectureData: {
     video?: string;
   } = {};
 
-  // Title Validation
   if (!lectureData.title.trim()) {
     errors.title = "Title is required";
   } else if (typeof lectureData.title !== "string") {
     errors.title = "Title should be valid characters";
   }
 
-  // Description Validation
   if (!lectureData.description.trim()) {
     errors.description = "Description is required";
   } else if (typeof lectureData.description !== "string") {
@@ -210,21 +208,23 @@ export const validateAddLectureForm = (lectureData: {
     errors.description = "Description should be at least 10 characters";
   }
 
-  // Order Validation
   if (!lectureData.order.trim()) {
     errors.order = "Order is required";
   } else if (!/^\d+$/.test(lectureData.order)) {
     errors.order = "Order must be a positive number";
   }
 
-  // Duration Validation
-  if (!lectureData.duration.trim()) {
-    errors.duration = "Duration is required";
-  } else if (!/^(\d+\s*(minutes?|hours?))$/i.test(lectureData.duration)) {
-    errors.duration = "Duration should be in a valid format (e.g., '30 minutes', '1 hour')";
-  }
 
-  // Video File Validation
+
+  const durationRegex = /^(\d{1,2}:)?\d{1,2}:\d{2}$/;
+
+if (!lectureData.duration.trim()) {
+  errors.duration = "Duration is required";
+} else if (!durationRegex.test(lectureData.duration)) {
+  errors.duration = "Duration must be in hh:mm:ss or mm:ss format";
+}
+
+
   if (!lectureData.video) {
     errors.video = "Lecture video is required";
   } else {

@@ -3,7 +3,7 @@ import mongoose,{Schema,Document} from "mongoose";
 export interface ICourse extends Document{
     title:String,
     categoryId:mongoose.Types.ObjectId,
-    tutorId:mongoose.Types.ObjectId,
+    tutorId:mongoose.Types.ObjectId | {_id:mongoose.Types.ObjectId; email:string;}
     description:String,
     price:number,
     thumbnail:String,

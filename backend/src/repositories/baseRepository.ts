@@ -13,8 +13,8 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T>{
         const newItem = new this.model(data)        
         return await newItem.save()
     }
-    async findById(id:string):Promise<T | null>{
-        return await this.model.findById(id);
+     findById(id:string){
+        return this.model.findById(id);
     }
 
     async findAll():Promise<T[]>{
@@ -24,7 +24,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T>{
         return await this.model.findOne(query)
     }
      find(filter:FilterQuery<T>,options?:QueryOptions){
-        return  this.model.find(filter,null,options)
+        return this.model.find(filter,null,options)
     }
     async findByIdAndUpdate(id:string,data:Partial<T>):Promise<T | null>{
         return await this.model.findByIdAndUpdate(id,data,{new:true})

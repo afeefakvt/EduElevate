@@ -46,7 +46,7 @@ export class AdminRepository  implements IAdminRepository{
         return this.courseRepository.find({status:"pending"}).populate("categoryId","name").populate("tutorId","name").exec();
     }
     async findCourseById(courseId: string): Promise<ICourse | null> {
-        return await this.courseRepository.findById(courseId)
+        return await this.courseRepository.findById(courseId).populate("lectures").populate("tutorId","email").exec()
     }
 
 }
