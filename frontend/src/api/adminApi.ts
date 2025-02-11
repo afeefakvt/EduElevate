@@ -146,7 +146,7 @@ export const rejectTutor = async(tutorId:string)=>{
 
 export const getCourseApplications = async()=>{
     try {
-        const response  = await axiosInstance.get('/admin/courseApplications')
+        const response  = await axiosInstance.get('/admin/courseApplications    ')
         return response.data
     } catch (error) {
         console.log("error is", error);

@@ -49,14 +49,19 @@ const AddCourse = () => {
   const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
   const tutorId = tutor?._id
 
-
+  interface Category {
+    _id:string;
+    name:string;
+    isListed:Boolean;
+  }
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const categoryData = await getCategories();
         console.log("Fetched categories:", categoryData); // Debugging line
-        setCategories(categoryData)
+        const filteredCategories = categoryData.filter((category:Category) => category.isListed === true);
+        setCategories(filteredCategories);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }

@@ -1,4 +1,5 @@
 import { axiosInstance } from "./axiosInstance";
+import { handleAxiosError } from "@/utils/errorHandler";
 
 export const addCourse =async(formData:FormData)=>{
     try {
@@ -14,7 +15,7 @@ export const addCourse =async(formData:FormData)=>{
 
     } catch (error) {
         console.error("Error adding course:", error);
-        throw error;
+        throw handleAxiosError(error);   
         
     }
 }
@@ -25,7 +26,27 @@ export const getCategories = async()=>{
         return response.data.categories
     } catch (error) {
         console.error("Error fetching categories:", error);
-        throw error;
+        throw handleAxiosError(error);   
+        
+    }
+}
+export const getCourses = async()=>{
+    try {
+        const response = await axiosInstance.get('/courses')
+        return response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error);   
+    }
+}
+
+export const getCourseDetails = async(courseId:string)=>{
+    try {
+        const response = await axiosInstance.get(`/courses/${courseId}`)
+        return response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error); 
         
     }
 }

@@ -21,8 +21,7 @@ studentRouter.post('/resendOtp',studentController.resendOtp.bind(studentControll
 studentRouter.post('/login',validateStudentLogin,studentController.login.bind(studentController))
 studentRouter.post('/auth/google',studentController.googleLogin.bind(studentController))
 studentRouter.post('/forgotPassword',studentController.forgotPassword.bind(studentController))
-studentRouter.post('/resetPassword',validateForgotPassword,studentController.resetPassword.bind(studentController))
-studentRouter.get('/courses',authenticateToken,studentController.getCourses.bind(studentController))
+studentRouter.post( '/resetPassword',validateForgotPassword,studentController.resetPassword.bind(studentController))
 
 // studentRouter.post('/logout',studentController.logoutStudent.bind(studentController))
 

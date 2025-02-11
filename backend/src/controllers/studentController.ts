@@ -242,15 +242,5 @@ export class StudentController {
         }
     }
 
-    async getCourses(req:Request,res:Response):Promise<void>{
-        try {
-            const courses = await this.studentService.getCourses()
-            res.status(200).json({success:true,courses})
-        } catch (error) {
-            console.error('error')
-            res.status(500).json({success:false,message:"internal server error",error:error instanceof Error ? error.message : error,})
-
-            
-        }
-    }
+    
 }

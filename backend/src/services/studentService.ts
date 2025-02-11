@@ -55,8 +55,5 @@ export class StudentService implements IStudentService  {
         return this.studentRepository.updatePassword(studentId,newPassword)
     }
     
-    async getCourses(): Promise<ICourse[]> {
-        return this.studentRepository.getCourses()
-    }
 
 }

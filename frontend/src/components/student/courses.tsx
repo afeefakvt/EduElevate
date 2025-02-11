@@ -1,88 +1,177 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
-import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box } from "@mui/material";
-import { getCourses } from "@/api/authApi";
-
-
+import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {  getCategories } from "@/api/authApi";
+import { getCourses } from "@/api/courseApi";
+import { useNavigate } from "react-router-dom";
 
 interface Course {
   _id: string;
   thumbnail: string;
   title: string;
   description: string;
-  tutorId: { _id: string; name: string }
-  categoryId: { _id: string; name: string }
+  tutorId: { _id: string; name: string };
+  categoryId: { _id: string; name: string };
   price: number;
   duration: string;
   status: string;
-
 }
+
+
+// interface Category {
+//   _id: string;
+//   name: string;
+//   isListed: boolean;
+// }
+
 const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const navigate= useNavigate()
+  // const [categories, setCategories] = useState<Category[]>([])
+  // const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await getCourses()
-        const approvedCourses = response.courses.filter((course: any) => course.status === "approved")
-        setCourses(approvedCourses)
+        const courseResponse = await getCourses();
+        const approvedCourses = courseResponse.courses.filter((course: Course) => course.status === "approved");
+        setCourses(approvedCourses);
 
+        // const categoryResponse = await getCategories()
+        // setCategories(categoryResponse.data.categories)
       } catch (error) {
         console.error("Failed to fetch approved courses:", error);
-
-
       }
-    }
-    fetchCourses()
-  }, [])
+    };
+    fetchCourses();
+  }, []);
+
+
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+    // const matchesCategory = selectedCategory === "all" || course.categoryId.name === selectedCategory;
+    return matchesSearch 
+  });
+
+ 
+
+
 
   return (
-    <div>
-      <Navbar /> {/* Navbar at the top */}
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Navbar />
 
-      <Container sx={{ mt: 15 }}>
-        <Typography variant="h5" align="center" gutterBottom sx={{ fontWeight: "bold" }}>
+      {/* Main content takes up remaining space */}
+      <Container sx={{ mt: 15, mb: 15, flexGrow: 1 }}>
+        <Typography
+          variant="h5"
+          align="center"
+          gutterBottom
+          sx={{ fontWeight: "bold" }}
+        >
           Available Courses
-        </Typography><br />
+        </Typography>
+
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 5, mt: 5 }}>
+          <TextField
+            label="Search courses..."
+            variant="outlined"
+            fullWidth
+            sx={{ maxWidth: 1200, flex: 1 }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+{/* 
+          <FormControl sx={{ minWidth: 200, ml: 2 }}>
+            <Select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+              <MenuItem value="all">All Categories</MenuItem>
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <MenuItem key={category._id} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>No Categories Found</MenuItem>
+              )}
+            </Select>
+          </FormControl> */}
+        </Box>
+
+
         <Grid container spacing={4}>
-          {courses.map((course) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={course._id}>
-              <Card sx={{ maxWidth: 345, height: "100%", display: "flex", flexDirection: "column", boxShadow: 3, borderRadius: 2 }}>
-                <Box sx={{ height: 180, overflow: "hidden" }}>
-                  <CardMedia
-                    component="img"
-                    height="100%"
-                    image={course.thumbnail}
-                    alt={course.title}
-                    sx={{ objectFit: "cover", width: "100%" }}
-                  />
-                </Box>
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map((course) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={course._id}>
+                <Card
+                  sx={{
+                    maxWidth: 345,
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      boxShadow: 10,
+                    },
+                  }}
+                >
+                  <Box sx={{ height: 150, overflow: "hidden" }}>
+                    <CardMedia
+                      component="img"
+                      height="100%"
+                      image={course.thumbnail}
+                      alt={course.title}
+                      sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+                    />
+                  </Box>
 
-                <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <Typography gutterBottom variant="h6" component="div">
-                    {course.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {course.description}
-                  </Typography>
-                  <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-                    Enroll Now
-                  </Button>
-                </CardContent>
-              </Card>
+                  <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Typography gutterBottom variant="h6" fontWeight="Bold">
+                      {course.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" >
+                      {course.tutorId.name}
+                    </Typography>
+                    <Typography variant="h6" fontWeight="Bold" >
+                      ₹{course.price}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {course.description}
+                    </Typography>
+                    <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                      ⭐4.6 (30,000)
+                    </Typography>
 
-            </Grid>
-          ))}
+                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={()=>navigate(`/courses/${course._id}`)} >
+                      View Details
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))
+          ) : (
+            <Typography variant="h6" color="text.secondary" sx={{ width: "100%", textAlign: "center", mt: 5 }}>
+              No courses found
+            </Typography>
+          )}
         </Grid>
+
       </Container>
 
-      <Footer /> {/* Footer at the bottom */}
-    </div>
+      <Footer />
+    </Box>
   );
 };
 
 export default Courses;
+
 
 
 

@@ -48,7 +48,7 @@ function App() {
         <Route path="/login" element = {<LoginPage/>}/>
         <Route path="/resetPassword/:token" element = {<PasswordReset/>}/>
         <Route path="/courses" element = {<Courses/>}/>
-        <Route path="/courses/courseDetails" element = {<CourseDetails/>}/>
+        <Route path="/courses/:courseId" element = {<CourseDetails/>}/>
         <Route element={<StudentProtected/>}>
          <Route path="/" element = {<Home/>}/>
         </Route>

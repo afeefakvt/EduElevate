@@ -34,6 +34,18 @@ export class CourseService implements ICourseService{
             
         }
     }
+
+    async getCourses(): Promise<ICourse[]> {
+        return this.courseRepository.getCourses()
+    }
+    async getCourseDetails(courseId: string): Promise<ICourse> {
+        const course = await this.courseRepository.getCourseDetails(courseId)
+
+        if(!course){
+            throw new Error (`Course with ID ${courseId} not found`);
+        }
+        return course
+    }
     
   
 }

@@ -102,9 +102,9 @@ export const resetPassword = async(token:string | undefined,newPassword:string,c
 
 }
 
-export const getCourses = async()=>{
+export const getCategories = async()=>{
     try {
-        const response = await axiosInstance.get('/courses')
+        const response = await axiosInstance.get('/categories')
         return response.data
     } catch (error) {
         console.log("error is", error);

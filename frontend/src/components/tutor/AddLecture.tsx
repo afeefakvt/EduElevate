@@ -30,6 +30,7 @@ const AddLecture = () => {
     const [order, setOrder] = useState('');
     const [duration, setDuration] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error" | "info" | "warning">("info");
@@ -38,12 +39,10 @@ const AddLecture = () => {
 
     const handleAddLecture = () => {
 
-        const errors = validateAddLectureForm({ title, description, order, duration, video: selectedFile });
+        const validationErrors = validateAddLectureForm({ title, description, order, duration, video: selectedFile });
 
-        if (Object.keys(errors).length > 0) {
-            setSnackbarMessage(Object.values(errors).join("\n"));
-            setSnackbarSeverity("error");
-            setSnackbarOpen(true);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
             return;
         }
 
@@ -53,6 +52,7 @@ const AddLecture = () => {
             setOrder('');
             setDuration('');
             setSelectedFile(null);
+            setErrors({});
             setSnackbarMessage("Lecture added successfully!");
             setSnackbarSeverity("success");
             setSnackbarOpen(true);
@@ -148,10 +148,18 @@ const AddLecture = () => {
 
                 <Box sx={{ width: "100%" }}>
                     <Stack spacing={2} > 
-                        <TextField label="Lecture Title" value={title} onChange={(e) => setTitle(e.target.value)} fullWidth required />
-                        <TextField label="Lecture Description" value={description} onChange={(e) => setDescription(e.target.value)} fullWidth required />
-                        <TextField label="Lecture Order" value={order} onChange={(e) => setOrder(e.target.value)} fullWidth required />
-                        <TextField label="Lecture Duration" value={duration} onChange={(e) => setDuration(e.target.value)} fullWidth required />
+                        <TextField label="Lecture Title" value={title} onChange={(e) => setTitle(e.target.value)} fullWidth required 
+                              error={!!errors.title}
+                              helperText={errors.title}/>
+                        <TextField label="Lecture Description" value={description} onChange={(e) => setDescription(e.target.value)} fullWidth required 
+                              error={!!errors.description}
+                              helperText={errors.description}/>
+                        <TextField label="Lecture Order" value={order} onChange={(e) => setOrder(e.target.value)} fullWidth required 
+                               error={!!errors.order}
+                               helperText={errors.order}/>
+                        <TextField label="Lecture Duration" value={duration} onChange={(e) => setDuration(e.target.value)} fullWidth required 
+                                error={!!errors.duration}
+                                helperText={errors.duration}/>
                     </Stack>
                     <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
                         <Button variant="contained" component="label" startIcon={<CloudUploadIcon />} sx={{ backgroundColor: "#6A0DAD" }}>
@@ -167,13 +175,15 @@ const AddLecture = () => {
                     </Box>
 
                     {selectedFile && <Typography>Selected File: {selectedFile.name}</Typography>}
+                    {errors.video && <Typography color="error">{errors.video}</Typography>}
+
 
                     <Button
                         variant="contained"
                         fullWidth
                         sx={{ mt: 2, backgroundColor: "#6A0DAD" }}
                         onClick={handleAddLecture}
-                        disabled={!title || !description || !order || !duration || !selectedFile}
+                        // disabled={!title || !description || !order || !duration || !selectedFile}
                     >
                         Add Lecture
                     </Button>
@@ -217,7 +227,7 @@ const AddLecture = () => {
 
             <Footer />
         </Box>
-    );
+    )
 }
 
 export default AddLecture
