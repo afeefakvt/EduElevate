@@ -17,4 +17,5 @@ courseRoutes.get('/courses',courseController.getCourses.bind(courseController));
 courseRoutes.get('/courses/:courseId',courseController.getCourseDetails.bind(courseController));
 
 
+
 export default courseRoutes;

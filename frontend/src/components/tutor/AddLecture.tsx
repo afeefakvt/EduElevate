@@ -169,6 +169,7 @@ const AddLecture = () => {
                                 name="videoFiles"
                                 accept="video/*"
                                 hidden
+                                onClick={(e) => (e.currentTarget.value = "")} 
                                 onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
                             />
                         </Button>

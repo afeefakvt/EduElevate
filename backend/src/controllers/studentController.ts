@@ -1,16 +1,20 @@
-import { StudentRepository } from "../repositories/studentRepository";
 import { Request, Response } from "express";
-import { StudentService } from "../services/studentService";
 import { storeOtp, sendOtptoEmail } from "../utils/otp";
 import { generateToken, verifyPasswordResetToken } from "../utils/jwt";
 import { IStudentService } from "../interfaces/student/IStudentService";
-import { IStudentRepository } from "../interfaces/student/IStudentRepository";
 import { OAuth2Client } from "google-auth-library";
 import { Student } from "../models/studentModel";
+import mongoose, { mongo } from "mongoose";
+import Stripe from "stripe";
+
 
 
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!,{
+    apiVersion:"2025-01-27.acacia"
+})
 
 
 export class StudentController {
@@ -132,7 +136,7 @@ export class StudentController {
     async adminLogin(req: Request, res: Response): Promise<void> {
         try {
             const { email, password } = req.body
-            console.log("uyjhncs");
+            // console.log("uyjhncs");
             
             const { token, student,role } = await this.studentService.loginStudent(email, password)
             if (!token) {
@@ -242,5 +246,56 @@ export class StudentController {
         }
     }
 
+    async stripePayment (req:Request,res:Response):Promise<void>{
+        try {
+            const {courseId} = req.params;
+            const studentId = (req as any).student?._id;
+            const title = req.body.title
+            const price = req.body.price
+
+            if(!mongoose.Types.ObjectId.isValid(courseId)){
+                res.status(400).json({message:"Invalid course ID"})
+            }
+            const course = await this.studentService.getCourseById(courseId)
+            if(!course){
+                res.status(404).json({message:"Course not found"})
+                return;
+            }
+            const session = await stripe.checkout.sessions.create({
+                payment_method_types:["card"],
+                line_items:[
+                    {
+                        price_data: {
+                          currency: "inr",
+                          product_data: {
+                            name: title,
+                            // description: course.description,
+                          },
+                          unit_amount: Math.round(price * 100),
+                        },
+                        quantity: 1,
+                      },
+                ],
+                mode: "payment",
+                success_url: `${process.env.FRONTEND_URL}/myCourses?success=true`,
+                cancel_url: `${process.env.FRONTEND_URL}/courses/${courseId}?cancelled=true`,
+                metadata: {
+                  courseId: courseId,
+                  studentId: studentId,
+                },
+            })
+            console.log("stripe test success", session);
+            res.json({ id: session.id });
+
+            
+        } catch (error) {
+            console.error("Stripe payment error:", error);
+            res.status(500).json({message: "Payment setup failed", error: (error as Error).message,
+        });
+
+            
+        }
+
+    }
     
 }

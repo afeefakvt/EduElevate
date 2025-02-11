@@ -210,12 +210,10 @@ export const validateAddLectureForm = (lectureData: {
 
   if (!lectureData.order.trim()) {
     errors.order = "Order is required";
-  } else if (!/^\d+$/.test(lectureData.order)) {
+  } else if  (isNaN(Number(lectureData.order)) || Number(lectureData.order) < 0) {
     errors.order = "Order must be a positive number";
-  }
-
-
-
+}
+  
   const durationRegex = /^(\d{1,2}:)?\d{1,2}:\d{2}$/;
 
 if (!lectureData.duration.trim()) {

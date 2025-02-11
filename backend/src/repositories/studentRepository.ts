@@ -28,5 +28,9 @@ export class StudentRepository extends BaseRepository<IStudent> implements IStud
         const hashedPassword = await bcrypt.hash(newPassword,10)
         return await this.findByIdAndUpdate(studentId,{password:hashedPassword});
     }
+     async getCourseById(courseId: string): Promise<IStudent | null> {
+        return await Course.findById(courseId)
+        
+    }
  
 }

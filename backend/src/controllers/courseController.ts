@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import { ICourseService } from "../interfaces/course/ICourseService";
-import { log } from "console";
+import mongoose from "mongoose";
 
 
 
@@ -53,5 +53,6 @@ export class CourseController{
             
         }
     }
+    
 
 }

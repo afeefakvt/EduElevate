@@ -17,4 +17,5 @@
             return await this.findById(courseId).populate("lectures").populate("tutorId","name").exec()
             
         }
+       
     }

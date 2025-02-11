@@ -1,4 +1,7 @@
 import { BrowserRouter as Router,Routes,Route } from "react-router-dom"
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
 import Home from "./pages/Home"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
@@ -34,6 +37,8 @@ import TutorResetPassword from "./components/tutor/TutorResetPassword"
 import { ThemeProvider} from './components/ui/themeProvider'
 import PasswordReset from "./components/common/PasswordReset"
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+
 function App() {
   return (
     <>
@@ -48,7 +53,11 @@ function App() {
         <Route path="/login" element = {<LoginPage/>}/>
         <Route path="/resetPassword/:token" element = {<PasswordReset/>}/>
         <Route path="/courses" element = {<Courses/>}/>
-        <Route path="/courses/:courseId" element = {<CourseDetails/>}/>
+        <Route path="/courses/:courseId" element = {
+          <Elements stripe={stripePromise}>
+            <CourseDetails/>
+          </Elements>
+          }/>
         <Route element={<StudentProtected/>}>
          <Route path="/" element = {<Home/>}/>
         </Route>
@@ -63,10 +72,11 @@ function App() {
          <Route path="/admin/categories" element = {<Category/>}/>
          <Route path="/admin/courses" element = {<AdminCourses/>}/>
          <Route path="/admin/courseApplications" element = {<CourseApplications/>}/>
-         <Route path="/admin/courseApplications/:courseId" element = {<CourseDetailsAdmin/>}/>
+         <Route path="/admin/courseApplications/:courseId" element = {<CourseDetailsAdmin/> }/>
         </Route>
 
        
+
         <Route path="/tutor/register" element = {<TutorRegisterPage/>}/>
         <Route path="/tutor/verifyOtp" element = {<TutorOtp/>}/>
         <Route path="/tutor/login" element = {<TutorLoginPage/>}/>

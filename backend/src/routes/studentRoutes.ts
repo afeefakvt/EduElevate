@@ -22,6 +22,7 @@ studentRouter.post('/login',validateStudentLogin,studentController.login.bind(st
 studentRouter.post('/auth/google',studentController.googleLogin.bind(studentController))
 studentRouter.post('/forgotPassword',studentController.forgotPassword.bind(studentController))
 studentRouter.post( '/resetPassword',validateForgotPassword,studentController.resetPassword.bind(studentController))
+studentRouter.post( '/course/checkout/:courseId',authenticateToken,studentController.stripePayment.bind(studentController))
 
 // studentRouter.post('/logout',studentController.logoutStudent.bind(studentController))
 

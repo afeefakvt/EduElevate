@@ -66,10 +66,9 @@ const Courses = () => {
       <Navbar />
 
       {/* Main content takes up remaining space */}
-      <Container sx={{ mt: 15, mb: 15, flexGrow: 1 }}>
+      <Container sx={{ mt: 15,mb:15, flexGrow: 1 }}>
         <Typography
           variant="h5"
-          align="center"
           gutterBottom
           sx={{ fontWeight: "bold" }}
         >

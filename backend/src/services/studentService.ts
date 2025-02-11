@@ -1,4 +1,3 @@
-import { StudentRepository } from "../repositories/studentRepository";
 import { IStudent } from "../models/studentModel";
 import { IStudentService } from "../interfaces/student/IStudentService";
 import { IStudentRepository } from "../interfaces/student/IStudentRepository";
@@ -7,8 +6,6 @@ import { validateOtp } from "../utils/otp";
 import { login } from "./authService";
 import { generatePasswordResetToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetPassword";
-import { ICourse } from "../models/courseModel";
-import { CourseRepository } from "../repositories/courseRepository";
 
 
 export class StudentService implements IStudentService  {
@@ -54,6 +51,8 @@ export class StudentService implements IStudentService  {
     async updatePassword(studentId:string,newPassword:string):Promise<IStudent | null>{
         return this.studentRepository.updatePassword(studentId,newPassword)
     }
-    
+    async getCourseById(courseId: string): Promise<IStudent | null> {
+        return this.studentRepository.getCourseById(courseId)
+    }
 
 }

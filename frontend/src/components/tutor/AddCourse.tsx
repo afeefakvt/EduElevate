@@ -181,7 +181,7 @@ const AddCourse = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        py: 10, // Adds padding to avoid sticking to top
+        py: 15, // Adds padding to avoid sticking to top
       }} >
         <Typography variant="h5" sx={{ my: 3, fontWeight: 650 }}>Add a Course</Typography>
 

@@ -5,6 +5,7 @@ export interface ICourseService{
     addCourse(courseData:Partial<ICourse>,file?:Express.Multer.File):Promise<ICourse | null>
     getCourses():Promise<ICourse[]>
     getCourseDetails(courseId:string):Promise<ICourse>
+    
 
     
 }
