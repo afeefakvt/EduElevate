@@ -1,3 +1,6 @@
+import { ERROR_MESSAGES } from "@/constants/messages";
+
+
 
 export const validateLoginForm = (email: string, password: string) => {
     const errors: { email?: string; password?: string } = {};
@@ -5,16 +8,16 @@ export const validateLoginForm = (email: string, password: string) => {
     // Validate email format
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email) {
-      errors.email = 'Email is required';
+      errors.email = ERROR_MESSAGES.REQUIRED.EMAIL
     } else if (!emailRegex.test(email)) {
-      errors.email = 'Invalid email format';
+      errors.email = ERROR_MESSAGES.INVALID.EMAIL
     }
   
     // Validate password (e.g., minimum 6 characters)
     if (!password) {
-      errors.password = 'Password is required';
+      errors.password = ERROR_MESSAGES.REQUIRED.PASSWORD
     } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      errors.password = ERROR_MESSAGES.INVALID.PASSWORD_LENGTH
     }
   
     return errors;
@@ -25,38 +28,38 @@ export const validateLoginForm = (email: string, password: string) => {
     const errors: { name?: string; email?: string; password?: string; confirmPassword?:string; title?: string; bio?: string } = {};
   
     if (!name.trim()) {
-      errors.name = "Name is required";
+      errors.name = ERROR_MESSAGES.REQUIRED.NAME
     }
   
     if (!email.trim()) {
-      errors.email = "Email is required";
+      errors.email = ERROR_MESSAGES.REQUIRED.EMAIL
     } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(email)) {
-      errors.email = "Invalid email format";
+      errors.email = ERROR_MESSAGES.INVALID.EMAIL
     }
   
     if (!password) {
-      errors.password = "Password is required";
+      errors.password = ERROR_MESSAGES.REQUIRED.PASSWORD
     } else if (password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
+      errors.password = ERROR_MESSAGES.INVALID.PASSWORD_LENGTH
     }
     if (!confirmPassword) {
-      errors.confirmPassword = "Confirm Password is required";
+      errors.confirmPassword = ERROR_MESSAGES.REQUIRED.CONFIRM_PASSWORD
     } else if (confirmPassword.length < 6) {
-      errors.confirmPassword = "Password must be at least 6 characters";
+      errors.confirmPassword = ERROR_MESSAGES.INVALID.PASSWORD_LENGTH
     }else if(confirmPassword!==password){
-      errors.confirmPassword = "Confirm Password should be same as entered Password"
+      errors.confirmPassword = ERROR_MESSAGES.INVALID.PASSWORD_MATCH
     }
   
     if (!title.trim()) {
-      errors.title = "Title is required";
+      errors.title = ERROR_MESSAGES.REQUIRED.TITLE
     }else if(typeof title!== 'string'){
-        errors.title = 'Title should be valid characters'
+        errors.title = ERROR_MESSAGES.INVALID.TITLE
     }
   
     if (!bio.trim()) {
-      errors.bio = "Bio is required";
+      errors.bio = ERROR_MESSAGES.REQUIRED.BIO
     }else if(typeof bio !== 'string'){
-        errors.bio = 'Bio should be valid characters'
+        errors.bio = ERROR_MESSAGES.INVALID.BIO
     }
   
     return errors;
@@ -67,25 +70,25 @@ export const validateLoginForm = (email: string, password: string) => {
     let errors: { name?: string; email?: string; password?: string; confirmPassword?: string } = {};
 
     if (!name.trim()) {
-        errors.name = "Full Name is required";
+        errors.name = ERROR_MESSAGES.REQUIRED.NAME
     }
 
     if (!email.trim()) {
-        errors.email = "Email is required";
+        errors.email = ERROR_MESSAGES.REQUIRED.EMAIL
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-        errors.email = "Invalid email format";
+        errors.email = ERROR_MESSAGES.INVALID.EMAIL
     }
 
     if (!password.trim()) {
-        errors.password = "Password is required";
+        errors.password =ERROR_MESSAGES.REQUIRED.PASSWORD
     } else if (password.length < 6) {
-        errors.password = "Password must be at least 6 characters";
+        errors.password = ERROR_MESSAGES.INVALID.PASSWORD_LENGTH
     }
 
     if (!confirmPassword.trim()) {
-        errors.confirmPassword = "Confirm Password is required";
+        errors.confirmPassword = ERROR_MESSAGES.REQUIRED.CONFIRM_PASSWORD
     } else if (confirmPassword !== password) {
-        errors.confirmPassword = "Passwords do not match";
+        errors.confirmPassword = ERROR_MESSAGES.INVALID.PASSWORD_MATCH
     }
 
     return errors;
@@ -97,15 +100,15 @@ export const validateResetPasswordForm = ( password: string, confirmPassword: st
 
 
   if (!password.trim()) {
-      errors.password = "Password is required";
+      errors.password = ERROR_MESSAGES.REQUIRED.PASSWORD
   } else if (password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
+      errors.password = ERROR_MESSAGES.INVALID.PASSWORD_LENGTH
   }
 
   if (!confirmPassword.trim()) {
-      errors.confirmPassword = "Confirm Password is required";
+      errors.confirmPassword = ERROR_MESSAGES.REQUIRED.CONFIRM_PASSWORD
   } else if (confirmPassword !== password) {
-      errors.confirmPassword = "Passwords do not match";
+      errors.confirmPassword = ERROR_MESSAGES.INVALID.PASSWORD_MATCH
   }
 
   return errors;
@@ -133,44 +136,44 @@ export const validateResetPasswordForm = ( password: string, confirmPassword: st
     } = {};
 
     if (!formData.title.trim()) {
-      errors.title = "Title is required.";
+      errors.title = ERROR_MESSAGES.REQUIRED.TITLE
     } else if (typeof formData.title !== "string") {
-      errors.title = "Title should be valid characters.";
+      errors.title = ERROR_MESSAGES.INVALID.TITLE
     }
 
     if (!formData.description.trim()) {
-      errors.description = "Description is required.";
+      errors.description = ERROR_MESSAGES.REQUIRED.DESCRIPTION
     } else if (typeof formData.description !== "string") {
       errors.description = "Description should be valid characters.";
     } else if (formData.description.length < 10) {
-      errors.description = "Description should be at least 10 characters.";
+      errors.description = ERROR_MESSAGES.INVALID.DESCRIPTION
     }
 
     if (!formData.category.trim()) {
-      errors.category = "Category is required.";
+      errors.category = ERROR_MESSAGES.REQUIRED.CATEGORY
     } 
 
     if (!formData.price) {
-      errors.price = "Valid Price is required.";
+      errors.price = ERROR_MESSAGES.REQUIRED.PRICE
     } else if (typeof formData.price !== "number" || formData.price < 0) {
-      errors.price = "Price must be a positive number.";
+      errors.price = ERROR_MESSAGES.INVALID.PRICE
     }
 
     if (!formData.duration.trim()) {
-      errors.duration = "Duration is required.";
+      errors.duration = ERROR_MESSAGES.REQUIRED.DURATION
     } else if (!/^\d+\s*(hours?|days?|weeks?|months?)$/i.test(formData.duration)) {
-      errors.duration = "Duration should be in a valid format (e.g., '10 hours', '2 weeks'.)";
+      errors.duration = ERROR_MESSAGES.INVALID.DURATION
     }
 
     if (!formData.thumbnail) {
-      errors.thumbnail = "Thumbnail image is required.  ";
+      errors.thumbnail = ERROR_MESSAGES.REQUIRED.THUMBNAIL
     } else {
       const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
       if (!allowedTypes.includes(formData.thumbnail.type)) {
-        errors.thumbnail = "Thumbnail must be in PNG, JPEG, or WEBP format.";
+        errors.thumbnail = ERROR_MESSAGES.INVALID.THUMBNAIL_FORMAT
       }
       if (formData.thumbnail.size > 5 * 1024 * 1024) {
-        errors.thumbnail = "Thumbnail size must be less than 5MB.";
+        errors.thumbnail = ERROR_MESSAGES.INVALID.THUMBNAIL_SIZE
       }
     }
 
@@ -195,43 +198,43 @@ export const validateAddLectureForm = (lectureData: {
   } = {};
 
   if (!lectureData.title.trim()) {
-    errors.title = "Title is required";
+    errors.title = ERROR_MESSAGES.REQUIRED.TITLE
   } else if (typeof lectureData.title !== "string") {
-    errors.title = "Title should be valid characters";
+    errors.title = ERROR_MESSAGES.INVALID.TITLE
   }
 
   if (!lectureData.description.trim()) {
-    errors.description = "Description is required";
+    errors.description = ERROR_MESSAGES.REQUIRED.DESCRIPTION
   } else if (typeof lectureData.description !== "string") {
     errors.description = "Description should be valid characters";
   } else if (lectureData.description.length < 10) {
-    errors.description = "Description should be at least 10 characters";
+    errors.description = ERROR_MESSAGES.INVALID.DESCRIPTION
   }
 
   if (!lectureData.order.trim()) {
-    errors.order = "Order is required";
+    errors.order = ERROR_MESSAGES.REQUIRED.ORDER
   } else if  (isNaN(Number(lectureData.order)) || Number(lectureData.order) < 0) {
-    errors.order = "Order must be a positive number";
+    errors.order = ERROR_MESSAGES.INVALID.ORDER
 }
   
   const durationRegex = /^(\d{1,2}:)?\d{1,2}:\d{2}$/;
 
 if (!lectureData.duration.trim()) {
-  errors.duration = "Duration is required";
+  errors.duration = ERROR_MESSAGES.REQUIRED.DURATION
 } else if (!durationRegex.test(lectureData.duration)) {
-  errors.duration = "Duration must be in hh:mm:ss or mm:ss format";
+  errors.duration = ERROR_MESSAGES.INVALID.LECTURE_DURATION
 }
 
 
   if (!lectureData.video) {
-    errors.video = "Lecture video is required";
+    errors.video = ERROR_MESSAGES.REQUIRED.VIDEO
   } else {
     const allowedTypes = ["video/mp4", "video/mkv", "video/avi", "video/mov"];
     if (!allowedTypes.includes(lectureData.video.type)) {
-      errors.video = "Video must be in MP4, MKV, AVI, or MOV format";
+      errors.video = ERROR_MESSAGES.INVALID.VIDEO_FORMAT
     }
     if (lectureData.video.size > 500 * 1024 * 1024) { // 500MB limit
-      errors.video = "Video size must be less than 500MB";
+      errors.video = ERROR_MESSAGES.INVALID.VIDEO_SIZE
     }
   }
 

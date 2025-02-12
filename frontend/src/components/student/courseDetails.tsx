@@ -56,7 +56,6 @@ const CourseDetails = () => {
 
 
 
-
   useEffect(() => {
     const fetchCourse = async () => {
       if (!courseId) return;
@@ -78,12 +77,12 @@ const CourseDetails = () => {
   const handleCheckout = async()=>{
     setLoading(true);
     try {
-      if(!courseId) return;
+      if(!courseId ) return;
 
 
       console.log("courseId",courseId);
 
-      const response = await axiosInstance.post(`/course/checkout/${courseId}`,{title:course?.title,price:course?.price});
+      const response = await axiosInstance.post(`/course/checkout/${courseId}`,{title:course?.title,price:course?.price });
 
       const {id:sessionId} = response.data
 
