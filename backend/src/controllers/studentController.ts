@@ -248,13 +248,16 @@ export class StudentController {
 
     async stripePayment (req:Request,res:Response):Promise<void>{
         try {
+
+            console.log("stripeeeeeeeeeee")
             const {courseId} = req.params;
-            const studentId = (req as any).student?._id;
+            const studentId = (req as any).student?._id.toString();
             const title = req.body.title
             const price = req.body.price
 
             if(!mongoose.Types.ObjectId.isValid(courseId)){
                 res.status(400).json({message:"Invalid course ID"})
+                return;
             }
             const course = await this.studentService.getCourseById(courseId)
             if(!course){
@@ -277,14 +280,14 @@ export class StudentController {
                       },
                 ],
                 mode: "payment",
-                success_url: `${process.env.FRONTEND_URL}/myCourses?success=true`,
+                success_url: `${process.env.FRONTEND_URL}/courses/${courseId}?success=true`,
                 cancel_url: `${process.env.FRONTEND_URL}/courses/${courseId}?cancelled=true`,
                 metadata: {
                   courseId: courseId,
-                  studentId: studentId,
+                  studentId: studentId.toString(),
                 },
             })
-            console.log("stripe test success", session);
+            console.log("stripe test success");
             res.json({ id: session.id });
 
             

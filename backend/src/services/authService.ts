@@ -42,12 +42,12 @@ export const tutorLogin  = async(email:string,password:string,repository:ITutorR
     if(!isValidPassword){
         throw new Error('invalid password')
     }
-    if (tutor.isApproved===false) {
+    if (tutor.status==="pending") {
         throw new Error('You cannot login. Your account is waiting admin approval')
         
       }
       if (tutor.status==='rejected') {
-        throw new Error('Your cannot login. Your approval is rejected by admin')
+        throw new Error(' Sorry you cannot login. Your approval is rejected by admin')
       }
 
     //   console.log(tutor,'hvhyhgbijmp;l')

@@ -24,6 +24,9 @@ import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "@/api/axiosInstance";
 import { handleAxiosError } from "@/utils/errorHandler";
+import { useLocation } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 
 
@@ -53,6 +56,12 @@ const CourseDetails = () => {
   const navigate = useNavigate()
   const stripe = useStripe()
   const elements = useElements();
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const isSuccess = searchParams.get("success")==="true"
+  const isCancelled = searchParams.get("cancelled")==="true"
+  const [openSnackbar,setOpenSnackbar] = useState(false)
+
 
 
 
@@ -71,13 +80,20 @@ const CourseDetails = () => {
       }
     }
     fetchCourse()
-  }, [courseId])
+  }, [courseId]);
+
+
+  useEffect(()=>{
+   if(isSuccess || isCancelled){
+    setOpenSnackbar(true)
+   } 
+  },[isSuccess,isCancelled])
 
 
   const handleCheckout = async()=>{
     setLoading(true);
     try {
-      if(!courseId ) return;
+      if( !stripe || !elements || !courseId || !course ) return;
 
 
       console.log("courseId",courseId);
@@ -112,7 +128,7 @@ const CourseDetails = () => {
         <Grid container spacing={4}>
           {loading ? (
             <div className="flex justify-center items-center h-40">
-              <p className="text-lg font-semibold">Loading course details...</p>
+              <p className="text-lg font-semibold">Loading...</p>
             </div>
           ) : !course ? (
             <p className="text-red-500 text-lg font-semibold">Course not found.</p>
@@ -243,6 +259,21 @@ const CourseDetails = () => {
         </Grid>
       </Container>
       <Footer />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000} 
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity={isSuccess ? "success" : "error"}
+          // variant="filled"
+
+        >
+          {isSuccess ? "Payment Successful! You have been enrolled in the course" : "Payment Failed. Please try again."}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

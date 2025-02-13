@@ -9,6 +9,7 @@ import OtpPage from "./pages/OtpPage"
 import Courses from "./components/student/Courses"
 import CourseDetails from "./components/student/CourseDetails"
 import StudentProtected from "./components/protectedRoutes/Studentprotected"
+import MyCourses from "./components/student/MyCourses";
 
 
 
@@ -60,6 +61,7 @@ function App() {
           }/>
         <Route element={<StudentProtected/>}>
          <Route path="/" element = {<Home/>}/>
+         <Route path="/myCourses" element = {<MyCourses/>}/>
         </Route>
         
 

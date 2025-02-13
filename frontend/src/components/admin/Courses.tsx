@@ -85,14 +85,14 @@ export default function AdminCourses() {
               </TableHeader>
               <TableBody>
                 {currentCourses.map((course) => (
-                  <TableRow key={course._id}>
-                    <TableCell>{course.title}</TableCell>
-                    <TableCell>{course.tutorId.name}</TableCell>
-                    <TableCell>{course.categoryId.name}</TableCell>
-                    <TableCell>₹{course.price}</TableCell>
-                    <TableCell>{course.status}</TableCell>
-                    <TableCell>{course.totalRatings}</TableCell>
-                    <TableCell>{course.studentsEnrolled}</TableCell>
+                  <TableRow key={course?._id}>
+                    <TableCell>{course?.title}</TableCell>
+                    <TableCell>{course?.tutorId?.name}</TableCell>
+                    <TableCell>{course?.categoryId?.name}</TableCell>
+                    <TableCell>₹{course?.price}</TableCell>
+                    <TableCell>{course?.status}</TableCell>
+                    <TableCell>{course?.totalRatings}</TableCell>
+                    <TableCell>{course?.studentsEnrolled}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

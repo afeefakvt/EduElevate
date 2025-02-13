@@ -19,7 +19,6 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNavigate, useParams } from "react-router-dom";
 import { addLecture } from "@/api/lectureApi";
 import { validateAddLectureForm } from "@/utils/validations";
-import { log } from "console";
 
 const AddLecture = () => {
 

@@ -9,7 +9,7 @@ import categoryRoutes from './routes/categoryRoutes'
 import { morganMiddleware,logger } from './middlewares/centralisedLogs'
 import courseRoutes from './routes/courseRoutes'
 import lectureRoutes from './routes/lectureRoutes'
-import multer from 'multer'
+import enrollmentRoutes from './routes/enrollmentRoutes'
 
 
 
@@ -36,6 +36,7 @@ app.use('/',tutorRoutes);
 app.use('/',categoryRoutes);
 app.use('/',courseRoutes);
 app.use('/',lectureRoutes);
+app.use('/',enrollmentRoutes);
 
 app.get('/',(req,res)=>{
     res.send('hello')
