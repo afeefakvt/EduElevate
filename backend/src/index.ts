@@ -10,6 +10,8 @@ import { morganMiddleware,logger } from './middlewares/centralisedLogs'
 import courseRoutes from './routes/courseRoutes'
 import lectureRoutes from './routes/lectureRoutes'
 import enrollmentRoutes from './routes/enrollmentRoutes'
+import webhookRoutes from './routes/webhookRoutes'
+import Stripe from 'stripe'
 
 
 
@@ -37,6 +39,7 @@ app.use('/',categoryRoutes);
 app.use('/',courseRoutes);
 app.use('/',lectureRoutes);
 app.use('/',enrollmentRoutes);
+app.use('/webhook',express.raw({type:"application/json"}),webhookRoutes);
 
 app.get('/',(req,res)=>{
     res.send('hello')

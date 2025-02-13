@@ -7,8 +7,10 @@ import { EnrollmentService } from "../services/enrollmentService";
 
 const enrollmentRepository = new EnrollmentRepository()
 const enrollmentService = new EnrollmentService(enrollmentRepository)
-const enrollmentContoller = new EnrollmentController(enrollmentService)
+const enrollmentController = new EnrollmentController(enrollmentService)
 
 const enrollmentRoutes = Router()
+
+enrollmentRoutes.get('/enrollment/myCourses',authenticateToken,enrollmentController.getEnrolledCoursesByStudent.bind(enrollmentController));
 
 export default enrollmentRoutes

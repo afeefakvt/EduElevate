@@ -71,7 +71,7 @@ const MyCourses = () => {
           gutterBottom
           sx={{ fontWeight: "bold" }}
         >
-          Available Courses
+          Enrolled Courses
         </Typography>
 
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 5, mt: 5 }}>

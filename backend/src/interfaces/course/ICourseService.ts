@@ -6,6 +6,5 @@ export interface ICourseService{
     getCourses():Promise<ICourse[]>
     getCourseDetails(courseId:string):Promise<ICourse>
     
-
     
 }
