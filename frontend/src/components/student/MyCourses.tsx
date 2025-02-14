@@ -5,6 +5,10 @@ import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box,
 import {  getCategories } from "@/api/authApi";
 import { fetchEnrolledCourses } from "@/api/enrollmentApi";
 import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import { useLocation } from "react-router-dom";
+
 
 
 interface Course {
@@ -42,6 +46,10 @@ const MyCourses = () => {
   const navigate= useNavigate()
   // const [categories, setCategories] = useState<Category[]>([])
   // const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const isSuccess = searchParams.get("success")==="true"
+  const [openSnackbar,setOpenSnackbar] = useState(false)
 
 
 
@@ -63,6 +71,12 @@ const MyCourses = () => {
     fetchCourses();
   }, []);
 
+
+  useEffect(()=>{
+    if(isSuccess){
+     setOpenSnackbar(true)
+    } 
+   },[isSuccess])
 
   const filteredCourses = enrolledCourses.filter((course) => {
     const matchesSearch = course.courseId.title?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -161,8 +175,8 @@ const MyCourses = () => {
                       ⭐4.6 (30,000)
                     </Typography>
 
-                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={()=>navigate(`/myCourses/${course._id}`)} >
-                      View Details
+                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={()=>navigate(`/myCourses/${course.courseId._id}`)} >
+                      Start Watching
                     </Button>
                   </CardContent>
                 </Card>
@@ -178,6 +192,21 @@ const MyCourses = () => {
       </Container>
 
       <Footer />
+       <Snackbar
+              open={openSnackbar}
+              autoHideDuration={4000} 
+              onClose={() => setOpenSnackbar(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              <Alert
+                onClose={() => setOpenSnackbar(false)}
+                severity={isSuccess ? "success" : "error"}
+                // variant="filled"
+      
+              >
+                {isSuccess ? "Payment Successful! You have been enrolled in the course" : "Payment Failed. Please try again."}
+              </Alert>
+            </Snackbar>
     </Box>
   );
 };

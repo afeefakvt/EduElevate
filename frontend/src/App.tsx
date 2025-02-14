@@ -10,6 +10,7 @@ import Courses from "./components/student/Courses"
 import CourseDetails from "./components/student/CourseDetails"
 import StudentProtected from "./components/protectedRoutes/Studentprotected"
 import MyCourses from "./components/student/MyCourses";
+import LecturePage from "./components/student/LecturePage";
 
 
 
@@ -62,6 +63,7 @@ function App() {
         <Route element={<StudentProtected/>}>
          <Route path="/" element = {<Home/>}/>
          <Route path="/myCourses" element = {<MyCourses/>}/>
+         <Route path="/myCourses/:courseId" element = {<LecturePage/>}/>
         </Route>
         
 
