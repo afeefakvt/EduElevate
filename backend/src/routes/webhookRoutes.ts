@@ -7,6 +7,6 @@ const webhookController = new WebhookController(); // Create an instance
 
 
 
-webhookRoutes.post('/webhook',webhookController.stripeWebhook.bind(webhookController))
+webhookRoutes.post('/',webhookController.stripeWebhook.bind(webhookController))
 
 export default webhookRoutes

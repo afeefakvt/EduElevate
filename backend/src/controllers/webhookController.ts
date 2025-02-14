@@ -17,6 +17,7 @@ export default class WebhookController {
         const sig = req.headers["stripe-signature"] as string | undefined;
 
         if (!sig) {
+            console.error("Missing stripe-signature header.");
             res.status(400).send("Missing stripe-signature header.");
             return;
         }
@@ -24,7 +25,7 @@ export default class WebhookController {
         let event;
         try {
             event = stripe.webhooks.constructEvent(
-                req.body as Buffer,  
+                req.body, 
                 sig,
                 process.env.STRIPE_WEBHOOK_SECRET!
             );
@@ -52,7 +53,7 @@ export default class WebhookController {
                     await Enrollment.create({
                         studentId,
                         courseId,
-                        paymentStatus: "Success",
+                        paymentStatus: "success",
                         paymentAmount
                     });
 
@@ -60,9 +61,27 @@ export default class WebhookController {
                     responseSent = true;
                     break;
 
+                case "payment_intent.payment_failed":
+                    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+
+                    const failedStudentId = paymentIntent.metadata?.studentId;
+                    const failedAmount = paymentIntent.amount_received
+                      ? paymentIntent.amount_received / 100
+                      : 0;
+
+                    responseSent = true; 
+                    break;
+
+
+                case "charge.succeeded":
+                case "payment_intent.succeeded":
+                case "payment_intent.created":
+                    console.log(`Unhandled event typeee ${event.type}`);
+                    break;
+
                 case "checkout.session.expired":
                     console.log("Payment session expired.");
-                    break;
+                    break; 
 
                 default:
                     console.log(`Unhandled event type: ${event.type}`);

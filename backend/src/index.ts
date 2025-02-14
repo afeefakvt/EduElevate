@@ -24,6 +24,9 @@ app.use(cors({
     credentials:true
 })
 );
+
+app.use('/webhook',express.raw({type:"application/json"}),webhookRoutes);
+
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
@@ -39,7 +42,8 @@ app.use('/',categoryRoutes);
 app.use('/',courseRoutes);
 app.use('/',lectureRoutes);
 app.use('/',enrollmentRoutes);
-app.use('/webhook',express.raw({type:"application/json"}),webhookRoutes);
+
+
 
 app.get('/',(req,res)=>{
     res.send('hello')

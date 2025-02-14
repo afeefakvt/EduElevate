@@ -6,16 +6,27 @@ import {  getCategories } from "@/api/authApi";
 import { fetchEnrolledCourses } from "@/api/enrollmentApi";
 import { useNavigate } from "react-router-dom";
 
+
 interface Course {
-  _id: string;
-  thumbnail: string;
-  title: string;
-  description: string;
-  tutorId: { _id: string; name: string };
-  categoryId: { _id: string; name: string };
-  price: number;
-  duration: string;
-  status: string;
+    _id: string;
+    title: string;
+    thumbnail: string;
+    tutorId: {
+      name: string;
+    };
+    price: number;
+    description: string;
+  }
+
+
+
+
+interface Enrollment {
+    _id:string;
+  courseId: Course;
+  studentId:string;
+  paymentStatus:string;
+  paymentAmount:string;
 }
 
 
@@ -26,7 +37,7 @@ interface Course {
 // }
 
 const MyCourses = () => {
-  const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
+  const [enrolledCourses, setEnrolledCourses] = useState<Enrollment[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate= useNavigate()
   // const [categories, setCategories] = useState<Category[]>([])
@@ -38,6 +49,9 @@ const MyCourses = () => {
     const fetchCourses = async () => {
       try {
         const response = await fetchEnrolledCourses();
+        console.log("repsonseeeeee")
+        console.log("Fetched enrolled courses:", response);
+
         setEnrolledCourses(response);
 
         // const categoryResponse = await getCategories()
@@ -51,7 +65,7 @@ const MyCourses = () => {
 
 
   const filteredCourses = enrolledCourses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = course.courseId.title?.toLowerCase().includes(searchQuery.toLowerCase());
     // const matchesCategory = selectedCategory === "all" || course.categoryId.name === selectedCategory;
     return matchesSearch 
   });
@@ -124,30 +138,30 @@ const MyCourses = () => {
                     <CardMedia
                       component="img"
                       height="100%"
-                      image={course.thumbnail}
-                      alt={course.title}
+                      image={course.courseId.thumbnail}
+                      alt={course.courseId.title}
                       sx={{ width: "100%", height: "100%", objectFit: "contain" }}
                     />
                   </Box>
 
                   <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                     <Typography gutterBottom variant="h6" fontWeight="Bold">
-                      {course.title}
+                      {course.courseId.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" >
-                      {course.tutorId.name}
+                      {course.courseId.tutorId.name}
                     </Typography>
                     <Typography variant="h6" fontWeight="Bold" >
-                      ₹{course.price}
+                      ₹{course.courseId.price}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {course.description}
+                      {course.courseId.description}
                     </Typography>
                     <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
                       ⭐4.6 (30,000)
                     </Typography>
 
-                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={()=>navigate(`/courses/${course._id}`)} >
+                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={()=>navigate(`/myCourses/${course._id}`)} >
                       View Details
                     </Button>
                   </CardContent>

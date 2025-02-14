@@ -255,6 +255,11 @@ export class StudentController {
             const title = req.body.title
             const price = req.body.price
 
+
+            console.log(courseId,"coyrseeeeeid");
+            console.log(studentId,"studentttttttttt");
+            
+            
             if(!mongoose.Types.ObjectId.isValid(courseId)){
                 res.status(400).json({message:"Invalid course ID"})
                 return;
@@ -280,7 +285,7 @@ export class StudentController {
                       },
                 ],
                 mode: "payment",
-                success_url: `${process.env.FRONTEND_URL}/courses/${courseId}?success=true`,
+                success_url: `${process.env.FRONTEND_URL}/myCourses?success=true`,
                 cancel_url: `${process.env.FRONTEND_URL}/courses/${courseId}?cancelled=true`,
                 metadata: {
                   courseId: courseId,
