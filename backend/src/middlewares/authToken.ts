@@ -1,10 +1,14 @@
 import { verifyToken } from "../utils/jwt";
 import { Request,Response,NextFunction } from "express";
-import { Student } from "../models/studentModel";
+import { IStudent, Student } from "../models/studentModel";
 import { JwtPayload } from "jsonwebtoken";
 
 interface DecodedToken extends JwtPayload{
     id:string
+}
+
+interface RequestWithStudent extends Request{
+    student:IStudent
 }
 export const authenticateToken = async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
     const token = req.cookies.authToken

@@ -3,6 +3,7 @@ import { ITutorRepository } from "../interfaces/tutor/ITutorRepository";
 import Tutor, { ITutor } from "../models/tutorModel";
 import bcrypt from 'bcryptjs'
 import { BaseRepository } from "./baseRepository";
+import Course, { ICourse } from "../models/courseModel";
 
 export class TutorRepository extends BaseRepository<ITutor> implements ITutorRepository{
 
@@ -19,5 +20,11 @@ export class TutorRepository extends BaseRepository<ITutor> implements ITutorRep
             const hashedPassword = await bcrypt.hash(newPassword,10)
             return await this.findByIdAndUpdate(studentId,{password:hashedPassword});
         }
+    async getTutorCourses(tutorId: string): Promise<ICourse[]> {
+        return await Course.find({tutorId:tutorId})
+    }
+    async getTutorCourseDetails(courseId: string): Promise<ICourse | null> {
+        return await Course.findById(courseId).populate("lectures").populate("tutorId")
+    }
 
 }

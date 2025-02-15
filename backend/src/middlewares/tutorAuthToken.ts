@@ -6,6 +6,7 @@ import Tutor from "../models/tutorModel";
 interface DecodedToken extends JwtPayload{
     id:string
 }
+
 export const authenticateToken = async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
     const token = req.cookies.tutorAuthToken
 

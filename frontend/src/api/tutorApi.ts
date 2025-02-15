@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { axiosInstance } from "./axiosInstance";
 import {store} from '../store/store'
 import { tutorLoginSuccess } from "../store/tutorAuthSlice";
+import { handleAxiosError } from "@/utils/errorHandler";
 
 
 export const signUp = async(name:string,email:string,password:string,confirmPassword:string,title:string,bio:string)=>{
@@ -83,4 +84,28 @@ export const login = async(email:string,password:string)=>{
 export const resetPassword = async(token:string | undefined,newPassword:string,confirmPassword:string)=>{
     await axiosInstance.post('/tutor/resetPassword',{token,newPassword,confirmPassword})
 
+}
+
+export const fetchTutorCourses = async()=>{
+    try {
+        const response = await axiosInstance.get('/tutor/myCourses')
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
+export const getTutorCourseDetails = async(courseId:string)=>{
+    try {
+        const response = await axiosInstance.get(`/tutor/myCourses/${courseId}`)
+        console.log("API Response:", response.data); 
+
+        return response.data
+        
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
 }

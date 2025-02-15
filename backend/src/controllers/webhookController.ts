@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import Enrollment from "../models/enrollmentModel";
-import { Request, Response } from "express"; // Import types
+import { Request, Response } from "express";
 
 if (!process.env.STRIPE_SECRET_KEY) {
     throw new Error("Stripe secret key is not defined in the .env.");

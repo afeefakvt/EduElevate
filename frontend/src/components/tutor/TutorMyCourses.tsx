@@ -2,37 +2,27 @@ import { useEffect, useState } from "react";
 import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { getCategories } from "@/api/authApi";
-import { fetchEnrolledCourses } from "@/api/enrollmentApi";
+import {  getCategories } from "@/api/authApi";
 import { useNavigate } from "react-router-dom";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import { useLocation } from "react-router-dom";
-import {  getCourseRatings } from "@/api/ratingApi";
+import { fetchTutorCourses } from "@/api/tutorApi";
 
 
 
 interface Course {
-  _id: string;
-  title: string;
-  thumbnail: string;
-  tutorId: {
-    name: string;
-  };
-  price: number;
-  description: string;
-}
+    _id: string;
+    title: string;
+    thumbnail: string;
+    tutorId: {
+      name: string;
+    };
+    price: number;
+    description: string;
+  }
 
 
 
 
-interface Enrollment {
-  _id: string;
-  courseId: Course;
-  studentId: string;
-  paymentStatus: string;
-  paymentAmount: string;
-}
+
 
 
 // interface Category {
@@ -41,69 +31,44 @@ interface Enrollment {
 //   isListed: boolean;
 // }
 
-const MyCourses = () => {
-  const [enrolledCourses, setEnrolledCourses] = useState<Enrollment[]>([]);
+const TutorMyCourses = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const navigate = useNavigate()
+  const navigate= useNavigate()
   // const [categories, setCategories] = useState<Category[]>([])
   // const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const location = useLocation()
-  const searchParams = new URLSearchParams(location.search)
-  const isSuccess = searchParams.get("success") === "true"
-  const [openSnackbar, setOpenSnackbar] = useState(false)
-  const [ratings, setRatings] = useState<{ [key: string]: { average: number; count: number } }>({})
+ 
 
 
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetchEnrolledCourses();
+        const response = await fetchTutorCourses();
         console.log("repsonseeeeee")
-        console.log("Fetched enrolled courses:", response);
+        console.log("Fetched  courses:", response);
 
-        setEnrolledCourses(response);
+        setCourses(response);
 
         // const categoryResponse = await getCategories()
         // setCategories(categoryResponse.data.categories)
       } catch (error) {
-        console.error("Failed to fetch approved courses:", error);
+        console.error("Failed to fetch  courses:", error);
       }
     };
     fetchCourses();
   }, []);
 
-  useEffect(() => {
-    const fetchRatings = async () => {
-      try {
-        const ratingResponse = await getCourseRatings(enrolledCourses.courseId._id);
-        ratingsData[enrolledCourses.courseId._id] = {
-            average: ratingResponse.average || 0,
-            count: ratingResponse.ratings.length || 0
-        };
-    } catch (error) {
-        console.error("Failed to fetch ratings:", error);
-    }
-    }
-    if (enrolledCourses.length > 0) {
-      fetchRatings();
-    }
-  }, [enrolledCourses])
 
 
-  useEffect(() => {
-    if (isSuccess) {
-      setOpenSnackbar(true)
-    }
-  }, [isSuccess])
 
-  const filteredCourses = enrolledCourses.filter((course) => {
-    const matchesSearch = course.courseId.title?.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch = course.title?.toLowerCase().includes(searchQuery.toLowerCase());
     // const matchesCategory = selectedCategory === "all" || course.categoryId.name === selectedCategory;
-    return matchesSearch
+    return matchesSearch 
   });
 
-
+ 
 
 
 
@@ -112,13 +77,13 @@ const MyCourses = () => {
       <Navbar />
 
       {/* Main content takes up remaining space */}
-      <Container sx={{ mt: 15, mb: 15, flexGrow: 1 }}>
+      <Container sx={{ mt: 15,mb:15, flexGrow: 1 }}>
         <Typography
           variant="h5"
           gutterBottom
           sx={{ fontWeight: "bold" }}
         >
-          Enrolled Courses
+          My Courses
         </Typography>
 
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 5, mt: 5 }}>
@@ -130,7 +95,7 @@ const MyCourses = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          {/* 
+{/* 
           <FormControl sx={{ minWidth: 200, ml: 2 }}>
             <Select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
               <MenuItem value="all">All Categories</MenuItem>
@@ -171,32 +136,31 @@ const MyCourses = () => {
                     <CardMedia
                       component="img"
                       height="100%"
-                      image={course.courseId.thumbnail}
-                      alt={course.courseId.title}
+                      image={course.thumbnail}
+                      alt={course.title}
                       sx={{ width: "100%", height: "100%", objectFit: "contain" }}
                     />
                   </Box>
 
                   <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                     <Typography gutterBottom variant="h6" fontWeight="Bold">
-                      {course.courseId.title}
+                      {course.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" >
-                      {course.courseId.tutorId.name}
+                      {course.tutorId.name}
                     </Typography>
                     <Typography variant="h6" fontWeight="Bold" >
-                      ₹{course.courseId.price}
+                      ₹{course.price}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {course.courseId.description}
+                      {course.description}
                     </Typography>
                     <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-                      ⭐{ratings[course.courseId._id]?.average?.toFixed(1) || "N/A"}
-                      ({ratings[course.courseId._id]?.count || 0} reviews)
+                      ⭐4.6 (30,000)
                     </Typography>
 
-                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={() => navigate(`/myCourses/${course.courseId._id}`)} >
-                      Start Watching
+                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={()=>navigate(`/tutor/myCourses/${course._id}`)} >
+                      View course
                     </Button>
                   </CardContent>
                 </Card>
@@ -212,23 +176,9 @@ const MyCourses = () => {
       </Container>
 
       <Footer />
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={4000}
-        onClose={() => setOpenSnackbar(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          onClose={() => setOpenSnackbar(false)}
-          severity={isSuccess ? "success" : "error"}
-        // variant="filled"
-
-        >
-          {isSuccess ? "Payment Successful! You have been enrolled in the course" : "Payment Failed. Please try again."}
-        </Alert>
-      </Snackbar>
+       
     </Box>
   );
 };
 
-export default MyCourses;
+export default TutorMyCourses;

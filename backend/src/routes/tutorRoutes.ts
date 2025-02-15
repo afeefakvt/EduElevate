@@ -3,7 +3,7 @@ import { TutorController } from "../controllers/tutorController";
 import { TutorService } from "../services/tutorService";
 import { TutorRepository } from "../repositories/tutorRepository";
 import { validateTutorRegistration ,validateTutorLogin,validateForgotPassword} from "../middlewares/validationMiddleware";
-import Tutor from "../models/tutorModel";
+import { authenticateToken } from "../middlewares/tutorAuthToken";
 
 
 const tutorRepository = new TutorRepository()
@@ -19,6 +19,8 @@ tutorRouter.post('/tutor/resendOtp',tutorController.resendOtp.bind(tutorControll
 tutorRouter.post('/tutor/login',validateTutorLogin,tutorController.loginTutor.bind(tutorController))
 tutorRouter.post('/tutor/forgotPassword',tutorController.forgotPassword.bind(tutorController))
 tutorRouter.post('/tutor/resetPassword',validateForgotPassword,tutorController.resetPassword.bind(tutorController))
+tutorRouter.get('/tutor/myCourses',authenticateToken,tutorController.getTutorCourses.bind(tutorController))
+tutorRouter.get('/tutor/myCourses/:courseId',authenticateToken,tutorController.getTutorCourseDetails.bind(tutorController))
 
 
 

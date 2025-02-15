@@ -25,6 +25,7 @@ import AdminCourses from "./components/admin/Courses"
 import CourseApplications from "./components/admin/CourseApplications"
 import CourseDetailsAdmin from "./components/admin/CourseDetails"
 
+
  
 import TutorHome from "./components/tutor/tutorHome"
 import TutorRegisterPage from "./components/tutor/RegisterPage"
@@ -34,6 +35,8 @@ import AddCourse from "./components/tutor/AddCourse"
 import AddLecture from "./components/tutor/AddLecture"
 import TutorProtected from "./components/protectedRoutes/TutorProtected"
 import TutorResetPassword from "./components/tutor/TutorResetPassword"
+import TutorMyCourses from "./components/tutor/TutorMyCourses";
+import TutorCourseDetails from "./components/tutor/TutorCourseDetails";
 
 
 import { ThemeProvider} from './components/ui/themeProvider'
@@ -89,6 +92,8 @@ function App() {
          <Route path="/tutor/home" element = {<TutorHome/>}/>
          <Route path="/tutor/addCourse" element = {<AddCourse/>}/>
          <Route path="/tutor/addLecture/:courseId" element = {<AddLecture/>}/>
+         <Route path="/tutor/myCourses" element = {<TutorMyCourses/>}/>
+         <Route path="/tutor/myCourses/:courseId" element = {<TutorCourseDetails/>}/>
         </Route>
        
       </Routes>

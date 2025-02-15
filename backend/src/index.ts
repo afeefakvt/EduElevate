@@ -11,6 +11,7 @@ import courseRoutes from './routes/courseRoutes'
 import lectureRoutes from './routes/lectureRoutes'
 import enrollmentRoutes from './routes/enrollmentRoutes'
 import webhookRoutes from './routes/webhookRoutes'
+import ratingRoutes from './routes/ratingRoutes'
 import Stripe from 'stripe'
 
 
@@ -42,6 +43,7 @@ app.use('/',categoryRoutes);
 app.use('/',courseRoutes);
 app.use('/',lectureRoutes);
 app.use('/',enrollmentRoutes);
+app.use('/',ratingRoutes);
 
 
 

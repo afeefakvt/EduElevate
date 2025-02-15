@@ -1,16 +1,13 @@
 import { Request, Response } from "express";
 import { ITutorService } from "../interfaces/tutor/ITutorService";
 import { sendOtptoEmail, storeOtp } from "../utils/otp";
-import { TutorRepository } from "../repositories/tutorRepository";
-import { ITutorRepository } from "../interfaces/tutor/ITutorRepository";
 import { sendEmail } from "../utils/mail"
 import { generateToken } from "../utils/jwt";
-import { OAuth2Client } from "google-auth-library";
 import { verifyPasswordResetToken } from "../utils/jwt";
+import { AuthenticatedRequest } from "../types/types";
+import mongoose from "mongoose";
+import { CourseService } from "../services/courseService";
 
-
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 export class TutorController {
 
@@ -93,25 +90,20 @@ export class TutorController {
             }
             if (tutor.isBlocked) {
                 res.status(403).json({ message: 'Your account is blocked ' });
-                return
-
+                return;
             }
             res.status(200).json({ message: 'Login successful', token, tutor })
             return;
-
 
         } catch (error: any) {
             console.error("Login Error:", error.message);
 
             res.status(400).json({ success: false, message: error.message });
             return;
-
         }
-
     }
     async forgotPassword(req: Request, res: Response): Promise<void> {
         try {
-
             const { email } = req.body;
             // console.log("Received request for forgot password:", email);
 
@@ -152,6 +144,41 @@ export class TutorController {
             console.error("Error resetting password:", error);
             res.status(500).json({ message: "Error resetting password", error });
 
+        }
+    }
+
+    async getTutorCourses(req:Request,res:Response):Promise<void>{
+        try {
+            console.log("coursee tutor");
+            
+            const {tutor} = req as AuthenticatedRequest;
+            const tutorId = tutor.id
+            const courses = await this.tutorService.getTutorCourses(tutorId);
+            if(!courses){
+                res.status(404).json({message:"No courses created"})
+            }
+            res.status(200).json(courses)
+            
+        } catch (error) {
+            res.status(500).json({message:"An unexpected error occured"});
+            error:(error as Error).message
+            
+        }
+    }
+
+    async getTutorCourseDetails(req:Request,res:Response):Promise<void>{
+        try {
+            // console.log("jhhvchgvcduvchshjchbn");
+            
+            const {courseId} = req.params;
+            const courseDetails = await this.tutorService.getTutorCourseDetails(courseId);
+            // console.log(courseDetails);
+            
+            res.status(200).json(courseDetails)
+        } catch (error) {
+            res.status(500).json({message:"An unexpected error occured"});
+            error:(error as Error).message
+            
         }
     }
 

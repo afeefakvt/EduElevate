@@ -7,6 +7,7 @@ import { hashPassword } from "../utils/password";
 import { tutorLogin } from "./authService";
 import { generatePasswordResetToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetTutorPassword";
+import { ICourse } from "../models/courseModel";
 
 
 
@@ -57,5 +58,11 @@ export class TutorService implements ITutorService {
     }
     async updatePassword(studentId: string, newPassword: string): Promise<ITutor | null> {
         return this.tutorRepository.updatePassword(studentId, newPassword)
+    } 
+    async  getTutorCourses(tutorId: string): Promise<ICourse[]> {
+        return await this.tutorRepository.getTutorCourses(tutorId)
+    }
+    async getTutorCourseDetails(courseId: string): Promise<ICourse | null> {
+        return await this.tutorRepository.getTutorCourseDetails(courseId)
     }
 }
