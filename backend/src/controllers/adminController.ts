@@ -130,7 +130,7 @@ export class AdminController {
               await sendEmail(
                 tutor.email,
                 "Your Tutor Application Rejected",
-                `Dear ${tutor.name},\n\nWe regret to inform you that your application to become a tutor in EduElevate has been rejected.\n\nBest regards,\nEduElevate Team`
+                `Dear ${tutor.name},\n\nWe regret to inform you that your application to become a tutor in EduElevate has been rejected.\n\nThank you,\nEduElevate Team`
               );
               res.status(200).json({ message: "Tutor rejected and email sent." });
 
@@ -226,6 +226,8 @@ export class AdminController {
     async rejectCourse(req:Request,res:Response):Promise<void>{
         try {
             const {courseId} = req.params;
+            const { rejectReason } = req.body;
+
             const course = await this.adminService.findCourseById(courseId)
 
             if(!course){
@@ -234,16 +236,20 @@ export class AdminController {
             }
             course.isApproved = false;
             course.status = "rejected";
+            course.rejectReason = rejectReason;
+
             await course.save();
 
             const tutor = course.tutorId as { _id: mongoose.Types.ObjectId; email: string };
             await sendEmail(
                 tutor.email,
                 "Your course publishing request has rejected",
-                `Dear ${tutor.email},\n\nWe regret to inform you that your application to publish a course in EduElevate has been rejected.\n\nBest regards,\nEduElevate Team`    
+                `Dear ${tutor.email},\n\nWe regret to inform you that your application to publish a course in EduElevate has been rejected.
+                The reason for rejection is ${course.rejectReason}.\n\nThank you,\nEduElevate Team`    
 
             )
-            res.status(200).json({message:"Course application rejected"})
+            res.status(200).json({message:"Course application rejected",status: "rejected", rejectReason})
+            return;
         } catch (error) {
             res.status(500).json({
                 success: false,

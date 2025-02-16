@@ -1,6 +1,5 @@
 import { Model,Document, FilterQuery, QueryOptions } from "mongoose";
 import { IBaseRepository } from "../interfaces/base/IBaseRepository";
-import { log } from "console";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T>{
     protected model:Model<T>;
@@ -28,5 +27,8 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T>{
     }
     async findByIdAndUpdate(id:string,data:Partial<T>):Promise<T | null>{
         return await this.model.findByIdAndUpdate(id,data,{new:true})
+    }
+    async findByIdAndDelete(id:string){
+        return this.model.findByIdAndDelete(id);
     }
 }

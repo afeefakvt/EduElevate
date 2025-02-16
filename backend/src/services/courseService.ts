@@ -46,6 +46,9 @@ export class CourseService implements ICourseService{
         }
         return course
     }
+    async deleteCourse(courseId: string): Promise<ICourse | null> {
+        return await this.courseRepository.deleteCourse(courseId);
+    }
 
   
 }

@@ -178,10 +178,10 @@ export const approveCourse = async(courseId:string)=>{
     }
 }
 
-export const rejectCourse = async(courseId:string)=>{
+export const rejectCourse = async(courseId:string,rejectReason:string)=>{
     try {
-        await axiosInstance.patch(`/admin/courseApplications/${courseId}/reject`);
-        return {status:"rejected"}
+        const  response =await axiosInstance.patch(`/admin/courseApplications/${courseId}/reject`,{rejectReason});
+        return response.data
     } catch (error) {
         console.log("error is", error);
         throw handleAxiosError(error)

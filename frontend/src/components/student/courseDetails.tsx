@@ -145,7 +145,7 @@ const CourseDetails = () => {
                       {course?.title}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      By <span style={{ color: "#550A8A" }}>{course.tutorId.name}</span> | Published on {new Date(course.createdAt).toLocaleDateString()} | Reviews
+                      By <span style={{ color: "#550A8A" }}>{course.tutorId.name}</span> | Published on {new Date(course.createdAt).toLocaleDateString()} 
                     </Typography>
                   </CardContent>
                 </Card>

@@ -99,9 +99,21 @@ export const fetchTutorCourses = async()=>{
 export const getTutorCourseDetails = async(courseId:string)=>{
     try {
         const response = await axiosInstance.get(`/tutor/myCourses/${courseId}`)
-        console.log("API Response:", response.data); 
-
+        console.log("API Response:", response.data);
         return response.data
+        
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)   
+    }
+}
+
+export const deleteTutorCourse = async(courseId:string)=>{
+    try {
+        console.log("delete courseee");
+        
+        const response = await axiosInstance.delete(`/courses/deleteCourse/${courseId}`);
+        return response.data;
         
     } catch (error) {
         console.log('error is', error);

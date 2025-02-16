@@ -100,7 +100,7 @@ const TutorCourseDetails = () => {
                       {course.title}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      By <span style={{ color: "#550A8A" }}>{course.tutorId.name}</span> | Published on {new Date(course.createdAt).toLocaleDateString()} | Reviews
+                      By <span style={{ color: "#550A8A" }}>{course.tutorId.name}</span> | Published on {new Date(course.createdAt).toLocaleDateString()} 
                     </Typography>
                   </CardContent>
                 </Card>
@@ -162,23 +162,10 @@ const TutorCourseDetails = () => {
                       <ListItemText primary={`🗣 Language: ${course.language}`} />
                     </ListItem>
                   </List>
-{/* 
-
-                {student?(
-                  <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }} 
-                  onClick={handleCheckout} disabled={ !stripe || !elements}>
-                  Enroll Now
-                </Button>
-
-                ):(
-                  <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }} 
-                  onClick={()=>navigate('/login')} disabled={  !stripe || !elements}>
-                  Enroll Now
-                </Button>
-
-                )} */}
-           
-
+                
+                <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }} >
+                   Manage Course
+                 </Button>                
                   <Box sx={{ mt: 3 }}>
                     <Typography variant="h6" fontWeight="bold">
                       This course includes:

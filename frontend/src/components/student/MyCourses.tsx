@@ -76,14 +76,20 @@ const MyCourses = () => {
   useEffect(() => {
     const fetchRatings = async () => {
       try {
-        const ratingResponse = await getCourseRatings(enrolledCourses.courseId._id);
-        ratingsData[enrolledCourses.courseId._id] = {
+        const ratingsData: { [key: string]: { average: number; count: number } } = {};
+  
+        for (const course of enrolledCourses) {
+          const ratingResponse = await getCourseRatings(course.courseId._id);
+          ratingsData[course.courseId._id] = {
             average: ratingResponse.average || 0,
             count: ratingResponse.ratings.length || 0
-        };
-    } catch (error) {
+          };
+        }
+  
+        setRatings(ratingsData);
+      } catch (error) {
         console.error("Failed to fetch ratings:", error);
-    }
+      }
     }
     if (enrolledCourses.length > 0) {
       fetchRatings();

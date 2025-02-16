@@ -13,6 +13,7 @@ export interface ICourse extends Document{
     status:String,
     isApproved:Boolean,
     isListed:Boolean,
+    rejectReason:string,
     lectures:mongoose.Types.ObjectId[]
     createdAt:Date,
     updatedAt:Date
@@ -75,6 +76,10 @@ const CourseSchema:Schema = new Schema<ICourse>(
             type:Boolean,
             default:true
 
+        },
+        rejectReason:{
+            type:String,
+            default:""
         },
         lectures:[
             {

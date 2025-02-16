@@ -7,4 +7,5 @@ export interface IBaseRepository<T extends Document>{
     findOne(filter:FilterQuery<T>):Promise<T | null>;
     find(filter:FilterQuery<T>,options?:QueryOptions):Promise<T[]>
     findByIdAndUpdate(id:string,data:Partial<T>):Promise<T | null>;
+    findByIdAndDelete(id:string):Promise <T | null>
 }

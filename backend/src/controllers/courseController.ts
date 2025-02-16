@@ -53,6 +53,26 @@ export class CourseController{
             
         }
     }
+
+    async deleteCourse(req:Request,res:Response):Promise<void>{
+        try {
+            console.log("delte courseasc");
+            
+            const {courseId} = req.params;
+            const deletedCourse = await this.courseService.deleteCourse(courseId)
+
+            if (!deletedCourse) {
+                 res.status(404).json({ message: "Course not found" });
+                 return;
+              }
+
+              res.status(200).json({ message: "Course deleted successfully" });
+          
+        } catch (error) {
+            console.error("Error deleting course:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    }
     
 
 }

@@ -5,6 +5,7 @@ import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box,
 import {  getCategories } from "@/api/authApi";
 import { getCourses } from "@/api/courseApi";
 import { useNavigate } from "react-router-dom";
+import { getCourseRatings } from "@/api/ratingApi";
 
 interface Course {
   _id: string;
@@ -31,6 +32,8 @@ const Courses = () => {
   const navigate= useNavigate()
   // const [categories, setCategories] = useState<Category[]>([])
   // const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [ratings, setRatings] = useState<{ [key: string]: { average: number; count: number } }>({})
+
 
 
 
@@ -50,6 +53,29 @@ const Courses = () => {
     fetchCourses();
   }, []);
 
+
+   useEffect(() => {
+      const fetchRatings = async () => {
+        try {
+          const ratingsData: { [key: string]: { average: number; count: number } } = {};
+    
+          for (const course of courses) {
+            const ratingResponse = await getCourseRatings(course._id);
+            ratingsData[course._id] = {
+              average: ratingResponse.average || 0,
+              count: ratingResponse.ratings.length || 0
+            };
+          }
+    
+          setRatings(ratingsData);
+        } catch (error) {
+          console.error("Failed to fetch ratings:", error);
+        }
+      }
+      if (courses.length > 0) {
+        fetchRatings();
+      }
+    }, [courses])
 
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -145,7 +171,8 @@ const Courses = () => {
                       {course.description}
                     </Typography>
                     <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-                      ⭐4.6 (30,000)
+                      ⭐{ratings[course._id]?.average?.toFixed(1) || "N/A"}
+                      ({ratings[course._id]?.count || 0} reviews)
                     </Typography>
 
                     <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={()=>navigate(`/courses/${course._id}`)} >
