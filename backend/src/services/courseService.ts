@@ -46,8 +46,8 @@ export class CourseService implements ICourseService{
         }
         return course
     }
-    async deleteCourse(courseId: string): Promise<ICourse | null> {
-        return await this.courseRepository.deleteCourse(courseId);
+    async listUnlistCourse(courseId: string,courseData:Partial<ICourse>): Promise<ICourse | null> {
+        return await this.courseRepository.listUnlistCourse(courseId,courseData);
     }
     async editCourse(courseId: string, updatedData: Partial<ICourse>, file?: Express.Multer.File): Promise<ICourse | null> {
         try {

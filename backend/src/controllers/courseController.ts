@@ -54,19 +54,20 @@ export class CourseController{
         }
     }
 
-    async deleteCourse(req:Request,res:Response):Promise<void>{
+    async listUnlistCourse(req:Request,res:Response):Promise<void>{
         try {
             console.log("delte courseasc");
             
             const {courseId} = req.params;
-            const deletedCourse = await this.courseService.deleteCourse(courseId)
+            const {isListed} = req.body
+            const deletedCourse = await this.courseService.listUnlistCourse(courseId,{isListed})
 
             if (!deletedCourse) {
                  res.status(404).json({ message: "Course not found" });
                  return;
               }
 
-              res.status(200).json({ message: "Course deleted successfully" });
+              res.status(200).json({ deletedCourse });
           
         } catch (error) {
             console.error("Error deleting course:", error);

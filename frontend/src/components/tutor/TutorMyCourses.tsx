@@ -3,11 +3,11 @@ import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { getCategories } from "@/api/authApi";
+import Switch from "@mui/material/Switch";
 import { useNavigate } from "react-router-dom";
 import { fetchTutorCourses } from "@/api/tutorApi";
 import { getCourseRatings } from "@/api/ratingApi";
-import Swal from "sweetalert2";
-import { deleteTutorCourse } from "../../api/courseApi";
+import { listUnlistCourse } from "../../api/courseApi";
 import { Snackbar, Alert } from "@mui/material";
 
 
@@ -24,6 +24,7 @@ interface Course {
   description: string;
   status: string;
   rejectReason: string;
+  isListed: boolean;
 }
 
 
@@ -96,30 +97,23 @@ const TutorMyCourses = () => {
   }, [courses])
 
 
-  const handleDeletCourse = async(courseId:string)=>{
-    Swal.fire({
-      title: "Are you sure?",
-      text: "The course will be permannetly deleted. You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result)=>{
-      if(result.isConfirmed){
-        try {
-          await deleteTutorCourse(courseId);
-          setCourses(courses.filter((course)=>course._id !== courseId));
-          setSnackbarMessage("Course deleted Successfully");
-          setSnackbarOpen(true);
-        } catch (error) {
-          console.error("Error deleting course:", error);
-          setSnackbarMessage("Failed to delete course!");
-          setSnackbarOpen(true);
-          
-        }
-      }
-    })
+  const handleListUnlistCourse = async (courseId: string, isCurrentlyListed: boolean) => {
+    try {
+      const response = await listUnlistCourse(courseId, isCurrentlyListed);
+      setCourses((prevCourses) =>
+        prevCourses.map((course) =>
+          course._id === courseId ? { ...course, isListed: !isCurrentlyListed } : course))
+      setSnackbarMessage(`Course ${!isCurrentlyListed ? "listed" : "unlisted"} successfully`);
+      setSnackbarOpen(true);
+
+    } catch (error) {
+      console.error("Error listing or unlisting course:", error);
+      setSnackbarMessage("Failed to update listing status!");
+      setSnackbarOpen(true);
+
+
+
+    }
   }
 
 
@@ -227,17 +221,27 @@ const TutorMyCourses = () => {
                       </Typography>
                     )}
 
-                    <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                    <Typography variant="body2" sx={{ display: "flex", mt: 1 }}>
                       ⭐{ratings[course._id]?.average?.toFixed(1) || "N/A"}
                       ({ratings[course._id]?.count || 0} reviews)
                     </Typography>
+                    {course.status === "approved" && (
+                      <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+                        <Typography variant="body2" sx={{ mr: 1 }}>
+                          {course.isListed ? "Listed" : "Unlisted"}
+                        </Typography>
+                        <Switch
+                          checked={course.isListed}
+                          onChange={() => handleListUnlistCourse(course._id, course.isListed)}
+                        />
+                      </Box>
+                    )}
 
                     <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={() => navigate(`/tutor/myCourses/${course._id}`)} >
                       View course
                     </Button>
-                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={() => handleDeletCourse(course._id)} >
-                      Delete course
-                    </Button>
+                  
+
                   </CardContent>
                 </Card>
               </Grid>
@@ -252,7 +256,7 @@ const TutorMyCourses = () => {
       </Container>
 
       <Footer />
-      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={() => setSnackbarOpen(false)}  anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={() => setSnackbarOpen(false)} anchorOrigin={{ vertical: "top", horizontal: "right" }}>
         <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
           {snackbarMessage}
         </Alert>

@@ -15,7 +15,7 @@ const courseRoutes = Router();
 courseRoutes.post('/tutor/addCourse',upload.single('thumbnail'),authenticateToken,courseController.addCourse.bind(courseController));
 courseRoutes.get('/courses',courseController.getCourses.bind(courseController));
 courseRoutes.get('/courses/:courseId',courseController.getCourseDetails.bind(courseController));
-courseRoutes.delete('/courses/deleteCourse/:courseId',authenticateToken,courseController.deleteCourse.bind(courseController));
+courseRoutes.patch('/courses/deleteCourse/:courseId',authenticateToken,courseController.listUnlistCourse.bind(courseController));
 courseRoutes.put('/tutor/editCourse/:courseId',upload.single('thumbnail'),authenticateToken,courseController.editCourse.bind(courseController));
 
 

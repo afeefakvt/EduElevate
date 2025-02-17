@@ -17,6 +17,7 @@ interface Course {
   price: number;
   duration: string;
   status: string;
+  isListed:Boolean
 }
 
 
@@ -41,7 +42,7 @@ const Courses = () => {
     const fetchCourses = async () => {
       try {
         const courseResponse = await getCourses();
-        const approvedCourses = courseResponse.courses.filter((course: Course) => course.status === "approved");
+        const approvedCourses = courseResponse.courses.filter((course: Course) => course.status === "approved" && course.isListed===true);
         setCourses(approvedCourses);
 
         // const categoryResponse = await getCategories()

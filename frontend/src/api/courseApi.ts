@@ -50,11 +50,11 @@ export const getCourseDetails = async(courseId:string)=>{
         
     }
 }
-export const deleteTutorCourse = async(courseId:string)=>{
+export const listUnlistCourse = async(courseId:string,isCurrentlyListed:Boolean)=>{
     try {
         console.log("delete courseee");
         
-        const response = await axiosInstance.delete(`/courses/deleteCourse/${courseId}`);
+        const response = await axiosInstance.patch(`/courses/deleteCourse/${courseId}`,{isListed:!isCurrentlyListed});
         return response.data
         
     } catch (error) {
