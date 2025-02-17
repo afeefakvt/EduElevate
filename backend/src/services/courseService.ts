@@ -49,6 +49,27 @@ export class CourseService implements ICourseService{
     async deleteCourse(courseId: string): Promise<ICourse | null> {
         return await this.courseRepository.deleteCourse(courseId);
     }
+    async editCourse(courseId: string, updatedData: Partial<ICourse>, file?: Express.Multer.File): Promise<ICourse | null> {
+        try {
+            if(file){
+                const result = await cloudinary.v2.uploader.upload(file.path,{
+                    folder:"course_thumbnails",
+                    resource_type:"auto"
+                })
+                updatedData.thumbnail=result.secure_url
+            }
+            updatedData.isRequestedToEdit = true;  
+
+            return await this.courseRepository.editCourse(courseId,updatedData,"pending")
+
+        } catch (error) {
+            throw new Error(`Error editing course: ${(error as Error).message}`);
+
+            
+        }
+
+
+    }
 
   
 }

@@ -74,5 +74,22 @@ export class CourseController{
         }
     }
     
+    async editCourse (req:Request,res:Response):Promise<void>{
+        try {
+            const {courseId} =req.params;
+            const updatedData = req.body;
+
+            if(req.file){
+                updatedData.thumbnail = req.file.path
+            }
+
+            const updatedCourse = await this.courseService.editCourse(courseId,updatedData,req.file);
+            res.status(200).json({message:"Edit course details submitted successfully for admin review",course:updatedCourse})
+        } catch (error) {
+            console.error("Error deleting course:", error);
+            res.status(500).json({ message: "Internal server error" });
+            
+        }
+    }
 
 }

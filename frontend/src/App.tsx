@@ -37,6 +37,7 @@ import TutorProtected from "./components/protectedRoutes/TutorProtected"
 import TutorResetPassword from "./components/tutor/TutorResetPassword"
 import TutorMyCourses from "./components/tutor/TutorMyCourses";
 import TutorCourseDetails from "./components/tutor/TutorCourseDetails";
+import EditCoursePage from "./components/tutor/EditCoursePage";
 
 
 import { ThemeProvider} from './components/ui/themeProvider'
@@ -94,6 +95,7 @@ function App() {
          <Route path="/tutor/addLecture/:courseId" element = {<AddLecture/>}/>
          <Route path="/tutor/myCourses" element = {<TutorMyCourses/>}/>
          <Route path="/tutor/myCourses/:courseId" element = {<TutorCourseDetails/>}/>
+         <Route path="/tutor/editCourse/:courseId" element = {<EditCoursePage/>}/>
         </Route>
        
       </Routes>

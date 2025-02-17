@@ -18,6 +18,7 @@ interface Course {
   price: number;
   duration:string;
   status:string;
+  isRequestedToEdit:Boolean;
 
 }
 
@@ -34,7 +35,7 @@ export default function CourseApplications() {
       try {
         const response = await getCourseApplications();
         // console.log("API Response:", response);
-        const filteredCourses = response.filter((course:Course)=>course.status==="pending")
+        const filteredCourses = response.filter((course:Course)=>course.status==="pending" )
         setCourses(filteredCourses);
       } catch (error) {
         console.error("Failed to fetch courses:", error);

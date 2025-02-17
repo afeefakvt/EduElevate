@@ -50,3 +50,27 @@ export const getCourseDetails = async(courseId:string)=>{
         
     }
 }
+export const deleteTutorCourse = async(courseId:string)=>{
+    try {
+        console.log("delete courseee");
+        
+        const response = await axiosInstance.delete(`/courses/deleteCourse/${courseId}`);
+        return response.data
+        
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
+
+export const editCourse = async(courseId:string,formData:FormData)=>{
+    try {
+        const response = await axiosInstance.put(`/tutor/editCourse/${courseId}`,formData);
+        return response.data.course
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}

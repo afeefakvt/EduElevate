@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchTutorCourses } from "@/api/tutorApi";
 import { getCourseRatings } from "@/api/ratingApi";
 import Swal from "sweetalert2";
-import { deleteTutorCourse } from "@/api/tutorApi";
+import { deleteTutorCourse } from "../../api/courseApi";
 import { Snackbar, Alert } from "@mui/material";
 
 

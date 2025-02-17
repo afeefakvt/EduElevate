@@ -108,16 +108,5 @@ export const getTutorCourseDetails = async(courseId:string)=>{
     }
 }
 
-export const deleteTutorCourse = async(courseId:string)=>{
-    try {
-        console.log("delete courseee");
-        
-        const response = await axiosInstance.delete(`/courses/deleteCourse/${courseId}`);
-        return response.data;
-        
-    } catch (error) {
-        console.log('error is', error);
-        throw handleAxiosError(error)
-        
-    }
-}
+
+

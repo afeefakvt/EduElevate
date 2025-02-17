@@ -15,8 +15,8 @@ import {
   Alert
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useNavigate } from "react-router-dom";
-import { addCourse, getCategories } from "../../api/courseApi";
+import { useNavigate ,useParams} from "react-router-dom";
+import { editCourse, getCategories ,getCourseDetails} from "../../api/courseApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { validateAddCourseForm } from "../../utils/validations";
@@ -39,6 +39,7 @@ const EditCoursePage = () => {
     thumbnail: null as File | null,
   });
 
+  const { courseId } = useParams<{ courseId: string }>(); 
   const [categories, setCategories] = useState<{ _id: string; name: string }[]>([])
   const levels = ['beginner', 'intermediate', 'advanced'];
   const languages = ["english", "malayalam"];
@@ -47,6 +48,7 @@ const EditCoursePage = () => {
   const navigate = useNavigate()
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
+  const [loading, setLoading] = useState(true); 
   const tutorId = tutor?._id
 
   interface Category {
@@ -56,18 +58,38 @@ const EditCoursePage = () => {
   }
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
         const categoryData = await getCategories();
         console.log("Fetched categories:", categoryData); // Debugging line
         const filteredCategories = categoryData.filter((category:Category) => category.isListed === true);
         setCategories(filteredCategories);
+
+        if(courseId){
+            const courseDatas = await getCourseDetails(courseId)
+            const courseData = courseDatas.course
+            console.log("Fetched course:", courseData); // Debugging line
+
+            setFormData({
+                title: courseData.title,
+                categoryId: courseData.categoryId,
+                description: courseData.description,
+                price: courseData.price.toString(),
+                language: courseData.language,
+                duration: courseData.duration,
+                level: courseData.level,
+                thumbnail: courseData.thumbnail 
+              });
+              setImagePreview(courseData.thumbnail);// Set existing image preview
+        }
+        
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching data:", error);
       }
     }
-    fetchCategories()
-  }, []);
+    fetchData()
+  }, [courseId]);
 
 
 
@@ -91,6 +113,8 @@ const EditCoursePage = () => {
       [name]: ""
    }));
   }
+
+
   const handleSelectChange = (e: SelectChangeEvent<string>) => {
     setFormData((prev) => ({
       ...prev,
@@ -98,20 +122,18 @@ const EditCoursePage = () => {
     }));
   };
 
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      setFormData((prev) => ({
-        ...prev,
-        thumbnail: file,
-      }));
+      setFormData((prev) => ({ ...prev, thumbnail: file }));
+      setImagePreview(URL.createObjectURL(file));  // Set new image preview
 
-      // Create a preview URL
-      const previewURL = URL.createObjectURL(file);
-      setImagePreview(previewURL);
-    }
+      }
+    };
 
-  }
+
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrMessage('')
@@ -149,17 +171,12 @@ const EditCoursePage = () => {
       return;
     }
 
-
- // Debugging: Log the FormData being sent
  console.log("FormData being sent:", Object.fromEntries(formDataToSend.entries()));
 
     try {
       console.log("Submitting:", formDataToSend);
-      const response = await addCourse(formDataToSend)
-      const courseId = response.newCourse._id
-
-      navigate(`/tutor/addLecture/${courseId}`)
-
+      await editCourse(courseId as string ,formDataToSend)
+      navigate(`/tutor/editLecture/${courseId}`)
 
     } catch (error) {
       console.error("Failed to add course", error);
@@ -183,7 +200,7 @@ const EditCoursePage = () => {
         justifyContent: "center",
         py: 15, // Adds padding to avoid sticking to top
       }} >
-        <Typography variant="h5" sx={{ my: 3, fontWeight: 650 }}>Add a Course</Typography>
+        <Typography variant="h5" sx={{ my: 3, fontWeight: 650 }}>Edit Course Details</Typography>
 
 
         <Box
@@ -226,7 +243,7 @@ const EditCoursePage = () => {
             </Alert>
           )}
 
-          <TextField label="Course Title" name="title" fullWidth required onChange={handleChange} error={!!formErrors.title}
+          <TextField label="Course Title" name="title" fullWidth required value={formData.title} onChange={handleChange} error={!!formErrors.title}
             helperText={formErrors.title} />
           <FormControl fullWidth required error={!!formErrors.categoryId}>
             <InputLabel>Category</InputLabel>
@@ -243,13 +260,13 @@ const EditCoursePage = () => {
               </Typography>
             )}
           </FormControl>
-          <TextField label="Description" name="description" fullWidth required multiline rows={3} onChange={handleChange}
+          <TextField label="Description" name="description" fullWidth required  value={formData.description} multiline rows={3} onChange={handleChange}
             error={!!formErrors.description}
             helperText={formErrors.description} />
-          <TextField label="Price(₹)" name="price" fullWidth required onChange={handleChange}
+          <TextField label="Price(₹)" name="price" fullWidth required value={formData.price} onChange={handleChange}
             error={!!formErrors.price}
             helperText={formErrors.price} />
-          <TextField label="Duration " name="duration" fullWidth onChange={handleChange}
+          <TextField label="Duration " name="duration" fullWidth value={formData.duration}  onChange={handleChange}
             error={!!formErrors.duration}
             helperText={formErrors.duration} />
           {/* <TextField label="Language" name="language" fullWidth required onChange={handleChange}
@@ -288,7 +305,7 @@ const EditCoursePage = () => {
           </FormControl>
 
           <Button type="submit" variant="contained" sx={{ mt: 2, backgroundColor: "#6A0DAD" }} >
-            Save and Next
+            Save Changes and Next
           </Button>
         </Box>
       </Container>

@@ -20,5 +20,8 @@ export class CourseRepository extends BaseRepository<ICourse> implements ICourse
     async deleteCourse(courseId: string): Promise<ICourse | null> {
         return await this.findByIdAndDelete(courseId)  
     }
+    async editCourse(courseId: string, updatedData: Partial<ICourse>, status: string): Promise<ICourse | null> {
+        return await this.findByIdAndUpdate(courseId,{...updatedData,status})
+    }
 
 }

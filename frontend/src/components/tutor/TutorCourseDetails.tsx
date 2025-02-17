@@ -163,7 +163,7 @@ const TutorCourseDetails = () => {
                     </ListItem>
                   </List>
                 
-                <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }} >
+                <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }} onClick={()=>navigate(`/tutor/editCourse/${courseId}`)} >
                    Manage Course
                  </Button>                
                   <Box sx={{ mt: 3 }}>
