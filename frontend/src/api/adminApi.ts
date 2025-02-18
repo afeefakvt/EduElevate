@@ -14,11 +14,17 @@ export const loginAdmin =  async(email:string,password:string)=>{
         
         const {token} = response.data
         if(token){
-            store.dispatch(loginSuccess({
-                token,
-                student:response.data.student
-            }))
-            Cookies.set('authToken', token, {expires: 1/24})
+            if(response.data?.student?.role==="admin"){
+                store.dispatch(loginSuccess({
+                    token,
+                    student:response.data.student,
+                    isAuthenticated:true
+                }))
+                Cookies.set('authToken', token, {expires: 15/1440})
+
+            }else{
+                console.log("this is not admin");    
+            }  
         } else{
             console.log(' not logged in ');
 

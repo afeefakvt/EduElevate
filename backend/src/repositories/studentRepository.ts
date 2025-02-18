@@ -32,5 +32,9 @@ export class StudentRepository extends BaseRepository<IStudent> implements IStud
         return await Course.findById(courseId)
         
     }
+    async getStudentByEmail(email: string): Promise<IStudent | null> {
+        return await this.findByEmail(email)
+        
+    }
  
 }

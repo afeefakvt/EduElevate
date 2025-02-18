@@ -67,7 +67,6 @@ const TutorMyCourses = () => {
      const fetchCategories = async()=>{
           try {
             const categories = await getCategories()
-            console.log(categories,"'")
             const categoryResponse = categories.filter((category:Category)=>category.isListed===true)
             setCategories(categoryResponse)
           } catch (error) {
@@ -174,8 +173,8 @@ const TutorMyCourses = () => {
 
 
         <Grid container spacing={4}>
-          {filteredCourses.length > 0 ? (
-            filteredCourses.map((course) => (
+          {paginatedCourses.length > 0 ? (
+            paginatedCourses.map((course) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={course._id}>
                 <Card
                   sx={{

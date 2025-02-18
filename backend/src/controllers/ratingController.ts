@@ -2,6 +2,7 @@ import { IRatingService } from "../interfaces/rating/IRatingService";
 import { Request,Response } from "express";
 import { AuthenticatedRequest } from "../types/types";
 import mongoose from "mongoose";
+import { HTTP_STATUS } from "../constants/httpStatusCode";
 
 
 
@@ -22,16 +23,16 @@ export class RatingController{
             const newRating = await this.ratingService.addRating(ratingData)
 
             if(!newRating){
-                res.status(400).json({message:"Failed to add Ratings to the course"})
+                res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Failed to add Ratings to the course"})
                 return;
             
             }
-            res.status(201).json(newRating)
+            res.status(HTTP_STATUS.CREATED).json(newRating)
             return;
             
         } catch (error) {
             console.log("error adding ratings",error);
-            res.status(500).json({ message: "Error adding rating" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error adding rating" });
             return;
         }
     }
@@ -43,7 +44,7 @@ export class RatingController{
 
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: "Error fetching ratings" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error fetching ratings" });
             
         }
     }

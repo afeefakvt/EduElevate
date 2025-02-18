@@ -22,7 +22,6 @@ const studentController = new StudentController(studentService)
 
 const adminRouter = Router()
 
-adminRouter.post('/admin/login',studentController.adminLogin.bind(studentController))
 adminRouter.get('/admin/students',authenticateToken,adminController.getStudents.bind(adminController))
 adminRouter.patch('/admin/students/:studentId/update',authenticateToken,adminController.updateStudent.bind(adminController))
 adminRouter.get('/admin/tutors',authenticateToken,adminController.getTutors.bind(adminController))

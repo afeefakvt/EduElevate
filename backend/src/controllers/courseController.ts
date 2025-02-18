@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import { ICourseService } from "../interfaces/course/ICourseService";
-import mongoose from "mongoose";
+import { HTTP_STATUS } from "../constants/httpStatusCode";
 
 
 
@@ -23,16 +23,16 @@ export class CourseController{
 
             res.status(201).json({newCourse,message:" course added successfully"})
         } catch (error) {
-            res.status(400).json({ error: (error as Error).message });
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ error: (error as Error).message });
         }
     }
     async getCourses(req:Request,res:Response):Promise<void>{
         try {
             const courses = await this.courseService.getCourses()
-            res.status(200).json({success:true,courses})
+            res.status(HTTP_STATUS.OK).json({success:true,courses})
         } catch (error) {
             console.error('error')
-            res.status(500).json({success:false,message:"internal server error",error:error instanceof Error ? error.message : error,})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"internal server error",error:error instanceof Error ? error.message : error,})
 
             
         }
@@ -42,13 +42,13 @@ export class CourseController{
             const {courseId} = req.params
             const course = await this.courseService.getCourseDetails(courseId)
             if(course){
-                res.status(200).json({success:true,course:course})
+                res.status(HTTP_STATUS.OK).json({success:true,course:course})
             }else{
-                res.status(404).json({sucess:false,message:"no course found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({sucess:false,message:"no course found"})
 
             }
         } catch (error:any) {
-            res.status(404).json({ success: false, message: error.message });     
+            res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: error.message });     
 
             
         }
@@ -63,15 +63,15 @@ export class CourseController{
             const deletedCourse = await this.courseService.listUnlistCourse(courseId,{isListed})
 
             if (!deletedCourse) {
-                 res.status(404).json({ message: "Course not found" });
+                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Course not found" });
                  return;
               }
 
-              res.status(200).json({ deletedCourse });
+              res.status(HTTP_STATUS.OK).json({ deletedCourse });
           
         } catch (error) {
             console.error("Error deleting course:", error);
-            res.status(500).json({ message: "Internal server error" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
         }
     }
     
@@ -85,10 +85,10 @@ export class CourseController{
             }
 
             const updatedCourse = await this.courseService.editCourse(courseId,updatedData,req.file);
-            res.status(200).json({message:"Edit course details submitted successfully for admin review",course:updatedCourse})
+            res.status(HTTP_STATUS.OK).json({message:"Edit course details submitted successfully for admin review",course:updatedCourse})
         } catch (error) {
             console.error("Error deleting course:", error);
-            res.status(500).json({ message: "Internal server error" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
             
         }
     }

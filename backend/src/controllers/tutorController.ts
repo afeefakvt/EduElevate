@@ -7,6 +7,7 @@ import { verifyPasswordResetToken } from "../utils/jwt";
 import { AuthenticatedRequest } from "../types/types";
 import mongoose from "mongoose";
 import { CourseService } from "../services/courseService";
+import { HTTP_STATUS } from "../constants/httpStatusCode";
 
 
 export class TutorController {
@@ -19,7 +20,7 @@ export class TutorController {
         try {
             const { name, email, password,confirmPassword, title, bio } = req.body
             if (password !== confirmPassword) {
-                res.status(400).json({ message: "passwords do not match" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "passwords do not match" })
                 return;
             }
 
@@ -29,10 +30,10 @@ export class TutorController {
             console.log('otp is', otp);
 
             const tutor = await this.tutorService.registerTutor({ name, email, password,confirmPassword, title, bio } as any)
-            res.status(201).json({ message: "tutor created,otp is send to your email address" })
+            res.status(HTTP_STATUS.CREATED).json({ message: "tutor created,otp is send to your email address" })
 
         } catch (error) {
-            res.status(500).json({ success: false, message: 'error registering tutor', error: error instanceof Error ? error.message : error, })
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: 'error registering tutor', error: error instanceof Error ? error.message : error, })
 
         }
 
@@ -50,14 +51,14 @@ export class TutorController {
                     await tutor.save()
                 }
 
-                res.status(200).json({ tutor, message: 'otp verified successfully' })
+                res.status(HTTP_STATUS.OK).json({ tutor, message: 'otp verified successfully' })
                 return;
             }
-            res.status(400).json({ message: 'invalid otp' })
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: 'invalid otp' })
             return;
 
         } catch (error) {
-            res.status(500).json({ success: false, message: 'internal server error' })
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: 'internal server error' })
         }
     }
 
@@ -70,7 +71,7 @@ export class TutorController {
             console.log('otp is', otp);
 
         } catch (error) {
-            res.status(500).json({
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: 'Failed to resend OTP.',
                 error: error instanceof Error ? error.message : error,
@@ -85,20 +86,20 @@ export class TutorController {
             const { email, password } = req.body
             const { token, tutor } = await this.tutorService.loginTutor(email, password)
             if (!token) {
-                res.status(404).json({ message: "tutor not found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "tutor not found" })
                 return;
             }
             if (tutor.isBlocked) {
                 res.status(403).json({ message: 'Your account is blocked ' });
                 return;
             }
-            res.status(200).json({ message: 'Login successful', token, tutor })
+            res.status(HTTP_STATUS.OK).json({ message: 'Login successful', token, tutor })
             return;
 
         } catch (error: any) {
             console.error("Login Error:", error.message);
 
-            res.status(400).json({ success: false, message: error.message });
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ success: false, message: error.message });
             return;
         }
     }
@@ -109,12 +110,12 @@ export class TutorController {
 
             const resetToken = await this.tutorService.handleForgotPassword(email)
             if (!resetToken) {
-                res.status(404).json({ message: "no tutor found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "no tutor found" })
                 return;
             }
-            res.status(200).json({ message: "Password reset link send to registered email" })
+            res.status(HTTP_STATUS.OK).json({ message: "Password reset link send to registered email" })
         } catch (error) {
-            res.status(500).json({ message: "Error in sending link", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in sending link", error });
         }
     }
     async resetPassword(req: Request, res: Response): Promise<void> {
@@ -125,24 +126,24 @@ export class TutorController {
 
             const decoded = verifyPasswordResetToken(token)
             if (!decoded) {
-                res.status(400).json({ message: "Invalid or expired token" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Invalid or expired token" })
                 return;
             }
             if (newPassword !== confirmPassword) {
-                res.status(400).json({ error: "Password does not match" });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "Password does not match" });
                 return;
             }
 
             const student = await this.tutorService.updatePassword(decoded.studentId, newPassword);
 
             if (!student) {
-                res.status(404).json({ message: "Student not found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Student not found" })
                 return;
             }
-            res.status(200).json({ message: "Passoword reset succcessful" })
+            res.status(HTTP_STATUS.OK).json({ message: "Passoword reset succcessful" })
         } catch (error) {
             console.error("Error resetting password:", error);
-            res.status(500).json({ message: "Error resetting password", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error resetting password", error });
 
         }
     }
@@ -155,12 +156,12 @@ export class TutorController {
             const tutorId = tutor.id
             const courses = await this.tutorService.getTutorCourses(tutorId);
             if(!courses){
-                res.status(404).json({message:"No courses created"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"No courses created"})
             }
-            res.status(200).json(courses)
+            res.status(HTTP_STATUS.OK).json(courses)
             
         } catch (error) {
-            res.status(500).json({message:"An unexpected error occured"});
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
             error:(error as Error).message
             
         }
@@ -174,9 +175,9 @@ export class TutorController {
             const courseDetails = await this.tutorService.getTutorCourseDetails(courseId);
             // console.log(courseDetails);
             
-            res.status(200).json(courseDetails)
+            res.status(HTTP_STATUS.OK).json(courseDetails)
         } catch (error) {
-            res.status(500).json({message:"An unexpected error occured"});
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
             error:(error as Error).message
             
         }

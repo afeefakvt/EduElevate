@@ -1,7 +1,7 @@
 import { Request,Response } from "express";
 import { ILectureService } from "../interfaces/lecture/ILectureService";
 import mongoose from "mongoose";
-
+import { HTTP_STATUS } from "../constants/httpStatusCode";
 
 interface LectureData{
     title:string,
@@ -23,19 +23,19 @@ export class LectureController {
             
             
             if(!req.files || !Array.isArray(req.files)){
-                res.status(400).json({message:"video files are required for all lectures"});
+                res.status(HTTP_STATUS.BAD_REQUEST).json({message:"video files are required for all lectures"});
                 return;
             }
             const lectureDatas = JSON.parse(req.body.lectures) as LectureData[];
             // console.log(lectureDatas,"khv hn")
 
             if(!lectureDatas.length || !mongoose.Types.ObjectId.isValid(lectureDatas[0].courseId)){
-                res.status(400).json({message:"Invalid courseId format"})
+                res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Invalid courseId format"})
                 return;
             }
             const videos= req.files as Express.Multer.File[];
             if(videos.length !== lectureDatas.length){
-                res.status(400).json({message:"Each lecture must have corresponding video file "});
+                res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Each lecture must have corresponding video file "});
                 return;
             }
             const addedLectures = []
@@ -52,7 +52,7 @@ export class LectureController {
                 };
                 const newLecture = await this.lectureService.addLecture(lectureData,courseId);
                 if(!newLecture){
-                    res.status(400).json({message:`Failed to add lectures: ${lectureData.title}`});
+                    res.status(HTTP_STATUS.BAD_REQUEST).json({message:`Failed to add lectures: ${lectureData.title}`});
                     return;
 
                 }
@@ -62,9 +62,9 @@ export class LectureController {
                 addedLectures.push(newLecture)
 
              }
-            res.status(201).json({message:"lectures added successfully",lectures:addedLectures})
+            res.status(HTTP_STATUS.CREATED).json({message:"lectures added successfully",lectures:addedLectures})
         } catch (error) {
-            res.status(500).json({message:(error as Error).message})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:(error as Error).message})
             console.error("error adding lectures",error);
             
         }
@@ -78,7 +78,7 @@ export class LectureController {
             if(!lectures){
                 throw new Error('lecture cannot found');
             }
-            res.status(200).json({lectures})
+            res.status(HTTP_STATUS.OK).json({lectures})
             
         } catch (error) {
             

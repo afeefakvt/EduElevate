@@ -11,7 +11,10 @@ interface RequestWithStudent extends Request{
     student:IStudent
 }
 export const authenticateToken = async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
-    const token = req.cookies.authToken
+    // const token = req.cookies.authToken
+
+    const token  = req.headers.authorization?.split(" ")[1];
+    console.log("authenticating the token");
 
     if(!token){
         res.status(401).json({message:'token not found'})
@@ -32,10 +35,10 @@ export const authenticateToken = async(req:Request,res:Response,next:NextFunctio
             return; 
         }
 
-        (req as any).student = student;
+        (req as RequestWithStudent).student = student;
         next()
     } catch (error) {
-        res.status(403).json({message:'invalid token'})
+        res.status(403).json({message:'Token is expired.Please login again.'})
         return;
         
     }

@@ -8,7 +8,12 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
     }
 
     async getEnrolledCoursesByStudent(id: string): Promise<IEnrollment[] | null> {
-        return await this.find({studentId:id}).populate({path:"courseId",populate:{path:"tutorId",select:"name"}}).exec();
+        return await this.find({studentId:id}).populate({path:"courseId",populate:
+            [{path:"tutorId",select:"name"},
+            {path:"categoryId",select:"name"}
+            ]
+        })
+        .exec();
         
     }
 }

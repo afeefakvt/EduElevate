@@ -4,16 +4,44 @@ import { IStudentRepository } from "../interfaces/student/IStudentRepository";
 import { hashPassword,comparePassword } from "../utils/password";
 import { validateOtp } from "../utils/otp";
 import { login } from "./authService";
-import { generatePasswordResetToken } from "../utils/jwt";
+import { generatePasswordResetToken, generateRefreshToken, generateToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetPassword";
+import { threadId } from "worker_threads";
 
 
 export class StudentService implements IStudentService  {
     private studentRepository: IStudentRepository; //abstarction
 
     constructor(studentRepository:IStudentRepository){
-        this.studentRepository = studentRepository //injecting deendency
+        this.studentRepository = studentRepository //injecting dependency
     }
+
+
+
+    private async authenticateStudent(email:string,password:string):Promise<IStudent>{
+        if(!email || !password){
+            throw new Error("Email and password cannot be empty")
+        }
+
+        const student = await this.studentRepository.getStudentByEmail(email)
+        if(!student){
+            throw new Error("student not found")
+        }
+
+        const isValidPassword = await comparePassword(password, student.password);
+        if(!isValidPassword){
+            throw new Error("Invalid password.Please enter a valid password")
+        }
+        if(student.isBlocked){
+            throw new Error("You are blocked by admin. Can't login now");
+        }
+        return student
+
+    }
+
+
+
+
 
     async createStudent(studentData:IStudent):Promise<IStudent>{
         const existingStudent = await this.studentRepository.findStudentByEmail(studentData.email);
@@ -29,9 +57,45 @@ export class StudentService implements IStudentService  {
         return validateOtp(email,otp)
     }
 
-    async loginStudent(email:string,password:string):Promise<{token:string, student:IStudent,role:string}>{
-        return await login(email,password,this.studentRepository)
+    async loginStudent(email:string,password:string):Promise<{token:string, refreshToken:string, student:IStudent}>{ 
+        const student = await this.authenticateStudent(email,password);
+
+        if(student.role!=="student"){
+            throw new Error("Access denied. Only registered student can login")
+        }
+
+        const token = generateToken({
+            id:student._id,
+            email:student.email,
+            role:student.role,
+            isBlocked:student.isBlocked 
+        })
+
+        const refreshToken = generateRefreshToken({id:student._id})
+        return {token,refreshToken,student}
+
     }
+    
+
+    async loginAdmin(email: string, password: string): Promise<{ token: string; refreshToken: string; student: IStudent; }> {
+        const student = await this.authenticateStudent(email,password);
+
+        if(student.role!=="admin"){
+            throw new Error("Access denied. Only admin can login here.")
+        }
+
+        const token = generateToken({
+            id:student._id,
+            email:student.email,
+            role:student.role,
+            isBlocked:student.isBlocked 
+        })
+
+        
+        const refreshToken = generateRefreshToken({id:student._id})
+        return {token,refreshToken,student}
+    }
+
     async findStudentByEmail(email:string):Promise<IStudent | null>{
         return this.studentRepository.findStudentByEmail(email);
     }

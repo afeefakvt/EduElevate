@@ -6,5 +6,6 @@ export interface IStudentRepository{
     findStudentByEmail(email: string): Promise<IStudent | null>;
     updatePassword(studentId:string,newPassword:string):Promise<IStudent | null>
     getCourseById(courseId:string):Promise<IStudent | null>
+    getStudentByEmail(email:string):Promise<IStudent | null>
 
 }

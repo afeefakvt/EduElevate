@@ -8,4 +8,5 @@ export interface IBaseRepository<T extends Document>{
     find(filter:FilterQuery<T>,options?:QueryOptions):Promise<T[]>
     findByIdAndUpdate(id:string,data:Partial<T>):Promise<T | null>;
     findByIdAndDelete(id:string):Promise <T | null>
+    findByEmail(email:string):Promise<T | null>
 }

@@ -52,9 +52,10 @@ export const login =  async(email:string,password:string)=>{
         if(token){
             store.dispatch(loginSuccess({
                 token,
-                student:response.data.student
+                student:response.data.student,
+                isAuthenticated:true
             }))
-            Cookies.set('authToken', token, {expires: 1/24})
+            Cookies.set('authToken', token, {expires: 15/1440})
         } else{
             console.log(' not logged in ');
 
@@ -90,8 +91,8 @@ export const googleSignIn = async(idToken:string)=>{
         }
         const data = await response.json();
         const {token,student} = data;
-        Cookies.set('authToken',token,{expires:7})
-        store.dispatch(loginSuccess({token,student}))
+        Cookies.set('authToken',token,{expires:15/1440})
+        store.dispatch(loginSuccess({token,student,isAuthenticated:true}))
 
         return data;
 }
@@ -109,5 +110,17 @@ export const getCategories = async()=>{
     } catch (error) {
         console.log("error is", error);
         throw handleAxiosError(error);   
+    }
+}
+
+
+export const logoutStudent = async()=>{
+    try {
+        const response = await axiosInstance('/logout')
+        return response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error);  
+        
     }
 }

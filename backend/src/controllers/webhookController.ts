@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import Enrollment from "../models/enrollmentModel";
 import { Request, Response } from "express";
+import { HTTP_STATUS } from "../constants/httpStatusCode";
 
 if (!process.env.STRIPE_SECRET_KEY) {
     throw new Error("Stripe secret key is not defined in the .env.");
@@ -18,7 +19,7 @@ export default class WebhookController {
 
         if (!sig) {
             console.error("Missing stripe-signature header.");
-            res.status(400).send("Missing stripe-signature header.");
+            res.status(HTTP_STATUS.BAD_REQUEST).send("Missing stripe-signature header.");
             return;
         }
 
@@ -32,7 +33,7 @@ export default class WebhookController {
             console.log("Webhook signature verification succeeded.");
         } catch (error) {
             console.error("Webhook signature verification failed:", (error as Error).message);
-            res.status(400).send(`Webhook Error: ${(error as Error).message}`);
+            res.status(HTTP_STATUS.BAD_REQUEST).send(`Webhook Error: ${(error as Error).message}`);
             return;
         }
 
@@ -91,7 +92,7 @@ export default class WebhookController {
         }
 
         if (!responseSent) {
-            res.status(200).send("Event received");
+            res.status(HTTP_STATUS.OK).send("Event received");
         }
     }
 }

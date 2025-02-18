@@ -1,11 +1,9 @@
 import { Request,Response } from "express";
 import { IAdminService } from "../interfaces/admin/IAdminService";
-import { TutorRepository } from "../repositories/tutorRepository";
-import { IAdminRepository } from "../interfaces/admin/IAdminRepository";
 import { sendEmail } from "../utils/mail";
 import { TutorService } from "../services/tutorService";
-import { send } from "process";
 import mongoose from "mongoose";
+import { HTTP_STATUS } from "../constants/httpStatusCode";
 
 
 export class AdminController {
@@ -18,12 +16,12 @@ export class AdminController {
             const students = await this.adminService.getStudents()
             
             if (students) {
-                res.status(200).json({ success: true, students: students });
+                res.status(HTTP_STATUS.OK).json({ success: true, students: students });
             } else {
-                res.status(404).json({ success: false, message: "No students found" });
+                res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: "No students found" });
             }
         } catch (error) {
-            res.status(500).json({ success: false, message: "Internal Server Error", error: error instanceof Error ? error.message : error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal Server Error", error: error instanceof Error ? error.message : error });
 
         }
     }
@@ -35,14 +33,14 @@ export class AdminController {
         try {
             const updatedStudent = await this.adminService.updateStudent(studentId,{isBlocked})
             if(!updatedStudent){
-                res.status(404).json({message:"student not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"student not found"})
                 return;
             }
-            res.status(200).json(updatedStudent)
+            res.status(HTTP_STATUS.OK).json(updatedStudent)
             return;
 
         } catch (error) {
-            res.status(500).json({success:false,message:'internal server error',error: error instanceof Error ? error.message : error,})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:'internal server error',error: error instanceof Error ? error.message : error,})
             
         }
     }
@@ -51,12 +49,12 @@ export class AdminController {
         try {
             const tutors = await this.adminService.getTutors()
             if(tutors){
-                res.status(200).json({success:true,tutors:tutors})
+                res.status(HTTP_STATUS.OK).json({success:true,tutors:tutors})
             }else{
-                res.status(404).json({ success: false, message: "No tutors found" });
+                res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: "No tutors found" });
             }
         } catch (error) {
-            res.status(500).json({ success: false, message: "Internal Server Error", error: error instanceof Error ? error.message : error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal Server Error", error: error instanceof Error ? error.message : error });
 
             
         }
@@ -70,15 +68,15 @@ export class AdminController {
             const tutor = await this.adminService.getTutorDetails(tutorId)
             
             if(tutor){
-                res.status(200).json({ success: true, tutor:tutor });
+                res.status(HTTP_STATUS.OK).json({ success: true, tutor:tutor });
 
             }
             else{
-                res.status(404).json({ success: false, message: "No tutor found" });
+                res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: "tutor not found" });
             }
 
         } catch (error:any) {
-            res.status(404).json({ success: false, message: error.message });
+            res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: error.message });
            
         }
     }
@@ -88,7 +86,7 @@ export class AdminController {
             const tutor = await this.adminService.findTutorById(tutorId)
 
             if (!tutor) {
-                 res.status(404).json({ message: "Tutor not found" });
+                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Tutor not found" });
                  return;  
               }
 
@@ -103,11 +101,11 @@ export class AdminController {
                 `Dear ${tutor.name},\n\nCongratulations! Your application to become a tutor in EduElevate has been approved. You can now log in and start teaching.\n\nBest regards,\nEduElevate Team`
               );
 
-              res.status(200).json({ message: "Tutor approved successfully" });
+              res.status(HTTP_STATUS.OK).json({ message: "Tutor approved successfully" });
 
 
         } catch (error) {
-            res.status(500).json({
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error,
@@ -120,7 +118,7 @@ export class AdminController {
             const {tutorId} = req.params
             const tutor = await this.adminService.findTutorById(tutorId)
             if (!tutor) {
-                 res.status(404).json({ message: "Tutor not found" });
+                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Tutor not found" });
                  return;
               }
               tutor.isApproved = false;
@@ -132,11 +130,11 @@ export class AdminController {
                 "Your Tutor Application Rejected",
                 `Dear ${tutor.name},\n\nWe regret to inform you that your application to become a tutor in EduElevate has been rejected.\n\nThank you,\nEduElevate Team`
               );
-              res.status(200).json({ message: "Tutor rejected and email sent." });
+              res.status(HTTP_STATUS.OK).json({ message: "Tutor rejected and email sent." });
 
 
         } catch (error) {
-            res.status(500).json({
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error,
@@ -153,15 +151,15 @@ export class AdminController {
             const updatedTutor = await this.adminService.updateTutor(tutorId,{isBlocked})
 
             if(!updatedTutor){
-                res.status(404).json({message:"tutor not found"});
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"tutor not found"});
                 return;
             }
 
-            res.status(200).json(updatedTutor)
+            res.status(HTTP_STATUS.OK).json(updatedTutor)
             return;
             
         } catch (error) {
-            res.status(500).json({
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error,
@@ -171,9 +169,9 @@ export class AdminController {
     async getCourseApplications(req:Request,res:Response):Promise<void>{
         try {
             const courses =  await this.adminService.getAllCourseApplications();
-            res.status(200).json(courses)
+            res.status(HTTP_STATUS.OK).json(courses)
         } catch (error) {
-            res.status(500).json({success:false,message:"internal server error",error:error instanceof Error ? error.message : error,})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"internal server error",error:error instanceof Error ? error.message : error,})
             
         }
     }
@@ -184,12 +182,12 @@ export class AdminController {
             const course = await this.adminService.getCourseDetails(courseId);
 
             if(course){
-                res.status(200).json({success:true,course:course})
+                res.status(HTTP_STATUS.OK).json({success:true,course:course})
             }else{
-                res.status(404).json({sucess:false,message:"no course found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({sucess:false,message:"no course found"})
             } 
         } catch (error:any) {
-            res.status(404).json({ success: false, message: error.message });     
+            res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: error.message });     
         }
     }
     async approveCourse(req:Request,res:Response):Promise<void>{
@@ -198,7 +196,7 @@ export class AdminController {
             const course = await this.adminService.findCourseById(courseId)
 
             if(!course){
-                res.status(404).json({message:"Course not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Course not found"})
                 return;
             }
             course.isApproved = true;
@@ -213,9 +211,9 @@ export class AdminController {
                 `Dear ${tutor.email},\n\nCongratulations! Your application to publish a course in EduElevate has been approved.\n\nBest regards,\nEduElevate Team`
             )
 
-            res.status(200).json({message:"Course approved successfully"})
+            res.status(HTTP_STATUS.OK).json({message:"Course approved successfully"})
         } catch (error) {
-            res.status(500).json({
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error,
@@ -231,7 +229,7 @@ export class AdminController {
             const course = await this.adminService.findCourseById(courseId)
 
             if(!course){
-                res.status(404).json({message:"Course not found"});
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Course not found"});
                 return;
             }
             course.isApproved = false;
@@ -248,10 +246,10 @@ export class AdminController {
                 The reason for rejection is ${course.rejectReason}.\n\nThank you,\nEduElevate Team`    
 
             )
-            res.status(200).json({message:"Course application rejected",status: "rejected", rejectReason})
+            res.status(HTTP_STATUS.OK).json({message:"Course application rejected",status: "rejected", rejectReason})
             return;
         } catch (error) {
-            res.status(500).json({
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: "Internal server error",
                 error: error instanceof Error ? error.message : error,

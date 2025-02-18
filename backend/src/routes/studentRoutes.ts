@@ -15,6 +15,8 @@ const studentController = new StudentController(studentService)
 
 const studentRouter = Router()
 
+studentRouter.post('/refreshToken',studentController.refreshAccessToken.bind(studentController));
+
 studentRouter.post('/register',validateStudentRegistration,studentController.createStudent.bind(studentController))
 studentRouter.post('/verifyOtp',studentController.verifyOtp.bind(studentController))
 studentRouter.post('/resendOtp',studentController.resendOtp.bind(studentController))
@@ -23,8 +25,11 @@ studentRouter.post('/auth/google',studentController.googleLogin.bind(studentCont
 studentRouter.post('/forgotPassword',studentController.forgotPassword.bind(studentController))
 studentRouter.post( '/resetPassword',validateForgotPassword,studentController.resetPassword.bind(studentController))
 studentRouter.post( '/course/checkout/:courseId',authenticateToken,studentController.stripePayment.bind(studentController))
+studentRouter.post( '/logout',authenticateToken,studentController.logout.bind(studentController))
 
-// studentRouter.post('/logout',studentController.logoutStudent.bind(studentController))
+studentRouter.post('/admin/login',studentController.adminLogin.bind(studentController))
+
+
 
 
 

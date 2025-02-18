@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import { storeOtp, sendOtptoEmail } from "../utils/otp";
-import { generateToken, verifyPasswordResetToken } from "../utils/jwt";
+import { generateToken, verifyPasswordResetToken, verifyRefreshToken } from "../utils/jwt";
 import { IStudentService } from "../interfaces/student/IStudentService";
 import { OAuth2Client } from "google-auth-library";
 import { Student } from "../models/studentModel";
 import mongoose, { mongo } from "mongoose";
 import Stripe from "stripe";
+import { HTTP_STATUS } from "../constants/httpStatusCode";
+import { error } from "console";
 
 
 
@@ -29,7 +31,7 @@ export class StudentController {
             const { name, email, password, confirmPassword } = req.body;
 
             if (password !== confirmPassword) {
-                res.status(400).json({ message: "passwords do not match" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "passwords do not match" })
                 return;
             }
 
@@ -40,10 +42,10 @@ export class StudentController {
 
             const student = await this.studentService.createStudent({ name, email, password } as any)
 
-            res.status(201).json({ message: 'student created successfully, otp is send to the email address' })
+            res.status(HTTP_STATUS.CREATED).json({ message: 'student created successfully, otp is send to the email address' })
         } catch (error: any) {
             const message = error.message || 'Internal server error';
-            res.status(400).json({ message });
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message });
 
         }
     }
@@ -59,15 +61,15 @@ export class StudentController {
                 if (student) {
                     await student.save()
                 }
-                res.status(200).json({ student, message: 'otp verified successfully' })
+                res.status(HTTP_STATUS.OK).json({ student, message: 'otp verified successfully' })
                 return;
             }
-            res.status(400).json({ message: 'invalid otp' })
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: 'invalid otp' })
             return;
 
         } catch (error: any) {
             const message = error.message || 'Internal server error';
-            res.status(400).json({ message });
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message });
             return;
         }
 
@@ -81,7 +83,7 @@ export class StudentController {
             console.log('otp is', otp);
 
         } catch (error) {
-            res.status(500).json({
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: 'Failed to resend OTP.',
                 error: error instanceof Error ? error.message : error,
@@ -92,45 +94,92 @@ export class StudentController {
     async login(req: Request, res: Response): Promise<void> {
         try {
             const { email, password } = req.body
-            const { token, student ,role} = await this.studentService.loginStudent(email, password)
+            const { token, refreshToken,student} = await this.studentService.loginStudent(email, password)
 
             if (!token) {
-                res.status(404).json({ message: 'student not found' })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: 'student not found' })
                 return;
-            }
-
-            if (role == 'admin') {
-                res.status(404).json({ message: 'Cant login email id is already used  for admin ' })
-                return;
-
-            }
-            if (student.isBlocked) {
-                res.status(403).json({ message: 'Your account is blocked ' });
-                return;
-
             }
             // console.log("genretaeeee");
 
-            res.status(200).json({ message: 'Login successful', token, student })
+            res.cookie("refreshToken",refreshToken,{
+                httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
+                secure:process.env.NODE_ENV==="development",
+                sameSite:"strict", //helps prevent csrf
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+
+            })
+
+            res.status(HTTP_STATUS.OK).json({ message: 'Login successful', token, student })
             return;
 
         } catch (error: any) {
             const message = error.message || 'Internal server error';
-            res.status(400).json({ message });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message });
             return;
 
         }
     }
-    // async logoutStudent = (req:Request,res:Response)=>{
-    //     try {    
-    //         res.clearCookie('token')
-    //         res.status(200).json({ message: "Logout Successful" });
 
-    //     } catch (error) {
-    //         res.status(500).json({ message: "Error in logging out", error });
 
-    //     }
-    // }
+    async refreshAccessToken (req:Request,res:Response):Promise<void>{
+        try {
+            const refreshToken = req.cookies.refreshToken;
+            console.log(refreshToken,"refreshhhh");
+            if(!refreshToken){
+                console.error("No refresh token found,Logging out.")
+        
+            res.clearCookie("refreshToken");
+            res.status(HTTP_STATUS.UNAUTHORIZED).json({message:"No refresh token found"});
+            return;
+            }
+
+
+            const decoded= verifyRefreshToken(refreshToken) as {id:string}
+            console.log(decoded,"decoded")
+            const student = await Student.findById(decoded.id)
+            console.log("student is",student)
+
+            if(!student){
+                res.clearCookie('refreshToken');
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"student not found"})
+                return;
+            }
+
+            console.log("generating new access token");
+            const newAccessToken = generateToken({
+                id:student._id,
+                email:student.email,
+                role:student.role,
+                isBlocked:student.isBlocked
+            })
+            console.log("generated new access token",newAccessToken);
+            res.json({token:newAccessToken})
+            
+            
+        } catch (error) {
+            console.log("invalid or expired refresh token:",error);
+            res.clearCookie("refreshToken");
+            res.status(HTTP_STATUS.FORBIDDEN).json({message:"Invalid or expired refresh token"});
+            
+        }
+    }
+
+
+    async logout(req:Request,res:Response):Promise<void>{
+        try {    
+            res.clearCookie('token')
+            res.clearCookie("refreshToken",{
+                httpOnly:true,
+                secure:process.env.NODE_ENV ==="development"
+            })
+            res.status(HTTP_STATUS.OK).json({ message: "Logout Successful" });
+
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in logging out", error });
+
+        }
+    }
 
 
     async adminLogin(req: Request, res: Response): Promise<void> {
@@ -138,20 +187,25 @@ export class StudentController {
             const { email, password } = req.body
             // console.log("uyjhncs");
             
-            const { token, student,role } = await this.studentService.loginStudent(email, password)
+            const { token, refreshToken,student } = await this.studentService.loginAdmin(email, password)
             if (!token) {
-                res.status(404).json({ message: "Admin not found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Admin not found" })
                 return;
+            }
 
-            }
-            if (role !== 'admin') {
-                throw new Error('Access denied,only admin can login')
-            }
-            res.status(200).json({ message: "Login successful", token, student,role })
+            res.cookie("refreshToken",refreshToken,{
+                httpOnly:true,
+                secure:process.env.NODE_ENV==="development",
+                sameSite:"strict", 
+                maxAge: 7 * 24 * 60 * 60 * 1000, 
+
+            })  
+          
+            res.status(HTTP_STATUS.OK).json({ message: "Login successful", token, student })
             return;
         } catch (error: any) {
             const message = error.message || 'Internal server error';
-            res.status(400).json({ message });
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message });
 
         }
     }
@@ -160,7 +214,7 @@ export class StudentController {
         try {
             const { idToken } = req.body
             if (!idToken) {
-                res.status(400).json({ error: "google id token is required" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "google id token is required" })
                 return;
             }
 
@@ -170,17 +224,22 @@ export class StudentController {
             });
             const payload = ticket.getPayload()
             if (!payload) {
-                res.status(400).json({ error: 'invalid google id token' });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: 'invalid google id token' });
                 return;
             }
 
             const { email, name } = payload
             if (!email) {
-                res.status(400).json({ error: 'google account must have an email' });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: 'google account must have an email' });
                 return;
             }
 
             let student = await this.studentService.findStudentByEmail(email)
+
+            if(student && student.isBlocked===true){
+                res.status(HTTP_STATUS.FORBIDDEN).json({error:"You are blocked currently,Can't login"})
+                return;
+            }
             if (!student) {
                 const studentData = {
                     name,
@@ -190,14 +249,13 @@ export class StudentController {
                 }
                 student = await this.studentService.createStudent(studentData)
             }
-            const role = student.role
 
             const token = generateToken({ id: student._id, email: student.email, role: student.role })
-            res.status(200).json({ message: "google sign in success", token, student,role })
+            res.status(HTTP_STATUS.OK).json({ message: "google sign in success", token, student })
 
         } catch (error) {
             console.error("Error in Google Sign-In:", error);
-            res.status(500).json({ error: (error as Error).message });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: (error as Error).message });
 
         }
     }
@@ -208,12 +266,12 @@ export class StudentController {
 
             const resetToken = await this.studentService.handleForgotPassword(email)
             if (!resetToken) {
-                res.status(404).json({ message: "no student found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "no student found" })
                 return;
             }
-            res.status(200).json({ message: "Password reset link send to registered email" })
+            res.status(HTTP_STATUS.OK).json({ message: "Password reset link send to registered email" })
         } catch (error) {
-            res.status(500).json({ message: "Error in sending link", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in sending link", error });
         }
     }
     async resetPassword(req: Request, res: Response): Promise<void> {
@@ -224,24 +282,24 @@ export class StudentController {
 
             const decoded = verifyPasswordResetToken(token)
             if (!decoded) {
-                res.status(400).json({ message: "Invalid or expired token" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Invalid or expired token" })
                 return;
             }
             if (newPassword !== confirmPassword) {
-                res.status(400).json({ error: "Password does not match" });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "Password does not match" });
                 return;
             }
 
             const student = await this.studentService.updatePassword(decoded.studentId, newPassword);
 
             if (!student) {
-                res.status(404).json({ message: "Student not found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Student not found" })
                 return;
             }
-            res.status(200).json({ message: "Passoword reset succcessful" })
+            res.status(HTTP_STATUS.OK).json({ message: "Passoword reset succcessful" })
         } catch (error) {
             console.error("Error resetting password:", error);
-            res.status(500).json({ message: "Error resetting password", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error resetting password", error });
 
         }
     }
@@ -261,12 +319,12 @@ export class StudentController {
             
             
             if(!mongoose.Types.ObjectId.isValid(courseId)){
-                res.status(400).json({message:"Invalid course ID"})
+                res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Invalid course ID"})
                 return;
             }
             const course = await this.studentService.getCourseById(courseId)
             if(!course){
-                res.status(404).json({message:"Course not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Course not found"})
                 return;
             }
             const session = await stripe.checkout.sessions.create({
@@ -298,7 +356,7 @@ export class StudentController {
             
         } catch (error) {
             console.error("Stripe payment error:", error);
-            res.status(500).json({message: "Payment setup failed", error: (error as Error).message,
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Payment setup failed", error: (error as Error).message,
         });
 
             

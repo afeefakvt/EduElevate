@@ -1,11 +1,13 @@
 import logo from "../../assets/logoaf.png"
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { RootState, store } from "../../store/store";
+import { persistor, RootState, store } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from "react";
 import { logout } from "../../store/authSlice";
 import { ModeToggle } from "../ui/modeToggle";
+import { logoutStudent } from "@/api/authApi";
+
 
 const Navbar = () => {
 
@@ -18,11 +20,18 @@ const Navbar = () => {
         console.log("Current Redux state:", store.getState());
     }, [])
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         try {
-            dispatch(logout())
+            dispatch(logout()); //remove the user data from redux store
+            await persistor.flush(); //ensure ersisted state is updated
+            persistor.purge() //clear persisted redux state
             console.log('logged out');
-            navigate('/login')
+
+            await logoutStudent()
+            localStorage.setItem("logoutSuccess","true")  //Store logout success message in local storage
+            if(student?.role==="student"){
+                navigate('/login')
+            }
 
         } catch (error) {
             console.log(error);

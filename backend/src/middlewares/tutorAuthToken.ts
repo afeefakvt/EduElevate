@@ -8,7 +8,11 @@ interface DecodedToken extends JwtPayload{
 }
 
 export const authenticateToken = async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
-    const token = req.cookies.tutorAuthToken
+    // const token = req.cookies.tutorAuthToken
+
+    const token = req.headers.authorization?.split(" ")[1];
+    console.log("authenticating the token");
+    
 
     if(!token){
         res.status(401).json({message:'token not found'})
@@ -32,7 +36,7 @@ export const authenticateToken = async(req:Request,res:Response,next:NextFunctio
         (req as any).tutor = tutor;
         next()
     } catch (error) {
-        res.status(403).json({message:'invalid token'})
+        res.status(403).json({message:'Token is expires. Please login again.'})
         return;
         
     }
