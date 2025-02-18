@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
-import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import {  getCategories } from "@/api/authApi";
+import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem, Pagination } from "@mui/material";
+import { getCategories } from "../../api/courseApi"
 import { getCourses } from "@/api/courseApi";
 import { useNavigate } from "react-router-dom";
 import { getCourseRatings } from "@/api/ratingApi";
@@ -17,24 +17,25 @@ interface Course {
   price: number;
   duration: string;
   status: string;
-  isListed:Boolean
+  isListed: Boolean
 }
 
 
-// interface Category {
-//   _id: string;
-//   name: string;
-//   isListed: boolean;
-// }
+interface Category {
+  _id: string;
+  name: string;
+  isListed: boolean;
+}
 
 const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const navigate= useNavigate()
-  // const [categories, setCategories] = useState<Category[]>([])
-  // const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const navigate = useNavigate()
+  const [categories, setCategories] = useState<Category[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [ratings, setRatings] = useState<{ [key: string]: { average: number; count: number } }>({})
-
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 4;
 
 
 
@@ -42,49 +43,60 @@ const Courses = () => {
     const fetchCourses = async () => {
       try {
         const courseResponse = await getCourses();
-        const approvedCourses = courseResponse.courses.filter((course: Course) => course.status === "approved" && course.isListed===true);
-        setCourses(approvedCourses);
-
-        // const categoryResponse = await getCategories()
-        // setCategories(categoryResponse.data.categories)
+        const approvedCourses = courseResponse.courses.filter((course: Course) => course.status === "approved" && course.isListed === true);
+        setCourses(approvedCourses);  
       } catch (error) {
         console.error("Failed to fetch approved courses:", error);
       }
     };
+
+    const fetchCategories = async()=>{
+      try {
+        const categories = await getCategories()
+        const categoryResponse = categories.filter((category:Category)=>category.isListed===true)
+        setCategories(categoryResponse)
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+        
+      }
+    }
     fetchCourses();
-  }, []);
+    fetchCategories();
+  },[]);
 
 
-   useEffect(() => {
-      const fetchRatings = async () => {
-        try {
-          const ratingsData: { [key: string]: { average: number; count: number } } = {};
-    
-          for (const course of courses) {
-            const ratingResponse = await getCourseRatings(course._id);
-            ratingsData[course._id] = {
-              average: ratingResponse.average || 0,
-              count: ratingResponse.ratings.length || 0
-            };
-          }
-    
-          setRatings(ratingsData);
-        } catch (error) {
-          console.error("Failed to fetch ratings:", error);
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const ratingsData: { [key: string]: { average: number; count: number } } = {};
+
+        for (const course of courses) {
+          const ratingResponse = await getCourseRatings(course._id);
+          ratingsData[course._id] = {
+            average: ratingResponse.average || 0,
+            count: ratingResponse.ratings.length || 0
+          };
         }
+
+        setRatings(ratingsData);
+      } catch (error) {
+        console.error("Failed to fetch ratings:", error);
       }
-      if (courses.length > 0) {
-        fetchRatings();
-      }
-    }, [courses])
+    }
+    if (courses.length > 0) {
+      fetchRatings();
+    }
+  }, [courses])
 
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
-    // const matchesCategory = selectedCategory === "all" || course.categoryId.name === selectedCategory;
-    return matchesSearch 
+    const matchesCategory = selectedCategory === "all" || course.categoryId._id === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
 
- 
+
+  const totalPages = Math.ceil(filteredCourses.length / rowsPerPage);
+  const paginatedCourses = filteredCourses.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
 
 
@@ -93,7 +105,7 @@ const Courses = () => {
       <Navbar />
 
       {/* Main content takes up remaining space */}
-      <Container sx={{ mt: 15,mb:15, flexGrow: 1 }}>
+      <Container sx={{ mt: 15, mb: 15, flexGrow: 1 }}>
         <Typography
           variant="h5"
           gutterBottom
@@ -111,13 +123,13 @@ const Courses = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-{/* 
+          
           <FormControl sx={{ minWidth: 200, ml: 2 }}>
             <Select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
               <MenuItem value="all">All Categories</MenuItem>
               {categories.length > 0 ? (
                 categories.map((category) => (
-                  <MenuItem key={category._id} value={category.name}>
+                  <MenuItem key={category._id} value={category._id}>
                     {category.name}
                   </MenuItem>
                 ))
@@ -125,13 +137,13 @@ const Courses = () => {
                 <MenuItem disabled>No Categories Found</MenuItem>
               )}
             </Select>
-          </FormControl> */}
+          </FormControl>
         </Box>
 
 
         <Grid container spacing={4}>
-          {filteredCourses.length > 0 ? (
-            filteredCourses.map((course) => (
+         { paginatedCourses.length > 0 ? (
+            paginatedCourses.map((course) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={course._id}>
                 <Card
                   sx={{
@@ -176,7 +188,7 @@ const Courses = () => {
                       ({ratings[course._id]?.count || 0} reviews)
                     </Typography>
 
-                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={()=>navigate(`/courses/${course._id}`)} >
+                    <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={() => navigate(`/courses/${course._id}`)} >
                       View Details
                     </Button>
                   </CardContent>
@@ -189,6 +201,16 @@ const Courses = () => {
             </Typography>
           )}
         </Grid>
+        {totalPages > 0 && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 5, }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              sx={{color:"#550A8A"}}
+            />
+          </Box>
+        )}
 
       </Container>
 

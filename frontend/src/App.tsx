@@ -24,6 +24,8 @@ import AdminProtected from "./components/protectedRoutes/AdminProtected"
 import AdminCourses from "./components/admin/Courses"
 import CourseApplications from "./components/admin/CourseApplications"
 import CourseDetailsAdmin from "./components/admin/CourseDetails"
+import EditApplications from "./components/admin/EditApllications";
+import EditCourseDetails from "./components/admin/EditCourseDetails";
 
 
  
@@ -38,6 +40,8 @@ import TutorResetPassword from "./components/tutor/TutorResetPassword"
 import TutorMyCourses from "./components/tutor/TutorMyCourses";
 import TutorCourseDetails from "./components/tutor/TutorCourseDetails";
 import EditCoursePage from "./components/tutor/EditCoursePage";
+import EditLecturePage from "./components/tutor/EditLecturePage";
+import TutorLecturePage from "./components/tutor/TutorLecturePage";
 
 
 import { ThemeProvider} from './components/ui/themeProvider'
@@ -81,6 +85,8 @@ function App() {
          <Route path="/admin/courses" element = {<AdminCourses/>}/>
          <Route path="/admin/courseApplications" element = {<CourseApplications/>}/>
          <Route path="/admin/courseApplications/:courseId" element = {<CourseDetailsAdmin/> }/>
+         <Route path="/admin/editApplications" element = {<EditApplications/> }/>
+         <Route path="/admin/editApplications/:courseId" element = {<EditCourseDetails/> }/>
         </Route>
 
        
@@ -96,6 +102,9 @@ function App() {
          <Route path="/tutor/myCourses" element = {<TutorMyCourses/>}/>
          <Route path="/tutor/myCourses/:courseId" element = {<TutorCourseDetails/>}/>
          <Route path="/tutor/editCourse/:courseId" element = {<EditCoursePage/>}/>
+         <Route path="/tutor/editLecture/:courseId" element = {<EditLecturePage/>}/>
+         <Route path="/tutor/:courseId/lectures" element = {<TutorLecturePage/>}/>
+    
         </Route>
        
       </Routes>

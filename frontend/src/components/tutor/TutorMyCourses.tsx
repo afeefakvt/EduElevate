@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
-import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { getCategories } from "@/api/authApi";
+import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem,Pagination } from "@mui/material";
+import { getCategories } from '../../api/courseApi'
 import Switch from "@mui/material/Switch";
 import { useNavigate } from "react-router-dom";
 import { fetchTutorCourses } from "@/api/tutorApi";
@@ -20,6 +20,10 @@ interface Course {
   tutorId: {
     name: string;
   };
+  categoryId:{
+    _id:string;
+    name:string;
+  };
   price: number;
   description: string;
   status: string;
@@ -28,29 +32,23 @@ interface Course {
 }
 
 
-
-
-
-
-
-// interface Category {
-//   _id: string;
-//   name: string;
-//   isListed: boolean;
-// }
+interface Category {
+  _id: string;
+  name: string;
+  isListed: boolean;
+}
 
 const TutorMyCourses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate = useNavigate()
-  // const [categories, setCategories] = useState<Category[]>([])
-  // const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [categories, setCategories] = useState<Category[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [ratings, setRatings] = useState<{ [key: string]: { average: number; count: number } }>({})
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-
-
-
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 4;
 
 
   useEffect(() => {
@@ -58,18 +56,27 @@ const TutorMyCourses = () => {
       try {
         const courseResponse = await fetchTutorCourses();
         const response = courseResponse.filter((course: Course) => course.status === "approved" || course.status === "rejected")
-        console.log("repsonseeeeee")
         console.log("Fetched  courses:", response);
 
         setCourses(response);
-
-        // const categoryResponse = await getCategories()
-        // setCategories(categoryResponse.data.categories)
       } catch (error) {
         console.error("Failed to fetch  courses:", error);
       }
     };
+
+     const fetchCategories = async()=>{
+          try {
+            const categories = await getCategories()
+            console.log(categories,"'")
+            const categoryResponse = categories.filter((category:Category)=>category.isListed===true)
+            setCategories(categoryResponse)
+          } catch (error) {
+            console.error("Failed to fetch categories:", error);
+            
+          }
+        }
     fetchCourses();
+    fetchCategories()
   }, []);
 
 
@@ -111,18 +118,19 @@ const TutorMyCourses = () => {
       setSnackbarMessage("Failed to update listing status!");
       setSnackbarOpen(true);
 
-
-
     }
   }
 
-
   const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title?.toLowerCase().includes(searchQuery.toLowerCase());
-    // const matchesCategory = selectedCategory === "all" || course.categoryId.name === selectedCategory;
-    return matchesSearch
+    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || course.categoryId._id === selectedCategory;
+    return matchesSearch && matchesCategory;
   });
 
+  
+
+  const totalPages = Math.ceil(filteredCourses.length / rowsPerPage);
+  const paginatedCourses = filteredCourses.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -147,13 +155,13 @@ const TutorMyCourses = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          {/* 
+          
           <FormControl sx={{ minWidth: 200, ml: 2 }}>
             <Select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
               <MenuItem value="all">All Categories</MenuItem>
               {categories.length > 0 ? (
                 categories.map((category) => (
-                  <MenuItem key={category._id} value={category.name}>
+                  <MenuItem key={category._id} value={category._id}>
                     {category.name}
                   </MenuItem>
                 ))
@@ -161,7 +169,7 @@ const TutorMyCourses = () => {
                 <MenuItem disabled>No Categories Found</MenuItem>
               )}
             </Select>
-          </FormControl> */}
+          </FormControl>
         </Box>
 
 
@@ -252,6 +260,16 @@ const TutorMyCourses = () => {
             </Typography>
           )}
         </Grid>
+        {totalPages > 0 && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 5, }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              sx={{color:"#550A8A"}}
+            />
+          </Box>
+        )}
 
       </Container>
 

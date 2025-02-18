@@ -13,5 +13,6 @@ const lectureController = new LectureController(lectureService);
 const lectureRoutes = Router();
 
 lectureRoutes.post('/tutor/addLecture/:courseId',uploadVideo.array('videoFiles'),authenticateToken,lectureController.addLecture.bind(lectureController));
+lectureRoutes.get('/tutor/:courseId/lectures',authenticateToken,lectureController.getLecturesByCourse.bind(lectureController));
 
 export default lectureRoutes

@@ -33,6 +33,7 @@ const menuItems = [
   { text: "Category", path: "/admin/categories", icon: <CategoryIcon /> },
   { text: "Courses", path: "/admin/courses", icon: <CoursesIcon /> },
   { text: "Course Applications", path: "/admin/courseApplications", icon: <ApplicationsIcon /> },
+  { text: "Edit Applications", path: "/admin/editApplications", icon: <ApplicationsIcon /> },
   { text: "Payment Management", path: "/admin/payments", icon: <PaymentIcon /> },
   { text: "Logout", path: "/admin/logout", icon: <LogoutIcon /> },
 ];

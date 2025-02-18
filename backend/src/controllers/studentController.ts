@@ -122,7 +122,7 @@ export class StudentController {
         }
     }
     // async logoutStudent = (req:Request,res:Response)=>{
-    //     try {
+    //     try {    
     //         res.clearCookie('token')
     //         res.status(200).json({ message: "Logout Successful" });
 

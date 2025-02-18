@@ -35,6 +35,8 @@ export default function Categories() {
     setLoading(true);
     try {
       const response = await axiosInstance.get("/admin/category");
+      console.log(response.data.categories,"jscbjsdbjm");
+      
       setCategories(response.data.categories);
     } catch (error) {
       console.error("Error fetching categories:", error);

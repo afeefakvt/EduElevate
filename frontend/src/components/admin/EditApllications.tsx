@@ -22,7 +22,7 @@ interface Course {
 
 }
 
-export default function CourseApplications() {
+export default function EditApplications() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,7 +35,7 @@ export default function CourseApplications() {
       try {
         const response = await getCourseApplications();
         // console.log("API Response:", response);
-        const filteredCourses = response.filter((course:Course)=>course.status==="pending" && course.isRequestedToEdit===false )
+        const filteredCourses = response.filter((course:Course)=>course.status==="pending" && course.isRequestedToEdit===true )
         setCourses(filteredCourses);
       } catch (error) {
         console.error("Failed to fetch courses:", error);
@@ -59,7 +59,7 @@ export default function CourseApplications() {
   const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
 
   const viewDetails = (courseId:string)=>{
-    navigate(`/admin/courseApplications/${courseId}`)
+    navigate(`/admin/editApplications/${courseId}`)
   }
 
 
@@ -69,7 +69,7 @@ export default function CourseApplications() {
       <Sidebar />
       <div className="container mx-auto mt-5 p-4" style={{ paddingTop: "150px", width: "1100px", marginLeft: "350px" }}>
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Course Applications</h1>
+          <h1 className="text-2xl font-bold">Edit Course Applications</h1>
           <Input
             type="text"
             placeholder="Search Courses..."

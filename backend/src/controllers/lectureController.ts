@@ -21,6 +21,7 @@ export class LectureController {
         try {
             // console.log("adddddlectureeeeeee");
             
+            
             if(!req.files || !Array.isArray(req.files)){
                 res.status(400).json({message:"video files are required for all lectures"});
                 return;
@@ -65,6 +66,21 @@ export class LectureController {
         } catch (error) {
             res.status(500).json({message:(error as Error).message})
             console.error("error adding lectures",error);
+            
+        }
+    }
+
+    async getLecturesByCourse (req:Request,res:Response):Promise<void>{
+        try {
+            const {courseId}  =req.params;
+            const lectures = await this.lectureService.getLecturesByCourse(courseId);
+
+            if(!lectures){
+                throw new Error('lecture cannot found');
+            }
+            res.status(200).json({lectures})
+            
+        } catch (error) {
             
         }
     }

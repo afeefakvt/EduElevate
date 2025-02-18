@@ -23,6 +23,9 @@ export class LectureRepository extends BaseRepository<ILecture> implements ILect
 
         }
     }
+    async getLecturesByCourse(courseId: string): Promise<ILecture[]> {
+        return await this.find({courseId})
+    }
 }
 
 

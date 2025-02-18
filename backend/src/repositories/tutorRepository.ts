@@ -21,7 +21,7 @@ export class TutorRepository extends BaseRepository<ITutor> implements ITutorRep
             return await this.findByIdAndUpdate(studentId,{password:hashedPassword});
         }
     async getTutorCourses(tutorId: string): Promise<ICourse[]> {
-        return await Course.find({tutorId:tutorId})
+        return await Course.find({tutorId:tutorId}).populate("categoryId")
     }
     async getTutorCourseDetails(courseId: string): Promise<ICourse | null> {
         return await Course.findById(courseId).populate("lectures").populate("tutorId")

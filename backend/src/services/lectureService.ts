@@ -35,4 +35,15 @@ export class LectureService implements ILectureService{
     async addLectureToCourse(courseId: mongoose.Types.ObjectId, lectureId: mongoose.Types.ObjectId): Promise<void> {
         await this.lectureRepository.addLectureToCourse(courseId,lectureId)
     }
+
+    async getLecturesByCourse(courseId: string): Promise<ILecture[]> {
+        try {
+            const lecture = await this.lectureRepository.getLecturesByCourse(courseId)
+            return lecture
+        } catch (error) {
+            throw new Error(
+                `Error fetching lectures for course: ${(error as Error).message}`
+              );  
+        }
+    }
 }

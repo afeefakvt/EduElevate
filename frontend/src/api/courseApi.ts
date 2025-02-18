@@ -22,7 +22,11 @@ export const addCourse =async(formData:FormData)=>{
 
 export const getCategories = async()=>{
     try {
+        console.log("vjhvuj");
+        
         const response = await axiosInstance.get('/categories');
+        console.log(response.data.categories,"mgujfhvhgnvhg ");
+        
         return response.data.categories
     } catch (error) {
         console.error("Error fetching categories:", error);

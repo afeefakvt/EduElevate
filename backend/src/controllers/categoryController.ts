@@ -11,7 +11,7 @@ export class CategoryController{
         try {
             const categories = await this.categoryService.getCategory()
 
-            if(categories){
+            if(categories.length){
                 res.status(200).json({success:true,categories:categories})
             }else{
                 res.status(404).json({success:false,message:"no categories found"})
