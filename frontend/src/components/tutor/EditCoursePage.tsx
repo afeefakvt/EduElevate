@@ -12,7 +12,8 @@ import {
   FormControl,
   Box,
   SelectChangeEvent,
-  Alert
+  Alert,
+  Snackbar
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNavigate ,useParams} from "react-router-dom";
@@ -37,6 +38,7 @@ const EditCoursePage = () => {
     duration: "",
     level: "intermediate",
     thumbnail: null as File | null,
+    status:""
   });
 
   const { courseId } = useParams<{ courseId: string }>(); 
@@ -49,6 +51,8 @@ const EditCoursePage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
   const [loading, setLoading] = useState(true); 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const tutorId = tutor?._id
 
   interface Category {
@@ -78,7 +82,8 @@ const EditCoursePage = () => {
                 language: courseData.language,
                 duration: courseData.duration,
                 level: courseData.level,
-                thumbnail: courseData.thumbnail 
+                thumbnail: courseData.thumbnail,
+                status: courseData.status, 
               });
               setImagePreview(courseData.thumbnail);// Set existing image preview
         }
@@ -176,12 +181,19 @@ const EditCoursePage = () => {
     try {
       console.log("Submitting:", formDataToSend);
       await editCourse(courseId as string ,formDataToSend)
-      navigate(`/tutor/editLecture/${courseId}`)
-
+      setOpenSnackbar(true); 
+      setTimeout(() => {
+        navigate('/tutor/myCourses');
+      }, 3000);
+  
     } catch (error) {
       console.error("Failed to add course", error);
     }
   };
+
+
+  
+
 
   return (
     <Box
@@ -305,11 +317,19 @@ const EditCoursePage = () => {
           </FormControl>
 
           <Button type="submit" variant="contained" sx={{ mt: 2, backgroundColor: "#6A0DAD" }} >
-            Save Changes and Next
+             {formData.status === "rejected" ? "Reapply" : "Send Edit Request"}          
           </Button>
         </Box>
       </Container>
       <Footer />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        sx={{ backgroundColor: "black", color: "white" }}
+        message="Your managing course request is under review. We will get back to you within 24 hrs."
+        onClose={() => setOpenSnackbar(false)}
+      />
     </Box>
 
   );

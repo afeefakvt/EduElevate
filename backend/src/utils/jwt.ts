@@ -17,7 +17,7 @@ if(!JWT_REFRESH_SECRET){
 }
 
 export const generateToken = (payload:object): string =>{
-    return jwt.sign(payload, JWT_SECRET,{expiresIn:'15m'})
+    return jwt.sign(payload, JWT_SECRET,{expiresIn:'30m'})
 }
 export const generateRefreshToken = (payload:object):string=>{
     return jwt.sign(payload,JWT_REFRESH_SECRET,{expiresIn:"7d"})

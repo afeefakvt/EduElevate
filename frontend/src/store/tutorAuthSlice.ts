@@ -31,7 +31,7 @@ const tutorAuthSlice = createSlice({
             state.token = action.payload.token,
             state.tutor = action.payload.tutor,
             state.isAuthenticated = true
-            Cookies.set('tutorAuthToken',action.payload.token,{expires:15/1440})
+            Cookies.set('tutorAuthToken',action.payload.token,{expires:30/1440})
         },
         tutorLogout:(state)=>{
             state.token = null

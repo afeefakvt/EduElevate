@@ -88,7 +88,11 @@ const Navbar = () => {
                             cursor: "pointer",
                             fontWeight: 750,
                             display: { xs: "none", md: "block" },
+                            px:2
                         }}
+                        onClick={() => navigate("/tutor/home")} 
+
+                        
                     >
                         Home
                     </Typography>
@@ -99,7 +103,10 @@ const Navbar = () => {
                             cursor: "pointer",
                             fontWeight: 750,
                             display: { xs: "none", md: "block" },
+                            px:2
                         }}
+                        onClick={() => navigate("/tutor/myCourses")} 
+
                     >
                        My Courses
                     </Typography>
@@ -110,12 +117,15 @@ const Navbar = () => {
                             cursor: "pointer",
                             fontWeight: 750,
                             display: { xs: "none", md: "block" },
+                            px:2
                         }}
+                        onClick={() => navigate("/tutor/addCourse")} 
+
                     >
                         Add a course
                     </Typography>
                     {token ? (
-                        <Box display={"flex"} justifyContent="center" alignItems="center">
+                        <Box display={"flex"} justifyContent="center" alignItems="center" gap={1}>
                             <Button
                                 variant="contained" color="primary"
                                 sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}
@@ -138,7 +148,7 @@ const Navbar = () => {
                         </Box>
 
                     ) : (
-                        <Box display={"flex"} justifyContent="center" alignItems="center">
+                        <Box display={"flex"} justifyContent="center" alignItems="center" gap={1}>
                             <Button
                                 variant="contained" color="primary"
                                 sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}

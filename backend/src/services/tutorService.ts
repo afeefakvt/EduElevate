@@ -29,7 +29,7 @@ export class TutorService implements ITutorService {
 
         const tutor = await this.tutorRepository.getTutorByEmail(email)
         if(!tutor){
-            throw new Error("student not found")
+            throw new Error("tutor not found")
         }
 
         const isValidPassword = await comparePassword(password, tutor.password);

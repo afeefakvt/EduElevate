@@ -31,3 +31,17 @@ export const getLecturesByCourse = async(courseId:string)=>{
     }
 }
 
+export const updateLecture = async(lectureId:string,updatedData:object)=>{
+    try {
+
+        // console.log("api for updateee",updatedData);
+        
+        const response = await axiosInstance.put(`/tutor/editLecture/${lectureId}`,updatedData)
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
+

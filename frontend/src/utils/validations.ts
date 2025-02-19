@@ -1,7 +1,5 @@
 import { ERROR_MESSAGES } from "@/constants/messages";
 
-
-
 export const validateLoginForm = (email: string, password: string) => {
     const errors: { email?: string; password?: string } = {};
   
@@ -235,6 +233,76 @@ if (!lectureData.duration.trim()) {
     }
     if (lectureData.video.size > 500 * 1024 * 1024) { // 500MB limit
       errors.video = ERROR_MESSAGES.INVALID.VIDEO_SIZE
+    }
+  }
+
+  return errors;
+};
+
+
+export const validateEditLectureForm = (lectureData: { 
+  title?: string;
+  description?: string;
+  order?: string;
+  duration?: string;
+  video?: File | null;
+}) => {
+
+  const errors: { 
+    title?: string; 
+    description?: string;  
+    order?: string; 
+    duration?: string; 
+    video?: string;
+  } = {};
+
+  if (lectureData.title !== undefined) {
+    if (!lectureData.title.trim()) {
+      errors.title = ERROR_MESSAGES.REQUIRED.TITLE;
+    } else if (typeof lectureData.title !== "string") {
+      errors.title = ERROR_MESSAGES.INVALID.TITLE;
+    }
+  }
+
+  if (lectureData.description !== undefined) {
+    if (!lectureData.description.trim()) {
+      errors.description = ERROR_MESSAGES.REQUIRED.DESCRIPTION;
+    } else if (typeof lectureData.description !== "string") {
+      errors.description = "Description should be valid characters";
+    } else if (lectureData.description.length < 10) {
+      errors.description = ERROR_MESSAGES.INVALID.DESCRIPTION;
+    }
+  }
+
+  if (lectureData.order !== undefined) {
+    if (!lectureData.order.trim()) {
+      errors.order = ERROR_MESSAGES.REQUIRED.ORDER;
+    } else if (isNaN(Number(lectureData.order)) || Number(lectureData.order) < 0) {
+      errors.order = ERROR_MESSAGES.INVALID.ORDER;
+    }
+  }
+
+  const durationRegex = /^(\d{1,2}:)?\d{1,2}:\d{2}$/;
+  
+  if (lectureData.duration !== undefined) {
+    if (!lectureData.duration.trim()) {
+      errors.duration = ERROR_MESSAGES.REQUIRED.DURATION;
+    } else if (!durationRegex.test(lectureData.duration)) {
+      errors.duration = ERROR_MESSAGES.INVALID.LECTURE_DURATION;
+    }
+  }
+
+  if (lectureData.video !== undefined) {
+    const allowedTypes = ["video/mp4", "video/mkv", "video/avi", "video/mov"];
+    if (!lectureData.video) {
+      errors.video = ERROR_MESSAGES.REQUIRED.VIDEO;
+    } else {
+      if (!allowedTypes.includes(lectureData.video.type)) {
+        errors.video = ERROR_MESSAGES.INVALID.VIDEO_FORMAT;
+      }
+      if (lectureData.video.size > 500 * 1024 * 1024) { // 500MB limit
+        errors.video = ERROR_MESSAGES.INVALID.VIDEO_SIZE;
+      }
     }
   }
 

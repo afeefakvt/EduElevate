@@ -79,8 +79,8 @@
                     <TableHead>Category</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Total Ratings</TableHead>
-                    <TableHead>Students Enrolled</TableHead>
+                    {/* <TableHead>Total Ratings</TableHead>
+                    <TableHead>Students Enrolled</TableHead> */}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -91,8 +91,8 @@
                       <TableCell>{course?.categoryId?.name}</TableCell>
                       <TableCell>₹{course?.price}</TableCell>
                       <TableCell>{course?.status}</TableCell>
-                      <TableCell>{course?.totalRatings}</TableCell>
-                      <TableCell>{course?.studentsEnrolled}</TableCell>
+                      {/* <TableCell>{course?.totalRatings}</TableCell>
+                      <TableCell>{course?.studentsEnrolled}</TableCell> */}
                     </TableRow>
                   ))}
                 </TableBody>

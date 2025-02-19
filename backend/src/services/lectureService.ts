@@ -4,6 +4,7 @@ import { ILectureRepository } from "../interfaces/lecture/ILectureRepository";
 import Course from "../models/courseModel";
 import mongoose from "mongoose";
 import { log } from "console";
+import { cloudinary } from "../config/cloudinary";
 
 export class LectureService implements ILectureService{
     private lectureRepository:ILectureRepository
@@ -44,6 +45,15 @@ export class LectureService implements ILectureService{
             throw new Error(
                 `Error fetching lectures for course: ${(error as Error).message}`
               );  
+        }
+    }
+    async editLecture(lectureId: string, updatedData: Partial<ILecture>): Promise<ILecture | null> {
+        try {
+            return await this.lectureRepository.editLecture(lectureId,updatedData)
+        } catch (error) {
+            throw new Error(`Error editing lecture: ${(error as Error).message}`);
+
+            
         }
     }
 }

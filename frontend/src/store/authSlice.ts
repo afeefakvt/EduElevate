@@ -30,7 +30,7 @@ const authSlice = createSlice({
             state.token = action.payload.token
             state.student = action.payload.student
             state.isAuthenticated =true
-            Cookies.set('authToken',action.payload.token,{expires:15/1440})
+            Cookies.set('authToken',action.payload.token,{expires:30/1440})
         },
         logout:(state)=>{
             state.token = null

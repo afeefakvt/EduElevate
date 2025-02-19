@@ -86,7 +86,9 @@ const Navbar = () => {
                             cursor: "pointer",
                             fontWeight: 750,
                             display: { xs: "none", md: "block" },
+                            px:2
                         }}
+                        onClick={() => navigate("/")} 
                     >
                         Home
                     </Typography>
@@ -97,7 +99,10 @@ const Navbar = () => {
                             cursor: "pointer",
                             fontWeight: 750,
                             display: { xs: "none", md: "block" },
+                            px:2
                         }}
+                        onClick={() => navigate("/courses")}
+
                     >
                         Courses
                     </Typography>
@@ -108,14 +113,17 @@ const Navbar = () => {
                             cursor: "pointer",
                             fontWeight: 750,
                             display: { xs: "none", md: "block" },
+                            px:2
                         }}
+                        onClick={() => navigate("/myCourses")}
+
                     >
                         My Courses
                     </Typography>
                     {token ? (
-                        <Box display={"flex"} justifyContent="center" alignItems="center">
+                        <Box display={"flex"} justifyContent="center" alignItems="center" gap={1}>
                             <Button
-                                variant="contained" color="primary"
+                                variant="contained" color="primary" 
                                 sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}
                                 onClick={() => navigate("/profile")}
                             >
@@ -136,7 +144,7 @@ const Navbar = () => {
                         </Box>
 
                     ) : (
-                        <Box display={"flex"} justifyContent="center" alignItems="center">
+                        <Box display={"flex"} justifyContent="center" alignItems="center" gap={1}>
                             <Button
                                 variant="contained" color="primary"
                                 sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}

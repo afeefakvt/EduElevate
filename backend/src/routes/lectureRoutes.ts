@@ -14,5 +14,6 @@ const lectureRoutes = Router();
 
 lectureRoutes.post('/tutor/addLecture/:courseId',uploadVideo.array('videoFiles'),authenticateToken,lectureController.addLecture.bind(lectureController));
 lectureRoutes.get('/tutor/:courseId/lectures',authenticateToken,lectureController.getLecturesByCourse.bind(lectureController));
+lectureRoutes.put('/tutor/editLecture/:lectureId',uploadVideo.single('videoFiles'),authenticateToken,lectureController.editLecture.bind(lectureController));
 
 export default lectureRoutes

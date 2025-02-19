@@ -26,6 +26,9 @@ export class LectureRepository extends BaseRepository<ILecture> implements ILect
     async getLecturesByCourse(courseId: string): Promise<ILecture[]> {
         return await this.find({courseId})
     }
+    async editLecture(lectureId: string, updatedData: Partial<ILecture>): Promise<ILecture | null> {
+        return await this.findByIdAndUpdate(lectureId,updatedData)
+    }
 }
 
 

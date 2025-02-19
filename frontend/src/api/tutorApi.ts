@@ -58,7 +58,7 @@ export const login = async(email:string,password:string)=>{
                 isAuthenticated:true
             }))
             // console.log('tutorrrr', response.data?.tutor);
-            Cookies.set('tutorAuthToken',token,{expires:15/1440})
+            Cookies.set('tutorAuthToken',token,{expires:30/1440})
 
         }else{
             console.log('not logged in');
@@ -170,6 +170,7 @@ export const editCourse = async(courseId:string,formData:FormData)=>{
         
     }
 }
+
 export const getCourseDetails = async(courseId:string)=>{
     try {
         const response = await axiosInstance.get(`/courses/${courseId}`)
