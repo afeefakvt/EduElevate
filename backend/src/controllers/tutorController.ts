@@ -8,6 +8,8 @@ import { AuthenticatedRequest } from "../types/types";
 import mongoose from "mongoose";
 import { CourseService } from "../services/courseService";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
+import { verifyRefreshToken } from "../utils/jwt";
+import Tutor from "../models/tutorModel";
 
 
 export class TutorController {
@@ -84,25 +86,93 @@ export class TutorController {
 
         try {
             const { email, password } = req.body
-            const { token, tutor } = await this.tutorService.loginTutor(email, password)
+            const { token, refreshToken,tutor } = await this.tutorService.loginTutor(email, password)
             if (!token) {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: "tutor not found" })
                 return;
             }
-            if (tutor.isBlocked) {
-                res.status(403).json({ message: 'Your account is blocked ' });
-                return;
-            }
+
+            
+            res.cookie("refreshToken",refreshToken,{
+                httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
+                secure:process.env.NODE_ENV==="development",
+                sameSite:"strict", //helps prevent csrf
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+
+            })
+           
             res.status(HTTP_STATUS.OK).json({ message: 'Login successful', token, tutor })
             return;
 
-        } catch (error: any) {
+        } catch (error: any) {  
             console.error("Login Error:", error.message);
-
             res.status(HTTP_STATUS.BAD_REQUEST).json({ success: false, message: error.message });
             return;
         }
     }
+
+    
+    
+        async refreshAccessToken (req:Request,res:Response):Promise<void>{
+            try {
+                const refreshToken = req.cookies.refreshToken;
+                console.log(refreshToken,"refreshhhh");
+                if(!refreshToken){
+                    console.error("No refresh token found,Logging out.")
+            
+                res.clearCookie("refreshToken");
+                res.status(HTTP_STATUS.UNAUTHORIZED).json({message:"No refresh token found"});
+                return;
+                }
+    
+    
+                const decoded= verifyRefreshToken(refreshToken) as {id:string}
+                console.log(decoded,"decoded")
+                const tutor = await Tutor.findById(decoded.id)
+                console.log("tutor is",tutor)
+    
+                if(!tutor){
+                    res.clearCookie('refreshToken');
+                    res.status(HTTP_STATUS.NOT_FOUND).json({message:"tutor not found"})
+                    return;
+                }
+    
+                console.log("generating new access token");
+                const newAccessToken = generateToken({
+                    id:tutor._id,
+                    email:tutor.email,
+                    isBlocked:tutor.isBlocked
+                })
+                console.log("generated new access token",newAccessToken);
+                res.json({token:newAccessToken})
+                
+                
+            } catch (error) {
+                console.log("invalid or expired refresh token:",error);
+                res.clearCookie("refreshToken");
+                res.status(HTTP_STATUS.FORBIDDEN).json({message:"Invalid or expired refresh token"});
+                
+            }
+        }
+
+
+        
+
+    async logoutTutor(req:Request,res:Response):Promise<void>{
+        try {    
+            res.clearCookie('token')
+            res.clearCookie("refreshToken",{
+                httpOnly:true,
+                secure:process.env.NODE_ENV ==="development"
+            })
+            res.status(HTTP_STATUS.OK).json({ message: "Logout Successful" });
+
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in logging out", error });
+
+        }
+    }
+
     async forgotPassword(req: Request, res: Response): Promise<void> {
         try {
             const { email } = req.body;

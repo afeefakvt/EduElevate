@@ -6,6 +6,7 @@ export interface ITutorService{
     verifyOtp(email:string,otp:string):Promise<boolean>;
     loginTutor(email:string,password:string):Promise<{
         token:string,
+        refreshToken:string,
         tutor:ITutor
     }>;
     findTutorByEmail(email:string):Promise<ITutor | null>

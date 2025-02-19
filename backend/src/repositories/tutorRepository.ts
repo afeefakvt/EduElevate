@@ -26,5 +26,8 @@ export class TutorRepository extends BaseRepository<ITutor> implements ITutorRep
     async getTutorCourseDetails(courseId: string): Promise<ICourse | null> {
         return await Course.findById(courseId).populate("lectures").populate("tutorId")
     }
+    async getTutorByEmail(email: string): Promise<ITutor | null> {
+        return await this.findByEmail(email)
+    }
 
 }

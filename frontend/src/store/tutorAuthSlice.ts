@@ -13,26 +13,30 @@ interface Tutor {
 
 interface AuthState {
     token:string | null,
-    tutor:Tutor | null
+    tutor:Tutor | null,
+    isAuthenticated:boolean
 }
 
 const initialState: AuthState= {
     token:Cookies.get('tutorAuthToken') || null,
-    tutor:null
+    tutor:null,
+    isAuthenticated:false
 }
 
 const tutorAuthSlice = createSlice({
     name:'tutorAuth',
     initialState,
     reducers:{
-        tutorLoginSuccess:(state,action:PayloadAction<{token:string,tutor:Tutor}>)=>{
+        tutorLoginSuccess:(state,action:PayloadAction<{token:string,tutor:Tutor | null, isAuthenticated:boolean}>)=>{
             state.token = action.payload.token,
-            state.tutor = action.payload.tutor
-            Cookies.set('tutorAuthToken',action.payload.token,{expires:7})
+            state.tutor = action.payload.tutor,
+            state.isAuthenticated = true
+            Cookies.set('tutorAuthToken',action.payload.token,{expires:15/1440})
         },
         tutorLogout:(state)=>{
             state.token = null
             state.tutor = null
+            state.isAuthenticated =false
             Cookies.remove('tutorAuthToken')
         }
     }

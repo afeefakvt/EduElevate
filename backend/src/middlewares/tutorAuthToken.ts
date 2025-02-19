@@ -1,10 +1,14 @@
 import { verifyToken } from "../utils/jwt";
 import { Request,Response,NextFunction } from "express";
 import { JwtPayload } from "jsonwebtoken";
-import Tutor from "../models/tutorModel";
+import Tutor, { ITutor } from "../models/tutorModel";
 
 interface DecodedToken extends JwtPayload{
     id:string
+}
+
+interface RequestWithTutor extends Request{
+    tutor:ITutor
 }
 
 export const authenticateToken = async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
@@ -33,7 +37,7 @@ export const authenticateToken = async(req:Request,res:Response,next:NextFunctio
             return; 
         }
 
-        (req as any).tutor = tutor;
+        (req as RequestWithTutor).tutor = tutor;
         next()
     } catch (error) {
         res.status(403).json({message:'Token is expires. Please login again.'})

@@ -1,8 +1,7 @@
-import axios from 'axios'
-import Cookies from 'js-cookie'
-import { store } from "../store/store";
-import { loginSuccess,logout } from '@/store/authSlice';
-
+import axios from "axios";
+import Cookies from "js-cookie";
+import {store} from '../store/store'
+import { tutorLoginSuccess,tutorLogout } from "@/store/tutorAuthSlice";
 
 
 export const axiosInstance = axios.create({
@@ -13,27 +12,25 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config)=>{
-        const token = Cookies.get('authToken')
+        const token = Cookies.get('tutorAuthToken')
         if(token){
-            config.headers['Authorization'] = `Bearer ${token}`
+            config.headers['Authorization'] =`Bearer ${token}`
         }
         return config
     },
     (error)=>{
         return Promise.reject(error)
     }
-    
-);
+)
 
 axiosInstance.interceptors.response.use(
     (response)=>{
         return response
     },
-
     async(error)=>{
         if(error.response && error.response.status===401){
-            store.dispatch(logout())
-            Cookies.remove("authToken")
+            store.dispatch(tutorLogout())
+            Cookies.remove("tutorAuthToken")
             return;
         }
         else if(error.response && error.response.status===403){
@@ -41,25 +38,25 @@ axiosInstance.interceptors.response.use(
 
             if(error.config._retry){
                 console.error("Token rfersh failed again .Logging out...");
-                store.dispatch(logout());
-                Cookies.remove("authToken")
-                window.location.href='/login';
+                store.dispatch(tutorLogout());
+                Cookies.remove("tutorAuthToken")
+                window.location.href='/tutor/login';
                 return Promise.reject(error)
                 
             }
             error.config._retry = true;
-            
+
             try {
-                const refreshResponse = await axiosInstance.post('/refreshToken');
+                const refreshResponse = await axiosInstance.post('/tutor/refreshToken');
                 if(!refreshResponse?.data?.token){
                     throw new Error("No new access token recieved")
                 }
 
                 console.log("new access token recieved",refreshResponse.data);
 
-                store.dispatch(loginSuccess({
+                store.dispatch(tutorLoginSuccess({
                     token:refreshResponse.data.token,
-                    student:store.getState().auth.student,
+                    tutor:store.getState().tutorAuth.tutor,
                     isAuthenticated:true
                 }))
                 error.config.headers[
@@ -69,15 +66,15 @@ axiosInstance.interceptors.response.use(
                 
             } catch (error) {
                 console.error("Refresh token invalid or expired", error);
-                store.dispatch(logout());
-                Cookies.remove("authToken");
+                store.dispatch(tutorLogout());
+                Cookies.remove("tutorAuthToken");
                 return Promise.reject(error);
                 
             }
+
+
         }
         return Promise.reject(error);
 
-        
     }
-   
 )

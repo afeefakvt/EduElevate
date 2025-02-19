@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNavigate } from "react-router-dom";
-import { addCourse, getCategories } from "../../api/courseApi";
+import { addCourse, getCategories } from "../../api/tutorApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { validateAddCourseForm } from "../../utils/validations";

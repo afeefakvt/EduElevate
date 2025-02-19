@@ -1,10 +1,12 @@
 import logo from "../../assets/afeefalogo.png"
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { RootState, store } from "../../store/store";
+import { RootState, store,persistor } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from "react";
 import { tutorLogout } from "../../store/tutorAuthSlice";
+import { logoutTutor } from "@/api/tutorApi";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
 
@@ -17,10 +19,19 @@ const Navbar = () => {
         console.log("Current Redux state:", store.getState());
     }, [])
 
-    const handleLogout = () => {
+    const handleLogout = async() => {
         try {
+            console.log("Before logout:", Cookies.get("tutorAuthToken")); 
+
             dispatch(tutorLogout())
-            console.log('logged out');
+            await persistor.flush();
+            await persistor.purge();
+            console.log("Tutor logged out successfully");
+            console.log("After logout:", Cookies.get("tutorAuthToken"));
+
+            await logoutTutor()
+            localStorage.setItem("logoutSuccess","true")  //Store logout success message in local storage
+
             navigate('/tutor/login')
 
         } catch (error) {

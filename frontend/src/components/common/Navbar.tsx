@@ -23,8 +23,8 @@ const Navbar = () => {
     const handleLogout = async () => {
         try {
             dispatch(logout()); //remove the user data from redux store
-            await persistor.flush(); //ensure ersisted state is updated
-            persistor.purge() //clear persisted redux state
+            await persistor.flush(); //ensure persisted state is updated
+            await persistor.purge() //clear persisted redux state
             console.log('logged out');
 
             await logoutStudent()

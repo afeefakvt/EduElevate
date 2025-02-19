@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { axiosInstance } from "./axiosInstance";
+import { axiosInstance } from '../api/tutorAxiosInstance'
 import {store} from '../store/store'
 import { tutorLoginSuccess } from "../store/tutorAuthSlice";
 import { handleAxiosError } from "@/utils/errorHandler";
@@ -54,10 +54,11 @@ export const login = async(email:string,password:string)=>{
         if(token){
             store.dispatch(tutorLoginSuccess({
                 token,
-                tutor:response.data.tutor
+                tutor:response.data.tutor,
+                isAuthenticated:true
             }))
             // console.log('tutorrrr', response.data?.tutor);
-            Cookies.set('tutorAuthtoken',token,{expires:1/24})
+            Cookies.set('tutorAuthToken',token,{expires:15/1440})
 
         }else{
             console.log('not logged in');
@@ -86,6 +87,28 @@ export const resetPassword = async(token:string | undefined,newPassword:string,c
 
 }
 
+
+export const addCourse =async(formData:FormData)=>{
+    try {
+        // console.log("courseee");        
+
+        const response = await axiosInstance.post('tutor/addCourse',formData,{
+            headers:{
+                "Content-Type":"multipart/form-data"
+            }
+        });
+        // console.log("ress gottt",response)
+        return response.data;
+
+    } catch (error) {
+        console.error("Error adding course:", error);
+        throw handleAxiosError(error);   
+        
+    }
+}
+
+
+
 export const fetchTutorCourses = async()=>{
     try {
         const response = await axiosInstance.get('/tutor/myCourses')
@@ -109,4 +132,77 @@ export const getTutorCourseDetails = async(courseId:string)=>{
 }
 
 
+export const getCategories = async()=>{
+    try {
+        console.log("vjhvuj");
+        
+        const response = await axiosInstance.get('/categories');
+        // console.log(response.data.categories,"mgujfhvhgnvhg ");
+        
+        return response.data.categories
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+        throw handleAxiosError(error);   
+        
+    }
+}
+export const listUnlistCourse = async(courseId:string,isCurrentlyListed:Boolean)=>{
+    try {
+        console.log("delete courseee");
+        
+        const response = await axiosInstance.patch(`/courses/deleteCourse/${courseId}`,{isListed:!isCurrentlyListed});
+        return response.data
+        
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
 
+export const editCourse = async(courseId:string,formData:FormData)=>{
+    try {
+        const response = await axiosInstance.put(`/tutor/editCourse/${courseId}`,formData);
+        return response.data.course
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
+export const getCourseDetails = async(courseId:string)=>{
+    try {
+        const response = await axiosInstance.get(`/courses/${courseId}`)
+        return response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error); 
+        
+    }
+}
+
+export const getCourseRatings  = async(courseId:string)=>{
+    try {
+        const response = await axiosInstance.get(`/rating/${courseId}`)
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+    }
+}
+
+
+export const logoutTutor = async()=>{
+    try {
+        const response = await axiosInstance.post('/tutor/logout')
+        console.log("cameeee repsosne");
+        
+        return response.data
+        
+        
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error); 
+        
+    }
+}

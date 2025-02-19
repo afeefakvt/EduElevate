@@ -1,9 +1,9 @@
 import { Container, Typography, Box, Card, CardContent, List, ListItem, ListItemText, ButtonBase,} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "../common/Navbar";
+import Navbar from "./Navbar";
 import Footer from "../common/Footer";
-import { getCourseDetails } from "@/api/courseApi";
+import { getCourseDetails } from "@/api/tutorApi";
 
 
 

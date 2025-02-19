@@ -1,4 +1,4 @@
-import { axiosInstance } from "./axiosInstance";
+import { axiosInstance } from "./tutorAxiosInstance";
 import { handleAxiosError } from "../utils/errorHandler";
 
 export const addLecture = async(courseId:string,formData:FormData)=>{

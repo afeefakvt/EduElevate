@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import Navbar from "../common/Navbar";
-import Footer from "../common/Footer";
+import Footer from "./Navbar";
 import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem,Pagination } from "@mui/material";
-import { getCategories } from '../../api/courseApi'
+import { getCategories } from '../../api/tutorApi'
 import Switch from "@mui/material/Switch";
 import { useNavigate } from "react-router-dom";
 import { fetchTutorCourses } from "@/api/tutorApi";
-import { getCourseRatings } from "@/api/ratingApi";
-import { listUnlistCourse } from "../../api/courseApi";
+import { getCourseRatings } from "@/api/tutorApi";
+import { listUnlistCourse } from "../../api/tutorApi";
 import { Snackbar, Alert } from "@mui/material";
 
 

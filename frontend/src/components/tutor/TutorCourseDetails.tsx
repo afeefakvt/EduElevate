@@ -16,7 +16,7 @@ import {
   Box,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import Navbar from "../common/Navbar";
+import Navbar from "./Navbar";
 import Footer from "../common/Footer";
 import { getTutorCourseDetails } from "@/api/tutorApi";
 import { RootState } from "@/store/store";
