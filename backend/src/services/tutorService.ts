@@ -4,7 +4,6 @@ import { ITutor } from "../models/tutorModel";
 import { StudentRepository } from "../repositories/studentRepository";
 import { validateOtp } from "../utils/otp";
 import { hashPassword } from "../utils/password";
-import { tutorLogin } from "./authService";
 import { generatePasswordResetToken, generateRefreshToken, generateToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetTutorPassword";
 import { ICourse } from "../models/courseModel";

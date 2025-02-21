@@ -5,8 +5,6 @@ import { AdminRepository } from "../repositories/adminRepository";
 import { StudentController } from "../controllers/studentController";
 import { StudentRepository } from "../repositories/studentRepository";
 import { StudentService } from "../services/studentService";
-import { Student } from "../models/studentModel";
-import Tutor from "../models/tutorModel";
 import { authenticateToken } from "../middlewares/authToken";
 
 

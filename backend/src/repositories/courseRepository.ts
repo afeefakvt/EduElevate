@@ -14,7 +14,7 @@ export class CourseRepository extends BaseRepository<ICourse> implements ICourse
         return await this.find({}).populate("categoryId", "name").populate("tutorId", "name").exec();
     }
     async getCourseDetails(courseId: string): Promise<ICourse | null> {
-        return await this.findById(courseId).populate("lectures").populate("tutorId", "name").exec()
+        return await this.findById(courseId).populate("lectures").populate("tutorId").exec()
 
     }
     async listUnlistCourse(courseId: string,courseData:Partial<ICourse>): Promise<ICourse | null> {

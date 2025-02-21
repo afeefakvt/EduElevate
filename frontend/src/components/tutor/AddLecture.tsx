@@ -105,9 +105,6 @@ const AddLecture = () => {
             setTimeout(() => {
                 navigate("/tutor/home");
             }, 5000);
-    
-    
-
 
         } catch (error) {
             console.error("Error publishing lectures", error);

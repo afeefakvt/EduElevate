@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -27,6 +27,7 @@ import { handleAxiosError } from "@/utils/errorHandler";
 import { useLocation } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import contact from "../../assets/contact.jpeg"
 
 
 
@@ -36,7 +37,7 @@ interface Course {
   thumbnail: string;
   title: string;
   description: string;
-  tutorId: { _id: string; name: string };
+  tutorId: { _id: string; name: string, email: string; title: string; bio: string; };
   categoryId: { _id: string; name: string };
   price: number;
   duration: string;
@@ -52,15 +53,15 @@ const CourseDetails = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const student = useSelector((state:RootState)=>state.auth.student)
+  const student = useSelector((state: RootState) => state.auth.student)
   const navigate = useNavigate()
   const stripe = useStripe()
   const elements = useElements();
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
-  const isSuccess = searchParams.get("success")==="true"
-  const isCancelled = searchParams.get("cancelled")==="true"
-  const [openSnackbar,setOpenSnackbar] = useState(false)
+  const isSuccess = searchParams.get("success") === "true"
+  const isCancelled = searchParams.get("cancelled") === "true"
+  const [openSnackbar, setOpenSnackbar] = useState(false)
 
 
 
@@ -83,38 +84,38 @@ const CourseDetails = () => {
   }, [courseId]);
 
 
-  useEffect(()=>{
-   if(isSuccess || isCancelled){
-    setOpenSnackbar(true)
-   } 
-  },[isSuccess,isCancelled])
+  useEffect(() => {
+    if (isSuccess || isCancelled) {
+      setOpenSnackbar(true)
+    }
+  }, [isSuccess, isCancelled])
 
 
-  const handleCheckout = async()=>{
+  const handleCheckout = async () => {
     setLoading(true);
     try {
-      if( !stripe || !elements || !courseId || !course ) return;
+      if (!stripe || !elements || !courseId || !course) return;
 
 
-      console.log("courseId",courseId);
+      console.log("courseId", courseId);
 
-      const response = await axiosInstance.post(`/course/checkout/${courseId}`,{title:course?.title,price:course?.price });
+      const response = await axiosInstance.post(`/course/checkout/${courseId}`, { title: course?.title, price: course?.price });
 
-      const {id:sessionId} = response.data
+      const { id: sessionId } = response.data
 
-      const {error} = await stripe!.redirectToCheckout({
+      const { error } = await stripe!.redirectToCheckout({
         sessionId
       })
 
-      if(error){
-        console.log("Error redirecting to checkout page",error)
+      if (error) {
+        console.log("Error redirecting to checkout page", error)
       }
-      
+
     } catch (error) {
-      console.error("checkout failed",error)
+      console.error("checkout failed", error)
       throw handleAxiosError(error)
 
-    }finally{
+    } finally {
       setLoading(false)
     }
 
@@ -145,12 +146,12 @@ const CourseDetails = () => {
                       {course?.title}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      By <span style={{ color: "#550A8A" }}>{course.tutorId.name}</span> | Published on {new Date(course.createdAt).toLocaleDateString()} 
+                      By <span style={{ color: "#550A8A" }}>{course.tutorId.name}</span> | Published on {new Date(course.createdAt).toLocaleDateString()}
                     </Typography>
                   </CardContent>
                 </Card>
 
-                
+
                 <Box sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: "white", boxShadow: 1 }}>
                   <Typography variant="h6" fontWeight="bold">
                     Description
@@ -160,7 +161,43 @@ const CourseDetails = () => {
                   </Typography>
                 </Box>
 
-                
+
+
+                <Box sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: "white", boxShadow: 1 }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    About the Instructor
+                  </Typography>
+
+                  <Card sx={{ display: "flex", alignItems: "center", p: 2, boxShadow: 2, mt: 2 }}>
+                    <CardMedia
+                      component="img"
+                      sx={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", mr: 2 }}
+                      src={contact}
+                      alt={course.tutorId.name}
+                    />
+                    <CardContent>
+                      <Typography variant="h6" fontWeight="bold">
+                        {course.tutorId.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" fontWeight="bold">
+                        {course.tutorId.title} 
+                      </Typography>                        
+                      <br />  
+                      <Typography variant="body2" color="text.secondary">
+                        {course.tutorId.bio} with an innate ability to simplify complex topics, 
+                        I has been mentoring engineers beginning their careers in software development for years, 
+                        and has now expanded that experience onto EduElevate,
+                         authoring the highest rated  course. 
+                         I teaches on EduElevate to share the knowledge I was gained with other software engineers.  
+                         Invest in yourself by learning from my published courses.
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: "#550A8A", mt: 1 }}>
+                        📧 {course.tutorId.email || "Not Available"}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Box>
+
                 <Box sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: "white", boxShadow: 1 }}>
                   <Typography variant="h6" fontWeight="bold">
                     Requirements for this course
@@ -186,6 +223,7 @@ const CourseDetails = () => {
                     </ListItem>
                   </List>
                 </Box>
+
               </Grid>
 
               {/* Right Side: Course Pricing & Purchase */}
@@ -209,20 +247,20 @@ const CourseDetails = () => {
                   </List>
 
 
-                {student?(
-                  <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }} 
-                  onClick={handleCheckout} disabled={ !stripe || !elements}>
-                  Enroll Now
-                </Button>
+                  {student ? (
+                    <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }}
+                      onClick={handleCheckout} disabled={!stripe || !elements}>
+                      Enroll Now
+                    </Button>
 
-                ):(
-                  <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }} 
-                  onClick={()=>navigate('/login')} disabled={  !stripe || !elements}>
-                  Enroll Now
-                </Button>
+                  ) : (
+                    <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, background: "#550A8A" }}
+                      onClick={() => navigate('/login')} disabled={!stripe || !elements}>
+                      Enroll Now
+                    </Button>
 
-                )}
-                  
+                  )}
+
                   {/* <Button variant="outlined" color="secondary" fullWidth sx={{ mt: 2 }}>
                 Add to Wishlist
               </Button> */}
@@ -261,14 +299,14 @@ const CourseDetails = () => {
       <Footer />
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={4000} 
+        autoHideDuration={4000}
         onClose={() => setOpenSnackbar(false)}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
           onClose={() => setOpenSnackbar(false)}
           severity={isSuccess ? "success" : "error"}
-          // variant="filled"
+        // variant="filled"
 
         >
           {isSuccess ? "Payment Successful! You have been enrolled in the course" : "Payment Failed. Please try again."}

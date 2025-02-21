@@ -40,7 +40,6 @@ import TutorResetPassword from "./components/tutor/TutorResetPassword"
 import TutorMyCourses from "./components/tutor/TutorMyCourses";
 import TutorCourseDetails from "./components/tutor/TutorCourseDetails";
 import EditCoursePage from "./components/tutor/EditCoursePage";
-import EditLecturePage from "./components/tutor/EditLecturePage";
 import TutorLecturePage from "./components/tutor/TutorLecturePage";
 
 
@@ -102,7 +101,6 @@ function App() {
          <Route path="/tutor/myCourses" element = {<TutorMyCourses/>}/>
          <Route path="/tutor/myCourses/:courseId" element = {<TutorCourseDetails/>}/>
          <Route path="/tutor/editCourse/:courseId" element = {<EditCoursePage/>}/>
-         <Route path="/tutor/editLecture/:courseId" element = {<EditLecturePage/>}/>
          <Route path="/tutor/:courseId/lectures" element = {<TutorLecturePage/>}/>
     
         </Route>

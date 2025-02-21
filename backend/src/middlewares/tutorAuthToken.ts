@@ -24,7 +24,6 @@ export const authenticateToken = async(req:Request,res:Response,next:NextFunctio
     }
     try {
         const decoded  = verifyToken(token) as DecodedToken
-        // console.log("12233w223qwdwads",decoded);
         const tutor  = await Tutor.findById(decoded.id)
         
         if(!tutor){

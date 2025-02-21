@@ -3,10 +3,8 @@ import { IStudentService } from "../interfaces/student/IStudentService";
 import { IStudentRepository } from "../interfaces/student/IStudentRepository";
 import { hashPassword,comparePassword } from "../utils/password";
 import { validateOtp } from "../utils/otp";
-import { login } from "./authService";
 import { generatePasswordResetToken, generateRefreshToken, generateToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetPassword";
-import { threadId } from "worker_threads";
 
 
 export class StudentService implements IStudentService  {

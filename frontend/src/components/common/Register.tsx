@@ -145,7 +145,7 @@ const Register = () => {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 2, mb: 2 }}
+                        sx={{ mt: 2, mb: 2,background:"#550A8A" }}
                         onClick={(e)=>{
                           e.preventDefault()
                           handleSignUp()}}
