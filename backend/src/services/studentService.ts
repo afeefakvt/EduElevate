@@ -5,6 +5,8 @@ import { hashPassword,comparePassword } from "../utils/password";
 import { validateOtp } from "../utils/otp";
 import { generatePasswordResetToken, generateRefreshToken, generateToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetPassword";
+import { StudentRepository } from "../repositories/studentRepository";
+import { error } from "console";
 
 
 export class StudentService implements IStudentService  {
@@ -115,6 +117,26 @@ export class StudentService implements IStudentService  {
     }
     async getCourseById(courseId: string): Promise<IStudent | null> {
         return this.studentRepository.getCourseById(courseId)
+    }
+
+    async editProfile(id:string,data: Partial<IStudent>): Promise<IStudent | null> {
+        return this.studentRepository.editProfile(id,data)
+        
+    }
+    async changePassword(studentId: string, currentPassword: string, newPassword: string): Promise<IStudent | null> {
+        console.log("chngeeeee");
+        
+
+        const student  = await this.studentRepository.findStudentById(studentId)
+        if(!student){
+            throw new Error("Student not found")
+        }
+        const isMatch = await comparePassword(currentPassword,student.password)
+        if(!isMatch){
+            throw new Error("Current Password is incorrect");
+        }
+        const hashedPassword = await hashPassword(newPassword);
+        return this.studentRepository.changePassword(studentId,{password:hashedPassword})
     }
 
 }

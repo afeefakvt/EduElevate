@@ -308,3 +308,35 @@ export const validateEditLectureForm = (lectureData: {
 
   return errors;
 };
+
+
+
+export const validateEditProfileForm = (name:string)=>{
+  let errors : {name?:string} = {}
+  if(!name.trim()){
+    errors.name = ERROR_MESSAGES.REQUIRED.NAME
+  }
+  return errors;
+}
+
+export const validateChangePasswordForm = (currentPassword:string,password:string,confirmPassword:string)=>{
+  let errors: {  currentPassword?:string,password?: string; confirmPassword?: string } = {};
+
+  if(!currentPassword.trim()){
+    errors.currentPassword = ERROR_MESSAGES.REQUIRED.PASSWORD
+  }
+
+  if (!password.trim()) {
+      errors.password = ERROR_MESSAGES.REQUIRED.PASSWORD
+  } else if (password.length < 6) {
+      errors.password = ERROR_MESSAGES.INVALID.PASSWORD_LENGTH
+  }
+
+  if (!confirmPassword.trim()) {
+      errors.confirmPassword = ERROR_MESSAGES.REQUIRED.CONFIRM_PASSWORD
+  } else if (confirmPassword !== password) {
+      errors.confirmPassword = ERROR_MESSAGES.INVALID.PASSWORD_MATCH
+  }
+
+  return errors;
+}

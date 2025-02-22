@@ -37,10 +37,16 @@ const authSlice = createSlice({
             state.student = null
             state.isAuthenticated = false
             Cookies.remove('authToken')
+        },
+        updateStudent:(state,action:PayloadAction<{student:Student}>)=>{
+            state.student = action.payload.student;
+            if(state.token){
+                Cookies.set("authToken",state.token,{expires:30/1440})
+            }
         }
     }
 
 })
 
-export const{loginSuccess,logout} = authSlice.actions
+export const{loginSuccess,logout,updateStudent} = authSlice.actions
 export default authSlice.reducer

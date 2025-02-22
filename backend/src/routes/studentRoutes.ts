@@ -25,6 +25,8 @@ studentRouter.post('/auth/google',studentController.googleLogin.bind(studentCont
 studentRouter.post('/forgotPassword',studentController.forgotPassword.bind(studentController))
 studentRouter.post( '/resetPassword',validateForgotPassword,studentController.resetPassword.bind(studentController))
 studentRouter.post( '/course/checkout/:courseId',authenticateToken,studentController.stripePayment.bind(studentController))
+studentRouter.put( '/editProfile/:studentId',authenticateToken,studentController.editProfile.bind(studentController))
+studentRouter.put( '/updatePassword/:studentId',authenticateToken,studentController.changePassword.bind(studentController))
 studentRouter.post( '/logout',authenticateToken,studentController.logout.bind(studentController))
 
 studentRouter.post('/admin/login',studentController.adminLogin.bind(studentController))

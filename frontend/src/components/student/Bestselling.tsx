@@ -113,7 +113,7 @@ const Bestselling = () => {
           textAlign: "center",
           borderRadius: "8px",
           marginTop: "2rem",
-          width:"100vw"
+          width: "100vw"
         }}
       >
         <Typography
@@ -154,24 +154,54 @@ const Bestselling = () => {
         </Grid>
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {!token && (
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ margin: "1rem", backgroundColor: "#550A8A" }}
-            onClick={() => navigate('/tutor/register')}
-          >
-            Become A Tutor
-          </Button>
-        )}
-      </Box>
+      {!token && (
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            backgroundColor: "#f5f5f5",
+            padding: "3rem",
+            borderRadius: "8px",
+            marginTop: "3rem",
+            marginBottom: "3rem",
+            gap: "1rem",
+            width: "100vw",
+            flexWrap: "wrap"
+          }}
+        >
+
+          <Card sx={{ maxWidth: 400, textAlign: "center", padding: "4rem", backgroundColor: "white" }}>
+            <Typography variant="h5" sx={{ color: "#550A8A", fontWeight: "bold" }}>Become a Tutor</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ margin: "1rem 0" }}>
+              Join our community of expert instructors and share your knowledge with students worldwide.
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#550A8A" }}
+              onClick={() => navigate('/tutor/register')}
+            >
+              Apply Now
+            </Button>
+          </Card>
+          
+          <Box sx={{ textAlign: "left", maxWidth: 400 }}>
+            <Typography variant="h6" sx={{ fontWeight: "bold", }}>Your teaching & earning steps</Typography>
+            <ol style={{ padding: 0, listStyleType: "none" }}>
+              <li><strong style={{ color: "#550A8A" }}>1. Apply to teach</strong>
+                - Complete your application to become a tutor</li>
+              <li><strong style={{ color: "#550A8A" }}>2. Create your course</strong>
+                - Use our platform tools to build engaging content</li>
+              <li><strong style={{ color: "#550A8A" }}>3. Start earning</strong>
+                - Get paid for every student who takes your course</li>
+            </ol>
+          </Box>
+        </Box>
+
+
+      )}
+
     </Box>
 
   )

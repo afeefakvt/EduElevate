@@ -11,6 +11,7 @@ import CourseDetails from "./components/student/CourseDetails"
 import StudentProtected from "./components/protectedRoutes/Studentprotected"
 import MyCourses from "./components/student/MyCourses";
 import LecturePage from "./components/student/LecturePage";
+import Profile from "./components/common/Profile";
 
 
 
@@ -71,6 +72,7 @@ function App() {
          <Route path="/" element = {<Home/>}/>
          <Route path="/myCourses" element = {<MyCourses/>}/>
          <Route path="/myCourses/:courseId" element = {<LecturePage/>}/>
+         <Route path="/profile" element = {<Profile/>}/>
         </Route>
         
 

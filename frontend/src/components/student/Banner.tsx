@@ -1,7 +1,9 @@
 import { Box,Typography,Button } from '@mui/material'
 import bannerImage from "../../assets/banner.webp"
+import { useNavigate } from 'react-router-dom'
 
 const Banner = () => {
+  const navigate = useNavigate()
   return (
    <Box
    sx={{
@@ -57,6 +59,7 @@ const Banner = () => {
               backgroundColor: "#550A8A",
             },
           }}
+          onClick={()=>navigate('/courses')}
         >
           Get Started
         </Button>

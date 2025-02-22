@@ -36,5 +36,15 @@ export class StudentRepository extends BaseRepository<IStudent> implements IStud
         return await this.findByEmail(email)
         
     }
+
+    async findStudentById(id: string): Promise<IStudent | null> {
+        return await this.findById(id)
+    }
+    async editProfile(id: string, data: Partial<IStudent>): Promise<IStudent | null> {
+        return await this.findByIdAndUpdate(id,data)
+    }
+    async changePassword(studentId: string, data: { password: string; }): Promise<IStudent | null> {
+        return await this.findByIdAndUpdate(studentId,{password:data.password});
+    }
  
 }

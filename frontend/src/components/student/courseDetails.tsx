@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  Container,
+ Container,
   Grid,
   Card,
   CardMedia,
@@ -28,8 +28,18 @@ import { useLocation } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import contact from "../../assets/contact.jpeg"
+import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+interface Lecture {
+  order: number;
+  _id: string;
+  title: string;
+  videoUrl: string;
+  description: string;
+  duration: string;
 
+}
 
 
 interface Course {
@@ -45,6 +55,7 @@ interface Course {
   reviews: number;
   level: string;
   language: string
+  lectures: Lecture[];
   createdAt: Date
 }
 
@@ -161,7 +172,36 @@ const CourseDetails = () => {
                   </Typography>
                 </Box>
 
-
+                <Box sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: "white", boxShadow: 1 }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Course Content
+                  </Typography>
+                  <List>
+                    {course.lectures.length > 0 ? (
+                      course.lectures.map((lecture, index) => (
+                        <Accordion key={index}>
+                          <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ bgcolor: "#f5f5f5" }}>
+                            <Typography variant="body1" fontWeight="bold">
+                              {`${index + 1}. ${lecture.title}`}
+                            </Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography variant="body2" color="text.secondary">
+                              {lecture.description}
+                            </Typography>
+                            <Typography variant="body2" fontWeight="bold" sx={{ mt: 1 }}>
+                              Duration: {lecture.duration}
+                            </Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      ))
+                    ) : (
+                      <Typography variant="body1" color="text.secondary">
+                        No lectures available.
+                      </Typography>
+                    )}
+                  </List>
+                  </Box>
 
                 <Box sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: "white", boxShadow: 1 }}>
                   <Typography variant="h6" fontWeight="bold">
@@ -180,16 +220,16 @@ const CourseDetails = () => {
                         {course.tutorId.name}
                       </Typography>
                       <Typography variant="body2" color="text.secondary" fontWeight="bold">
-                        {course.tutorId.title} 
-                      </Typography>                        
-                      <br />  
+                        {course.tutorId.title}
+                      </Typography>
+                      <br />
                       <Typography variant="body2" color="text.secondary">
-                        {course.tutorId.bio} with an innate ability to simplify complex topics, 
-                        I has been mentoring engineers beginning their careers in software development for years, 
+                        {course.tutorId.bio} with an innate ability to simplify complex topics,
+                        I has been mentoring engineers beginning their careers in software development for years,
                         and has now expanded that experience onto EduElevate,
-                         authoring the highest rated  course. 
-                         I teaches on EduElevate to share the knowledge I was gained with other software engineers.  
-                         Invest in yourself by learning from my published courses.
+                        authoring the highest rated  course.
+                        I teaches on EduElevate to share the knowledge I was gained with other software engineers.
+                        Invest in yourself by learning from my published courses.
                       </Typography>
                       <Typography variant="body2" sx={{ color: "#550A8A", mt: 1 }}>
                         📧 {course.tutorId.email || "Not Available"}
@@ -198,31 +238,33 @@ const CourseDetails = () => {
                   </Card>
                 </Box>
 
-                <Box sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: "white", boxShadow: 1 }}>
-                  <Typography variant="h6" fontWeight="bold">
-                    Requirements for this course
-                  </Typography>
-                  <List>
-                    <ListItem>
-                      <ListItemIcon>
-                        <CheckCircleIcon color="primary" />
-                      </ListItemIcon>
-                      <ListItemText primary="You Will Need A Computer Running Linux, MacOS, Or Windows" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon>
-                        <CheckCircleIcon color="primary" />
-                      </ListItemIcon>
-                      <ListItemText primary="A Basic Understanding Of Web Technologies" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon>
-                        <CheckCircleIcon color="primary" />
-                      </ListItemIcon>
-                      <ListItemText primary="Proficiency In A Programming Language Is Advantageous But Not Mandatory" />
-                    </ListItem>
-                  </List>
-                </Box>
+                  <Box sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: "white", boxShadow: 1 }}>
+                    <Typography variant="h6" fontWeight="bold">
+                      Requirements for this course
+                    </Typography>
+                    <List>
+                      <ListItem>
+                        <ListItemIcon>
+                          <CheckCircleIcon color="primary" />
+                        </ListItemIcon>
+                        <ListItemText primary="You Will Need A Computer Running Linux, MacOS, Or Windows" />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemIcon>
+                          <CheckCircleIcon color="primary" />
+                        </ListItemIcon>
+                        <ListItemText primary="A Basic Understanding Of Web Technologies" />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemIcon>
+                          <CheckCircleIcon color="primary" />
+                        </ListItemIcon>
+                        <ListItemText primary="Proficiency In A Programming Language Is Advantageous But Not Mandatory" />
+                      </ListItem>
+                    </List>
+                  </Box>
+
+
 
               </Grid>
 

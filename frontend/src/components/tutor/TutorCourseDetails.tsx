@@ -21,6 +21,8 @@ import Footer from "../common/Footer";
 import { getTutorCourseDetails } from "@/api/tutorApi";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import contact from '../../assets/contact.jpeg'
+
 
 
 
@@ -31,7 +33,7 @@ interface Course {
   thumbnail: string;
   title: string;
   description: string;
-  tutorId: { _id: string; name: string };
+  tutorId: { _id: string; name: string,email:string;title:string; bio:string };
   categoryId: { _id: string; name: string };
   price: number;
   duration: string;
@@ -49,8 +51,6 @@ const TutorCourseDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
   const navigate = useNavigate()
-
- 
 
 
 
@@ -104,7 +104,6 @@ const TutorCourseDetails = () => {
                     </Typography>
                   </CardContent>
                 </Card>
-
                 
                 <Box sx={{ mt: 3, p: 3, borderRadius: 2, bgcolor: "white", boxShadow: 1 }}>
                   <Typography variant="h6" fontWeight="bold">
@@ -196,8 +195,6 @@ const TutorCourseDetails = () => {
 
             </>
           )}
-
-
         </Grid>
       </Container>
       <Footer />

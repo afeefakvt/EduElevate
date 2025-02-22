@@ -7,7 +7,6 @@ import { Student } from "../models/studentModel";
 import mongoose, { mongo } from "mongoose";
 import Stripe from "stripe";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
-import { error } from "console";
 
 
 
@@ -362,6 +361,42 @@ export class StudentController {
             
         }
 
+    }
+
+
+    async editProfile(req:Request,res:Response):Promise<void>{
+        try {
+            
+            const {name} = req.body            
+            const {studentId} =req.params
+            
+            const result = await this.studentService.editProfile(studentId,{name})
+
+            if (!result) {
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Student not found." });
+                return;
+              }
+            console.log(result)
+            res.status(HTTP_STATUS.CREATED).json({message:"editted profile successfully",result})
+        } catch (error) {
+            console.error("error editing profile",error)
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})
+            
+        }
+    }
+
+    async changePassword(req:Request,res:Response):Promise<void>{
+        try {
+            
+            const {studentId} = req.params;
+            const {currentPassword,newPassword} = req.body;
+                await this.studentService.changePassword(studentId,currentPassword,newPassword)
+                res.status(200).json({message:"Password updates successfully. Please login again"})
+          
+        } catch (error:any) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: error.message || 'Something went wrong' })
+            
+        }
     }
     
 }
