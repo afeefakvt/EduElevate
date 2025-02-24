@@ -2,6 +2,7 @@ import { Router } from "express";
 import { StudentController } from "../controllers/studentController";
 import { StudentService } from "../services/studentService";
 import { authenticateToken } from "../middlewares/authToken";
+import { authorizeRoles } from "../middlewares/authRole";
 import { Student } from "../models/studentModel";
 import { StudentRepository } from "../repositories/studentRepository";
 import { validateStudentRegistration,validateStudentLogin,validateForgotPassword } from "../middlewares/validationMiddleware";
@@ -24,10 +25,10 @@ studentRouter.post('/login',validateStudentLogin,studentController.login.bind(st
 studentRouter.post('/auth/google',studentController.googleLogin.bind(studentController))
 studentRouter.post('/forgotPassword',studentController.forgotPassword.bind(studentController))
 studentRouter.post( '/resetPassword',validateForgotPassword,studentController.resetPassword.bind(studentController))
-studentRouter.post( '/course/checkout/:courseId',authenticateToken,studentController.stripePayment.bind(studentController))
-studentRouter.put( '/editProfile/:studentId',authenticateToken,studentController.editProfile.bind(studentController))
-studentRouter.put( '/updatePassword/:studentId',authenticateToken,studentController.changePassword.bind(studentController))
-studentRouter.post( '/logout',authenticateToken,studentController.logout.bind(studentController))
+studentRouter.post( '/course/checkout/:courseId',authenticateToken,authorizeRoles(["student"]),studentController.stripePayment.bind(studentController))
+studentRouter.put( '/editProfile/:studentId',authenticateToken,authorizeRoles(["student"]),studentController.editProfile.bind(studentController))
+studentRouter.put( '/updatePassword/:studentId',authenticateToken,authorizeRoles(["student"]),studentController.changePassword.bind(studentController))
+studentRouter.post( '/logout',studentController.logout.bind(studentController))
 
 studentRouter.post('/admin/login',studentController.adminLogin.bind(studentController))
 

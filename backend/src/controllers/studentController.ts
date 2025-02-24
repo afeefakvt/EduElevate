@@ -167,7 +167,12 @@ export class StudentController {
 
     async logout(req:Request,res:Response):Promise<void>{
         try {    
-            res.clearCookie('token')
+
+            // console.log('Headers:', req.headers) // Log incoming headers
+            // console.log('Cookies:', req.cookies) 
+            // console.log("Cookies received:", req.cookies);
+            
+            // res.clearCookie('token')
             res.clearCookie("refreshToken",{
                 httpOnly:true,
                 secure:process.env.NODE_ENV ==="development"

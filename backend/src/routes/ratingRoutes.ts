@@ -3,7 +3,7 @@ import { RatingRepository } from "../repositories/ratingRepository";
 import { RatingService } from "../services/ratingService";
 import { RatingController } from "../controllers/ratingController";
 import { authenticateToken } from "../middlewares/authToken";
-
+import { authorizeRoles } from "../middlewares/authRole";
 
 
 const ratingRepository = new RatingRepository();
@@ -12,7 +12,7 @@ const ratingController = new RatingController(ratingService)
 
 const ratingRoutes = Router()
 
-ratingRoutes.post('/rating/addRating',authenticateToken,ratingController.addRating.bind(ratingController))
+ratingRoutes.post('/rating/addRating',authenticateToken,authorizeRoles(["student"]),ratingController.addRating.bind(ratingController))
 ratingRoutes.get('/rating/:courseId',ratingController.getCourseRatings.bind(ratingController))
 
 export default ratingRoutes

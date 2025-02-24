@@ -93,7 +93,7 @@ export class TutorController {
             }
 
             
-            res.cookie("refreshToken",refreshToken,{
+            res.cookie("tutorRefreshToken",refreshToken,{
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
                 secure:process.env.NODE_ENV==="development",
                 sameSite:"strict", //helps prevent csrf
@@ -115,12 +115,12 @@ export class TutorController {
     
         async refreshAccessToken (req:Request,res:Response):Promise<void>{
             try {
-                const refreshToken = req.cookies.refreshToken;
+                const refreshToken = req.cookies.tutorRefreshToken;
                 console.log(refreshToken,"refreshhhh");
                 if(!refreshToken){
                     console.error("No refresh token found,Logging out.")
             
-                res.clearCookie("refreshToken");
+                res.clearCookie("tutorRefreshToken");
                 res.status(HTTP_STATUS.UNAUTHORIZED).json({message:"No refresh token found"});
                 return;
                 }
@@ -132,7 +132,7 @@ export class TutorController {
                 console.log("tutor is",tutor)
     
                 if(!tutor){
-                    res.clearCookie('refreshToken');
+                    res.clearCookie('tutorRefreshToken');
                     res.status(HTTP_STATUS.NOT_FOUND).json({message:"tutor not found"})
                     return;
                 }
@@ -160,8 +160,10 @@ export class TutorController {
 
     async logoutTutor(req:Request,res:Response):Promise<void>{
         try {    
-            res.clearCookie('token')
-            res.clearCookie("refreshToken",{
+            // console.log("Cookies received:", req.cookies);
+
+            // res.clearCookie('token')
+            res.clearCookie("tutorRefreshToken",{
                 httpOnly:true,
                 secure:process.env.NODE_ENV ==="development"
             })

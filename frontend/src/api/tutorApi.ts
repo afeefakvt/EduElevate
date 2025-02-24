@@ -196,7 +196,8 @@ export const getCourseRatings  = async(courseId:string)=>{
 export const logoutTutor = async()=>{
     try {
         const response = await axiosInstance.post('/tutor/logout')
-        console.log("cameeee repsosne");
+        // console.log("cameeee repsosne");
+        // console.log(response?.data ?? "No response data");
         
         return response.data
         

@@ -13,6 +13,8 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config)=>{
         const token = Cookies.get('tutorAuthToken')
+        // console.log('tutor token:', token) 
+
         if(token){
             config.headers['Authorization'] =`Bearer ${token}`
         }

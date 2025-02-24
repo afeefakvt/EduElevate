@@ -8,7 +8,8 @@ export interface ITutor extends Document{
     isApproved:Boolean,
     status:string,
     title:string,
-    bio:string
+    bio:string,
+    role:string
 }
 
 const TutorSchema:Schema  = new Schema<ITutor>(
@@ -45,6 +46,10 @@ const TutorSchema:Schema  = new Schema<ITutor>(
             type:String,
             enum:["pending","approved","rejected"],
             default:"pending"
+        },
+        role:{
+            type:String,
+            default:"tutor"
         }
     }
 )

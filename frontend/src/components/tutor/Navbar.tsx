@@ -1,9 +1,10 @@
 import logo from "../../assets/afeefalogo.png"
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { RootState, store,persistor } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { tutorLogout } from "../../store/tutorAuthSlice";
 import { logoutTutor } from "@/api/tutorApi";
 import Cookies from "js-cookie";
@@ -13,11 +14,22 @@ const Navbar = () => {
     const navigate = useNavigate()
     const token = useSelector((state: RootState) => state.tutorAuth.token)
     const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    
 
     const dispatch = useDispatch()
     useEffect(() => {
         console.log("Current Redux state:", store.getState());
     }, [])
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
 
     const handleLogout = async() => {
         try {
@@ -36,8 +48,6 @@ const Navbar = () => {
 
         } catch (error) {
             console.log(error);
-
-
         }
     }
     return (
@@ -125,27 +135,32 @@ const Navbar = () => {
                         Add a course
                     </Typography>
                     {token ? (
-                        <Box display={"flex"} justifyContent="center" alignItems="center" gap={1}>
-                            <Button
-                                variant="contained" color="primary"
-                                sx={{ color: "white", margin: 0, backgroundColor: "#550A8A" }}
-                                onClick={() => navigate("/tutor/profile")}
+                        <>
+                        {/* Avatar Button */}
+                        <IconButton onClick={handleMenuOpen}>
+                            <Avatar 
+                                // src={student?.profilePic || ""} 
+                                alt={tutor?.name}
+                                sx={{ width: 40, height: 40, bgcolor: "#550A8A", color: "white", fontSize: 18 }}
                             >
+                                {tutor?.name?.charAt(0).toUpperCase()} {/* First letter if no image */}
+                            </Avatar>
+                        </IconButton>
+    
+                        {/* Dropdown Menu */}
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                        >
+                            <MenuItem onClick={() => { navigate("/profile"); handleMenuClose(); }}>
                                 Profile
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{
-                                    backgroundColor: "#550A8A",
-                                    display: { xs: "none", sm: 'block' },
-                                    //   "&:hover": { backgroundColor: "#333" },
-                                }}
-                                onClick={() => handleLogout()}
-                            >
+                            </MenuItem>
+                            <MenuItem onClick={() => { handleLogout(); handleMenuClose(); }}>
                                 Logout
-                            </Button>
-                        </Box>
+                            </MenuItem>
+                        </Menu>
+                    </>
 
                     ) : (
                         <Box display={"flex"} justifyContent="center" alignItems="center" gap={1}>

@@ -4,10 +4,12 @@ import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { persistor, RootState, store } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
-import { SetStateAction, useEffect,useState } from "react";
+import { useEffect,useState } from "react";
 import { logout } from "../../store/authSlice";
 import { ModeToggle } from "../ui/modeToggle";
 import { logoutStudent } from "@/api/authApi";
+import Cookies from "js-cookie";
+
 
 
 const Navbar = () => {
@@ -32,11 +34,14 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         try {
+            console.log("Before logout:", Cookies.get("authToken")); 
+
             dispatch(logout()); //remove the user data from redux store
             await persistor.flush(); //ensure persisted state is updated
             await persistor.purge() //clear persisted redux state
-            console.log('logged out');
-
+            console.log("student logged out successfully");
+            console.log("After logout:", Cookies.get("authToken"));
+             -
             await logoutStudent()
             localStorage.setItem("logoutSuccess","true")  //Store logout success message in local storage
             if(student?.role==="student"){
@@ -45,8 +50,6 @@ const Navbar = () => {
 
         } catch (error) {
             console.log(error);
-
-
         }
     }
     return (
