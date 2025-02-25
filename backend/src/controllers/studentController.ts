@@ -123,6 +123,9 @@ export class StudentController {
 
     async refreshAccessToken (req:Request,res:Response):Promise<void>{
         try {
+
+            console.log("refressshhhhhhhhhh");
+            
             const refreshToken = req.cookies.refreshToken;
             console.log(refreshToken,"refreshhhh");
             if(!refreshToken){
@@ -172,10 +175,10 @@ export class StudentController {
             // console.log('Cookies:', req.cookies) 
             // console.log("Cookies received:", req.cookies);
             
-            // res.clearCookie('token')
+            res.clearCookie('token')
             res.clearCookie("refreshToken",{
                 httpOnly:true,
-                secure:process.env.NODE_ENV ==="development"
+                secure:process.env.NODE_ENV ==="production"
             })
             res.status(HTTP_STATUS.OK).json({ message: "Logout Successful" });
 

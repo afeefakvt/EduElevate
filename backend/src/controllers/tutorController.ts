@@ -10,6 +10,7 @@ import { CourseService } from "../services/courseService";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
 import { verifyRefreshToken } from "../utils/jwt";
 import Tutor from "../models/tutorModel";
+import { RequestWithUser } from "../middlewares/authToken";
 
 
 export class TutorController {
@@ -95,7 +96,7 @@ export class TutorController {
             
             res.cookie("tutorRefreshToken",refreshToken,{
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
-                secure:process.env.NODE_ENV==="development",
+                secure:process.env.NODE_ENV==="production",
                 sameSite:"strict", //helps prevent csrf
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 
@@ -155,14 +156,11 @@ export class TutorController {
             }
         }
 
-
-        
-
     async logoutTutor(req:Request,res:Response):Promise<void>{
         try {    
             // console.log("Cookies received:", req.cookies);
 
-            // res.clearCookie('token')
+            res.clearCookie('token')
             res.clearCookie("tutorRefreshToken",{
                 httpOnly:true,
                 secure:process.env.NODE_ENV ==="development"
@@ -220,12 +218,17 @@ export class TutorController {
         }
     }
 
-    async getTutorCourses(req:Request,res:Response):Promise<void>{
+    async getTutorCourses(req:RequestWithUser,res:Response):Promise<void>{
         try {
             console.log("coursee tutor");
             
-            const {tutor} = req as AuthenticatedRequest;
-            const tutorId = tutor.id
+            // const {tutor} = req as AuthenticatedRequest;
+
+            if (!req.tutor || !req.tutor._id) {
+                res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a tutor." });
+                return;
+              }
+            const tutorId = req.tutor._id.toString( )            
             const courses = await this.tutorService.getTutorCourses(tutorId);
             if(!courses){
                 res.status(HTTP_STATUS.NOT_FOUND).json({message:"No courses created"})

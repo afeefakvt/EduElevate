@@ -5,13 +5,17 @@ import storage from 'redux-persist/lib/storage';
 import { persistReducer,persistStore } from "redux-persist";
 
 const persistConfig = {
-    key:'root',
+    key:'auth',
     storage
     
 }
+const tutorAuthPersistConfig = {
+    key: 'tutorAuth',
+    storage,
+};
 
 const persistedAuthReducer = persistReducer(persistConfig,authReducer);
-const persistedTutorAuthReducer = persistReducer(persistConfig,tutorAuthReducer)
+const persistedTutorAuthReducer = persistReducer(tutorAuthPersistConfig,tutorAuthReducer)
 
 export const store = configureStore({
     reducer:{

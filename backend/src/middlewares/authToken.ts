@@ -2,8 +2,7 @@ import { verifyToken } from "../utils/jwt";
 import { Request,Response,NextFunction } from "express";
 import { IStudent, Student } from "../models/studentModel";
 import { JwtPayload } from "jsonwebtoken";
-import Tutor from "../models/tutorModel";
-import { decode } from "punycode";
+import Tutor, { ITutor } from "../models/tutorModel";
 
 
 interface DecodedToken extends JwtPayload{
@@ -12,7 +11,9 @@ interface DecodedToken extends JwtPayload{
 }
 
 export interface RequestWithUser extends Request{
-    user?:any; //can be student,tutor,admin
+    user?:IStudent| ITutor; //can be student,tutor,admin
+    student?:IStudent;
+    tutor?:ITutor;
 }
 
 export const authenticateToken = async(req:RequestWithUser,res:Response,next:NextFunction):Promise<void>=>{
@@ -22,7 +23,7 @@ export const authenticateToken = async(req:RequestWithUser,res:Response,next:Nex
     console.log("authenticating the token");
 
     if(!token){
-        res.status(401).json({message:'Access denied. No token provided.'})
+        res.status(403).json({message:'Access denied. No token provided.'})
         return;
     }
 
@@ -33,8 +34,11 @@ export const authenticateToken = async(req:RequestWithUser,res:Response,next:Nex
 
         if(decoded.role==="student" || decoded.role==="admin"){
             user = await Student.findById(decoded.id);
+            if (user) req.student = user;
+            
         }else if(decoded.role==="tutor"){
             user  = await Tutor.findById(decoded.id)
+            if (user) req.tutor = user;
         }
 
         if(!user){

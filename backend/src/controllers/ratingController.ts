@@ -17,6 +17,12 @@ export class RatingController{
         try {
             const {courseId,rating,review} = req.body ;
             const {student} = req as AuthenticatedRequest; // Extract student from request
+
+            if (!student || !student.id) {
+                res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Unauthorized: Student not found" });
+                return;
+            }
+
             const studentId = new mongoose.Types.ObjectId(student.id)
 
             const ratingData ={rating,review,courseId,studentId} 

@@ -1,4 +1,3 @@
-import { networkInterfaces } from "os";
 import { RequestWithUser } from "./authToken";
 import { Response,NextFunction } from "express";
 

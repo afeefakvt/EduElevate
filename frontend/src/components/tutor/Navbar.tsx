@@ -8,6 +8,8 @@ import { useEffect,useState } from "react";
 import { tutorLogout } from "../../store/tutorAuthSlice";
 import { logoutTutor } from "@/api/tutorApi";
 import Cookies from "js-cookie";
+import storage from 'redux-persist/lib/storage';
+
 
 const Navbar = () => {
 
@@ -37,7 +39,7 @@ const Navbar = () => {
 
             dispatch(tutorLogout())
             await persistor.flush();
-            await persistor.purge();
+            storage.removeItem('persist:tutorAuth');
             console.log("Tutor logged out successfully");
             console.log("After logout:", Cookies.get("tutorAuthToken"));
 

@@ -49,7 +49,7 @@ export const login =  async(email:string,password:string)=>{
         const response =  await axiosInstance.post('/login',{email,password})
         
         const {token} = response.data
-        console.log(token,"tokkkkkkkkk");
+        // console.log(token,"tokkkkkkkkk");
         
         if(token){
             store.dispatch(loginSuccess({
@@ -57,7 +57,7 @@ export const login =  async(email:string,password:string)=>{
                 student:response.data.student,
                 isAuthenticated:true
             }))
-            Cookies.set('authToken', token, {expires: 30/1440})
+            Cookies.set('authToken', token, {expires: 2/1440})
         } else{
             console.log(' not logged in ');
 

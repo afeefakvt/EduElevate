@@ -9,6 +9,7 @@ import { logout } from "../../store/authSlice";
 import { ModeToggle } from "../ui/modeToggle";
 import { logoutStudent } from "@/api/authApi";
 import Cookies from "js-cookie";
+import storage from 'redux-persist/lib/storage';
 
 
 
@@ -38,7 +39,7 @@ const Navbar = () => {
 
             dispatch(logout()); //remove the user data from redux store
             await persistor.flush(); //ensure persisted state is updated
-            await persistor.purge() //clear persisted redux state
+            storage.removeItem('persist:auth');//clear persisted redux state
             console.log("student logged out successfully");
             console.log("After logout:", Cookies.get("authToken"));
              -

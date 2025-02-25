@@ -19,7 +19,7 @@ axiosInstance.interceptors.request.use(
         if(token){
             config.headers['Authorization'] = `Bearer ${token}`
         }
-        console.log('Request headers:', config.headers) // Log the full headers
+        // console.log('Request headers:', config.headers) // Log the full headers
 
         return config
     },
@@ -31,20 +31,26 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     (response)=>{
+        // console.log("✅ Response received:", response);
         return response
     },
 
     async(error)=>{
+        // console.log(" Error caught by interceptor:", error); 
+        // console.log("Error status:", error.response?.status);
+
+
         if(error.response && error.response.status===401){
             store.dispatch(logout())
             Cookies.remove("authToken")
             return;
         }
+
         else if(error.response && error.response.status===403){
-            console.log("awaiting to refresh access token");
+            console.log("403 error — Trying to refresh token...");
 
             if(error.config._retry){
-                console.error("Token rfersh failed again .Logging out...");
+                console.error("Token refresh failed again .Logging out...");
                 store.dispatch(logout());
                 Cookies.remove("authToken")
                 window.location.href='/login';
@@ -54,6 +60,8 @@ axiosInstance.interceptors.response.use(
             error.config._retry = true;
             
             try {
+                console.log("Sending request to /refreshToken");
+
                 const refreshResponse = await axiosInstance.post('/refreshToken');
                 if(!refreshResponse?.data?.token){
                     throw new Error("No new access token recieved")

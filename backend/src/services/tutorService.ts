@@ -38,6 +38,14 @@ export class TutorService implements ITutorService {
         if(tutor.isBlocked){
             throw new Error("You are blocked by admin. Can't login now");
         }
+        if (tutor.status==="pending") {
+            throw new Error('You cannot login. Your account is waiting admin approval')
+                    
+        }
+        if (tutor.status==='rejected') {
+            throw new Error(' Sorry you cannot login. Your approval is rejected by admin')
+        }
+            
         return tutor
 
     }
@@ -67,6 +75,7 @@ export class TutorService implements ITutorService {
         const token = generateToken({
             id:tutor._id,
             email:tutor.email,
+            role:tutor.role,
             isBlocked:tutor.isBlocked 
         })
 

@@ -1,6 +1,6 @@
 import { Request } from "express";
 
 export interface AuthenticatedRequest extends Request{
-    student:{id:string};
-    tutor:{id:string}
+    student?:{id:string};
+    tutor?:{id:string}
 }
