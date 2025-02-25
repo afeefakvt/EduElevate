@@ -37,6 +37,17 @@ export const loginAdmin =  async(email:string,password:string)=>{
     }
 }
 
+export const logoutAdmin = async()=>{
+    try {
+        const response = await axiosInstance.post('/admin/logout')
+        return response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error); 
+        
+    }
+}
+
 export const getStudents = async()=>{
     try {
         const response = await axiosInstance.get('/admin/students')

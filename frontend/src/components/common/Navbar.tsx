@@ -47,6 +47,8 @@ const Navbar = () => {
             localStorage.setItem("logoutSuccess","true")  //Store logout success message in local storage
             if(student?.role==="student"){
                 navigate('/login')
+            }else if(student?.role==="admin"){
+                navigate('/admin/login')
             }
 
         } catch (error) {

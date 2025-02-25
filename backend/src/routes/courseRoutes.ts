@@ -13,7 +13,7 @@ const courseController  =  new CourseController(courseService);
 
 const courseRoutes = Router();
 
-courseRoutes.post('/tutor/addCourse',upload.single('thumbnail'),authenticateToken,authorizeRoles(["tutor"]),courseController.addCourse.bind(courseController));
+courseRoutes.post('/tutor/addCourse',authenticateToken,authorizeRoles(["tutor"]),upload.single('thumbnail'),courseController.addCourse.bind(courseController));
 courseRoutes.get('/courses',courseController.getCourses.bind(courseController));
 courseRoutes.get('/courses/:courseId',courseController.getCourseDetails.bind(courseController));
 courseRoutes.patch('/courses/deleteCourse/:courseId',authenticateToken,authorizeRoles(["tutor"]),courseController.listUnlistCourse.bind(courseController));

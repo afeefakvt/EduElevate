@@ -31,6 +31,7 @@ studentRouter.put( '/updatePassword/:studentId',authenticateToken,authorizeRoles
 studentRouter.post( '/logout',studentController.logout.bind(studentController))
 
 studentRouter.post('/admin/login',studentController.adminLogin.bind(studentController))
+studentRouter.post('/admin/logout',studentController.adminLogout.bind(studentController))
 
 
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { storeOtp, sendOtptoEmail } from "../utils/otp";
-import { generateToken, verifyPasswordResetToken, verifyRefreshToken } from "../utils/jwt";
+import { generateToken, verifyPasswordResetToken, verifyRefreshToken ,generateRefreshToken} from "../utils/jwt";
 import { IStudentService } from "../interfaces/student/IStudentService";
 import { OAuth2Client } from "google-auth-library";
 import { Student } from "../models/studentModel";
@@ -217,6 +217,20 @@ export class StudentController {
         }
     }
 
+    async adminLogout(req:Request,res:Response):Promise<void>{
+        try {
+            res.clearCookie('token')
+            res.clearCookie("refreshToken",{
+                httpOnly:true,
+                secure:process.env.NODE_ENV ==="production"
+            })
+            res.status(HTTP_STATUS.OK).json({ message: "Logout Successful" });  
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in logging out", error });
+            
+        }
+    }
+
     async googleLogin(req: Request, res: Response): Promise<void> {
         try {
             const { idToken } = req.body
@@ -258,6 +272,7 @@ export class StudentController {
             }
 
             const token = generateToken({ id: student._id, email: student.email, role: student.role })
+    
             res.status(HTTP_STATUS.OK).json({ message: "google sign in success", token, student })
 
         } catch (error) {

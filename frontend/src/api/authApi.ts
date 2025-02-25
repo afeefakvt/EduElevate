@@ -93,7 +93,7 @@ export const googleSignIn = async(idToken:string)=>{
         }
         const data = await response.json();
         const {token,student} = data;
-        Cookies.set('authToken',token,{expires:15/1440})
+        Cookies.set('authToken',token,{expires:1/24})
         store.dispatch(loginSuccess({token,student,isAuthenticated:true}))
 
         return data;

@@ -24,7 +24,11 @@ import {
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import { logout } from "../../store/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
+import storage from 'redux-persist/lib/storage';
+import { persistor,RootState,store } from "@/store/store";
+import { logoutAdmin } from "@/api/adminApi";
+
 
 const menuItems = [
   { text: "Dashboard", path: "/admin/home", icon: <DashboardIcon /> },
@@ -41,6 +45,8 @@ const menuItems = [
 const Sidebar = () => {
     const isMobile = useMediaQuery("(max-width: 900px)");
     const [open, setOpen] = useState(!isMobile);
+    const admin = useSelector((state: RootState) => state.auth.student)
+    const token = useSelector((state: RootState) => state.auth.token)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -50,8 +56,17 @@ const Sidebar = () => {
   };
 
 
-  const handleLogout = ()=>{
+  const handleLogout = async()=>{
     dispatch(logout())
+    await persistor.flush(); //ensure persisted state is updated
+    storage.removeItem('persist:auth');//clear persisted redux state
+    await logoutAdmin();
+    localStorage.setItem("logoutSuccess","true")  //Store logout success message in local storage
+    if(admin?.role==="admin"){
+        navigate('/admin/login')
+    }else if(admin?.role==="admin"){
+        navigate('/login')
+    }
     navigate('/admin/login')
   }
   return (

@@ -18,9 +18,9 @@ const categoryRouter = Router()
 
 
 categoryRouter.get('/admin/category',authenticateToken,authorizeRoles(["admin"]),categoryController.getCategory.bind(categoryController));
-categoryRouter.post('/admin/category/addCategory',authorizeRoles(["admin"]),authenticateToken,categoryController.addCategory.bind(categoryController));
-categoryRouter.patch('/admin/category/:id/listUnlistCategory',authorizeRoles(["admin"]),authenticateToken,categoryController.listUnlistCategory.bind(categoryController));
-categoryRouter.put('/admin/category/:id/editCategory',authorizeRoles(["admin"]),authenticateToken,categoryController.editCategory.bind(categoryController));
+categoryRouter.post('/admin/category/addCategory',authenticateToken,authorizeRoles(["admin"]),categoryController.addCategory.bind(categoryController));
+categoryRouter.patch('/admin/category/:id/listUnlistCategory',authenticateToken,authorizeRoles(["admin"]),categoryController.listUnlistCategory.bind(categoryController));
+categoryRouter.put('/admin/category/:id/editCategory',authenticateToken,authorizeRoles(["admin"]),categoryController.editCategory.bind(categoryController));
 categoryRouter.get('/categories', categoryController.getCategory.bind(categoryController));
 
 
