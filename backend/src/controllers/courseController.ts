@@ -93,4 +93,17 @@ export class CourseController{
         }
     }
 
+    async bestSellingCourses(req:Request,res:Response):Promise<void>{
+        try {
+            console.log("cvas djchmndcdscas");
+            
+            const courses = await this.courseService.getBestSellingCourses()
+            res.status(200).json({courses:courses})
+        } catch (error) {
+            res.status(500).json({ message: "Failed to fetch bestselling courses" });
+            
+        }
+
+    }
+
 }

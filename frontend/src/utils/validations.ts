@@ -311,7 +311,20 @@ export const validateEditLectureForm = (lectureData: {
 
 
 
-export const validateEditProfileForm = (name:string)=>{
+export const validateTutorEditProfileForm = (name:string,title:string,bio:string)=>{
+  let errors : {name?:string,title?:string,bio?:string} = {}
+  if(!name.trim()){
+    errors.name = ERROR_MESSAGES.REQUIRED.NAME
+  }
+  if(!title.trim()){
+    errors.title = ERROR_MESSAGES.REQUIRED.TITLE
+  }
+  if(!bio.trim()){
+    errors.bio = ERROR_MESSAGES.REQUIRED.BIO
+  }
+  return errors;
+}
+export const validateStudentEditProfileForm = (name:string)=>{
   let errors : {name?:string} = {}
   if(!name.trim()){
     errors.name = ERROR_MESSAGES.REQUIRED.NAME

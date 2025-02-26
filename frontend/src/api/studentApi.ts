@@ -28,3 +28,4 @@ export const editProfile = async(studentId:string,name: string )=>{
             
         }
     }
+    

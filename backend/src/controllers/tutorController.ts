@@ -261,10 +261,10 @@ export class TutorController {
 
     async editTutorProfile(req:Request,res:Response):Promise<void>{
         try {
-            const {name} = req.body;
+            const {name,title,bio} = req.body;
             const {tutorId} = req.params;
 
-            const result = await this.tutorService.editTutorProfile(tutorId,{name})
+            const result = await this.tutorService.editTutorProfile(tutorId,{name,title,bio})
             
             if (!result) {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Tutor not found." });

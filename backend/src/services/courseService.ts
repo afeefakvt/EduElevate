@@ -68,7 +68,9 @@ export class CourseService implements ICourseService{
             
         }
 
-
+    }
+    async getBestSellingCourses(): Promise<ICourse[]> {
+        return await this.courseRepository.getBestSellingCourses()
     }
 
   

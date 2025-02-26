@@ -5,27 +5,45 @@ import worldwide from '../../assets/worldwide.webp'
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useEffect, useState } from "react";
+import { bestSellingCourses } from "../../api/courseApi"
+import { Bold } from "lucide-react";
+
+
+interface Course {
+  _id: string;
+  tutorId:{name:string};
+  title: string;
+  description: string;
+  thumbnail: string;
+  count: number;
+  price:number
+};
 
 const Bestselling = () => {
 
   const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token)
+  const [courses, setCourses] = useState<Course[]>([])
 
-  const courses = [
-    {
-      id: 1,
-      title: "Full-Stack Web Development",
-      description: "Master front-end and back-end development.",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 3,
-      title: "Mobile App Development",
-      description: "Build apps for Android and iOS.",
-      image: "https://via.placeholder.com/150",
-    },
+  useEffect(() => {
+    console.log("hdbc mjdshmcbbdk");
 
-  ];
+    const fetchBestSellingCourses = async () => {
+      try {
+        console.log("gdvc hsn");
+
+        const response = await bestSellingCourses()
+        console.log("bestee");
+
+        setCourses(response.courses)
+
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    }
+    fetchBestSellingCourses()
+  }, [])
 
   const content = [
     {
@@ -63,22 +81,38 @@ const Bestselling = () => {
 
       }}>
         <Typography
-          variant="h4"
+          variant="h5"
           sx={{ fontWeight: "bold", color: "#333", marginBottom: "1rem" }}
-
         > Best Selling Courses</Typography><br />
 
         <Grid container spacing={3}>
           {courses.map((course) => (
-            <Grid item xs={12} sm={6} md={3} key={course.id}>
-              <Card sx={{ maxWidth: 330, '&:hover': { boxShadow: 6 } }}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={course.image}
-                  alt={course.title}
-                />
-                <CardContent>
+            <Grid item xs={12} sm={6} md={3} key={course._id}>
+              <Card
+                sx={{
+                  maxWidth: 300,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: "100%",
+                  boxShadow: 3,
+                  borderRadius: 2,
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  '&:hover': { 
+                    transform: "scale(1.05)",
+                    boxShadow: 10 },
+                }}
+              >
+                <Box sx={{ height: 150, overflow: "hidden" }}>
+                    <CardMedia
+                      component="img"
+                      height="100%"
+                      image={course.thumbnail}
+                      alt={course.title}
+                      sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+                    />
+                  </Box>
+                <CardContent sx={{ flexGrow: 1 }}>
                   <Typography
                     gutterBottom
                     variant="h6"
@@ -87,6 +121,9 @@ const Bestselling = () => {
                   >
                     {course.title}
                   </Typography>
+                  <Typography variant="h6" color="text.secondary" sx={{fontWeight:"bold"}}>
+                    ₹{course.price}
+                  </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {course.description}
                   </Typography>
@@ -94,7 +131,11 @@ const Bestselling = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  sx={{ margin: "1rem", backgroundColor: "#550A8A" }}
+                  sx={{
+                    margin: "1rem",
+                    backgroundColor: "#550A8A",
+                  }}
+                  onClick={() => navigate(`/courses/${course._id}`)}
                 >
                   View Course
                 </Button>
@@ -185,7 +226,7 @@ const Bestselling = () => {
               Apply Now
             </Button>
           </Card>
-          
+
           <Box sx={{ textAlign: "left", maxWidth: 400 }}>
             <Typography variant="h6" sx={{ fontWeight: "bold", }}>Your teaching & earning steps</Typography>
             <ol style={{ padding: 0, listStyleType: "none" }}>

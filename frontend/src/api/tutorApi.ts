@@ -209,9 +209,9 @@ export const logoutTutor = async()=>{
     }
 }
 
-export const editTutorProfile = async(tutorId:string,name:string)=>{
+export const editTutorProfile = async(tutorId:string,name:string,title:string,bio:string)=>{
     try {
-        const response = await axiosInstance.put(`/tutor/editProfile/${tutorId}`,{name})
+        const response = await axiosInstance.put(`/tutor/editProfile/${tutorId}`,{name,title,bio})
         return response.data
     } catch (error) {
         console.log("error is", error);

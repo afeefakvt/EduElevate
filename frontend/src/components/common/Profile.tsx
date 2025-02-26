@@ -19,66 +19,89 @@ import React, { useEffect, useState } from "react";
 import { editProfile } from "@/api/studentApi";
 import { logout, updateStudent } from "@/store/authSlice";
 import { changePassword } from "@/api/studentApi";
-import { validateChangePasswordForm, validateEditProfileForm } from "@/utils/validations";
-import { toast ,ToastContainer} from 'react-toastify';
+import { validateChangePasswordForm, validateTutorEditProfileForm,validateStudentEditProfileForm } from "@/utils/validations";
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { editTutorProfile, tutorChangePassword } from "@/api/tutorApi";
 import { tutorLogout, updateTutor } from "@/store/tutorAuthSlice";
 
 
-interface ProfileProps{
-    userType:"student" | "tutor";
+interface ProfileProps {
+    userType: "student" | "tutor";
 }
 
-const Profile:React.FC<ProfileProps>= ({userType}) => {
+const Profile: React.FC<ProfileProps> = ({ userType }) => {
 
-    const user = useSelector((state:RootState)=>
-    userType==="student"? state.auth.student : state.tutorAuth.tutor
-);
-  
+    const user = useSelector((state: RootState) =>
+        userType === "student" ? state.auth.student : state.tutorAuth.tutor
+    );
+
     const [name, setName] = useState(user?.name || "")
+    const [title, setTitle] = useState(
+        userType === "tutor" && user && "title" in user ? user.title : ""
+      );
+      const [bio, setBio] = useState(
+        userType === "tutor" && user && "bio" in user ? user.bio : ""
+      );
+      
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
-    const [nameError, setNameError] = useState<string | null>(null)
-    const [passwordErrors, setPasswordErrors] = useState<{ currentPassword?:string;password?: string; confirmPassword?: string }>({});
+    const [studentProfileError,setStudentProfileError] = useState<string | null>(null)
+    const [tutorProfileError, setTutorProfileError] = useState<{name?:string,title?:string,bio?:string}>({})
+    const [passwordErrors, setPasswordErrors] = useState<{ currentPassword?: string; password?: string; confirmPassword?: string }>({});
     const dispatch = useDispatch()
 
-   
+
 
     const handleLogout = () => {
         if (userType === "student") {
-          dispatch(logout());
+            dispatch(logout());
         } else if (userType === "tutor") {
-          dispatch(tutorLogout());
+            dispatch(tutorLogout());
         }
-      };
+    };  
 
     const updateName = async () => {
-        setNameError(null);
+        if(userType==="tutor"){
+            setTutorProfileError({});
 
-        const errors = validateEditProfileForm(name);
-        if (errors.name) {
-            setNameError(errors.name);
+        const errors = validateTutorEditProfileForm(name,title,bio);
+        if (errors.name || errors.title || errors.bio) {
+            setTutorProfileError(errors);
             return;
         }
+
+        }else{
+            setStudentProfileError(null)
+            
+        const errors = validateStudentEditProfileForm(name);
+        if (errors.name) {
+            setStudentProfileError(errors.name);
+            return;
+        }
+
+        }
+        
 
         try {
             if (!user?._id) {
                 setError("student id is missing")
                 return;
             }
-            let response 
-            if(userType==="student"){
-                response =await editProfile(user._id,name)
+            let response
+            if (userType === "student") {
+                response = await editProfile(user._id, name)
                 setName(response.result.name)
-                dispatch(updateStudent({student:response.result}))
+                dispatch(updateStudent({ student: response.result }))
 
-            }else{
-                response=await editTutorProfile(user._id,name);
+            } else {
+                response = await editTutorProfile(user._id, name,title,bio);
                 setName(response.result.name)
-                dispatch(updateTutor({tutor:response.result}))
+                setTitle(response.result.title)
+                setBio(response.result.bio)
+                dispatch(updateTutor({ tutor: response.result }))
             }
 
             toast.success("Profile updated successfully!");
@@ -87,15 +110,15 @@ const Profile:React.FC<ProfileProps>= ({userType}) => {
             console.log(error);
             toast.error("Failed to update profile.");
 
-        } 
+        }
     }
 
     const updatePassword = async () => {
         setError('');
         setPasswordErrors({});
 
-        const errors = validateChangePasswordForm(currentPassword,newPassword, confirmPassword);
-        if (errors.currentPassword  || errors.password || errors.confirmPassword) {
+        const errors = validateChangePasswordForm(currentPassword, newPassword, confirmPassword);
+        if (errors.currentPassword || errors.password || errors.confirmPassword) {
             setPasswordErrors(errors);
             return;
         }
@@ -106,30 +129,29 @@ const Profile:React.FC<ProfileProps>= ({userType}) => {
         }
         try {
             console.log("change pass");
-            
 
             if (userType === "student") {
                 await changePassword(user._id, currentPassword, newPassword);
-              } else {
+            } else {
                 await tutorChangePassword(user._id, currentPassword, newPassword);
-              }  
+            }
             toast.success("Password changed successfully! Logging out...");
 
             setTimeout(() => {
                 handleLogout()
             }, 3500);
-         
+
         } catch (error: any) {
             setError(error.message || "Failed to change password");
-        } 
+        }
     }
 
     if (!user) return <div className="text-center mt-10">Loading...</div>
 
     return (
 
-    <div className="flex flex-col min-h-screen">
-      {userType === "student" ? <StudentNavbar /> : <TutorNavbar />}
+        <div className="flex flex-col min-h-screen">
+            {userType === "student" ? <StudentNavbar /> : <TutorNavbar />}
 
             <div className="flex-1 container mx-auto mt-28 mb-28 p-6 max-w-4xl">
                 <h1 className="text-2xl font-bold mb-6 text-center">Profile Settings</h1>
@@ -153,14 +175,39 @@ const Profile:React.FC<ProfileProps>= ({userType}) => {
                                 {error && <p className="text-red-500">{error}</p>}
 
                                 <div className="space-y-1">
-                                    <Label htmlFor="name">Name</Label>
+                                    <Label htmlFor="name">Email</Label>
                                     <Input id="email" disabled value={user?.email} />
                                 </div>
                                 <div className="space-y-1">
                                     <Label htmlFor="username">Name</Label>
                                     <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-                                    {nameError && <p className="text-red-500">{nameError}</p>}
+                                    {userType === "tutor" && tutorProfileError?.name && <p className="text-red-500">{tutorProfileError.name}</p>}
+                                    {userType === "student" && studentProfileError && <p className="text-red-500">{studentProfileError}</p>}
+                                    
                                 </div>
+                                {userType === "tutor" && user && "title" in user && "bio" in user && (
+                                    <>
+                                        <div className="space-y-1">
+                                            <Label htmlFor="title">Title</Label>
+                                            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} /> 
+                                            {tutorProfileError?.title && <p className="text-red-500">{tutorProfileError.title}</p>}
+
+                                        </div>
+
+                                        <div className="space-y-1">
+                                            <Label htmlFor="bio">Bio</Label>
+                                            <textarea
+                                                id="bio"
+                                                rows={4}
+                                                className="w-full p-2 border rounded-md"
+                                                value={bio}
+                                                onChange={(e) => setBio(e.target.value)}
+                                            ></textarea>
+                                         {tutorProfileError?.bio && <p className="text-red-500">{tutorProfileError.bio}</p>}
+
+                                        </div>
+                                    </>
+                                )}
                             </CardContent>
                             <CardFooter>
                                 <Button className="bg-[#550A8A] hover:bg-[#6A0DAD] text-white" onClick={updateName}>Save Changes</Button>
