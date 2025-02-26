@@ -45,6 +45,7 @@ const TutorMyCourses = () => {
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [ratings, setRatings] = useState<{ [key: string]: { average: number; count: number } }>({})
+  const [sortOption,setSortOption] = useState<string>("default")
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [page, setPage] = useState(1);
@@ -127,9 +128,17 @@ const TutorMyCourses = () => {
   });
 
   
+  const sortedCourses = [...filteredCourses].sort((a,b)=>{
+    if(sortOption==="priceAsc") return a.price- b.price;
+    if(sortOption==="priceDesc") return b.price-a.price;
+    if(sortOption==="ratingAsc") return (ratings[a._id]?.average || 0)-(ratings[b._id]?.average || 0);
+    if(sortOption==="ratingDesc") return (ratings[b._id]?.average || 0)-(ratings[a._id]?.average || 0);
 
-  const totalPages = Math.ceil(filteredCourses.length / rowsPerPage);
-  const paginatedCourses = filteredCourses.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+    return 0;
+  }) 
+
+  const totalPages = Math.ceil(sortedCourses.length / rowsPerPage);
+  const paginatedCourses = sortedCourses.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -167,6 +176,16 @@ const TutorMyCourses = () => {
               ) : (
                 <MenuItem disabled>No Categories Found</MenuItem>
               )}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ minWidth: 200, ml: 2 }}>
+            <InputLabel>Sort By</InputLabel>
+            <Select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+            <MenuItem value="default">Default</MenuItem>
+              <MenuItem value="priceAsc">Price: Low to High</MenuItem>
+              <MenuItem value="priceDesc">Price: High to Low</MenuItem>
+              <MenuItem value="ratingAsc">Rating: Low to High</MenuItem>
+              <MenuItem value="ratingDesc">Rating: High to Low</MenuItem>
             </Select>
           </FormControl>
         </Box>

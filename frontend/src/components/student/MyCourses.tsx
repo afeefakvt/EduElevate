@@ -54,6 +54,7 @@ const MyCourses = () => {
   const isSuccess = searchParams.get("success") === "true"
   const [openSnackbar, setOpenSnackbar] = useState(false)
   const [ratings, setRatings] = useState<{ [key: string]: { average: number; count: number } }>({})
+  const [sortOption,setSortOption] = useState<string>("default")
   const [page, setPage] = useState(1);
   const rowsPerPage = 4;
 
@@ -125,9 +126,19 @@ const MyCourses = () => {
     return matchesSearch && matchesCategory;
   });
 
+  const sortedCourses = [...filteredCourses].sort((a,b)=>{
+    if(sortOption==="priceAsc") return a.courseId.price- b.courseId.price;
+    if(sortOption==="priceDesc") return b.courseId.price-a.courseId.price;
+    if(sortOption==="ratingAsc") return (ratings[a.courseId._id]?.average || 0)-(ratings[b.courseId._id]?.average || 0);
+    if(sortOption==="ratingDesc") return (ratings[b.courseId._id]?.average || 0)-(ratings[a.courseId._id]?.average || 0);
 
-  const totalPages = Math.ceil(filteredCourses.length / rowsPerPage);
-  const paginatedCourses = filteredCourses.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+    return 0;
+  }) 
+
+
+
+  const totalPages = Math.ceil(sortedCourses.length / rowsPerPage);
+  const paginatedCourses = sortedCourses.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
 
   return (
@@ -166,6 +177,16 @@ const MyCourses = () => {
               ) : (
                 <MenuItem disabled>No Categories Found</MenuItem>
               )}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ minWidth: 200, ml: 2 }}>
+            <InputLabel>Sort By</InputLabel>
+            <Select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+            <MenuItem value="default">Default</MenuItem>
+              <MenuItem value="priceAsc">Price: Low to High</MenuItem>
+              <MenuItem value="priceDesc">Price: High to Low</MenuItem>
+              <MenuItem value="ratingAsc">Rating: Low to High</MenuItem>
+              <MenuItem value="ratingDesc">Rating: High to Low</MenuItem>
             </Select>
           </FormControl>
         </Box>
