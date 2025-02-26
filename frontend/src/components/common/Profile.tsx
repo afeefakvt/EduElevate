@@ -10,23 +10,33 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Navbar from "../../components/common/Navbar"
+import StudentNavbar from "../../components/common/Navbar"
+import TutorNavbar from "../../components/tutor/Navbar"
 import Footer from "../../components/common/Footer"
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { editProfile } from "@/api/studentApi";
 import { logout, updateStudent } from "@/store/authSlice";
 import { changePassword } from "@/api/studentApi";
 import { validateChangePasswordForm, validateEditProfileForm } from "@/utils/validations";
 import { toast ,ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { editTutorProfile, tutorChangePassword } from "@/api/tutorApi";
+import { tutorLogout, updateTutor } from "@/store/tutorAuthSlice";
 
 
-const Profile = () => {
-    const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
-    const student = useSelector((state: RootState) => state.auth.student)
-    const [name, setName] = useState(student?.name || "")
+interface ProfileProps{
+    userType:"student" | "tutor";
+}
+
+const Profile:React.FC<ProfileProps>= ({userType}) => {
+
+    const user = useSelector((state:RootState)=>
+    userType==="student"? state.auth.student : state.tutorAuth.tutor
+);
+  
+    const [name, setName] = useState(user?.name || "")
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,6 +46,14 @@ const Profile = () => {
     const dispatch = useDispatch()
 
    
+
+    const handleLogout = () => {
+        if (userType === "student") {
+          dispatch(logout());
+        } else if (userType === "tutor") {
+          dispatch(tutorLogout());
+        }
+      };
 
     const updateName = async () => {
         setNameError(null);
@@ -47,17 +65,28 @@ const Profile = () => {
         }
 
         try {
-            if (!student?._id) {
+            if (!user?._id) {
                 setError("student id is missing")
                 return;
             }
-            const response = await editProfile(student._id, name)
-            setName(response.result.name)
-            dispatch(updateStudent({ student: response.result }));
+            let response 
+            if(userType==="student"){
+                response =await editProfile(user._id,name)
+                setName(response.result.name)
+                dispatch(updateStudent({student:response.result}))
+
+            }else{
+                response=await editTutorProfile(user._id,name);
+                setName(response.result.name)
+                dispatch(updateTutor({tutor:response.result}))
+            }
+
             toast.success("Profile updated successfully!");
 
         } catch (error) {
             console.log(error);
+            toast.error("Failed to update profile.");
+
         } 
     }
 
@@ -71,7 +100,7 @@ const Profile = () => {
             return;
         }
 
-        if (!student?._id) {
+        if (!user?._id) {
             setError("student id is missing")
             return;
         }
@@ -79,26 +108,28 @@ const Profile = () => {
             console.log("change pass");
             
 
-            await changePassword(student._id, currentPassword, newPassword)
+            if (userType === "student") {
+                await changePassword(user._id, currentPassword, newPassword);
+              } else {
+                await tutorChangePassword(user._id, currentPassword, newPassword);
+              }  
             toast.success("Password changed successfully! Logging out...");
 
             setTimeout(() => {
-                dispatch(logout())
-                
+                handleLogout()
             }, 3500);
          
         } catch (error: any) {
             setError(error.message || "Failed to change password");
-
         } 
-
     }
 
-    if (!student) return <div className="text-center mt-10">Loading...</div>
+    if (!user) return <div className="text-center mt-10">Loading...</div>
+
     return (
 
-        <div className="flex flex-col min-h-screen">
-            <Navbar />
+    <div className="flex flex-col min-h-screen">
+      {userType === "student" ? <StudentNavbar /> : <TutorNavbar />}
 
             <div className="flex-1 container mx-auto mt-28 mb-28 p-6 max-w-4xl">
                 <h1 className="text-2xl font-bold mb-6 text-center">Profile Settings</h1>
@@ -115,7 +146,7 @@ const Profile = () => {
                             <CardHeader>
                                 <CardTitle>Account</CardTitle>
                                 <CardDescription>
-                                    Make changes to your account here. Click save when you're done.
+                                    Make changes to your profile here. Click save when you're done.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2">
@@ -123,7 +154,7 @@ const Profile = () => {
 
                                 <div className="space-y-1">
                                     <Label htmlFor="name">Name</Label>
-                                    <Input id="email" disabled value={student?.email} />
+                                    <Input id="email" disabled value={user?.email} />
                                 </div>
                                 <div className="space-y-1">
                                     <Label htmlFor="username">Name</Label>

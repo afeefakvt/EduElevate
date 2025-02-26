@@ -42,7 +42,6 @@ axiosInstance.interceptors.response.use(
         if (status === 401) {
           store.dispatch(logout());
           Cookies.remove("authToken");
-          window.location.href = "/login";
           return Promise.reject(error); // Ensure flow stops here
         }
   

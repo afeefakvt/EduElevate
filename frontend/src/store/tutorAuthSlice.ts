@@ -32,16 +32,22 @@ const tutorAuthSlice = createSlice({
             state.token = action.payload.token,
             state.tutor = action.payload.tutor,
             state.isAuthenticated = true
-            Cookies.set('tutorAuthToken',action.payload.token,{expires:2/1440})
+            Cookies.set('tutorAuthToken',action.payload.token,{expires:15/1440})
         },
         tutorLogout:(state)=>{
             state.token = null
             state.tutor = null
             state.isAuthenticated =false
             Cookies.remove('tutorAuthToken')
+        },
+        updateTutor:(state,action:PayloadAction<{tutor:Tutor}>)=>{
+            state.tutor = action.payload.tutor;
+            if(state.token){
+                Cookies.set("tutorAuthToken",state.token,{expires:15/1440})
+            }
         }
     }
 
 })
-export const{tutorLoginSuccess,tutorLogout} = tutorAuthSlice.actions;
+export const{tutorLoginSuccess,tutorLogout,updateTutor} = tutorAuthSlice.actions;
 export default tutorAuthSlice.reducer

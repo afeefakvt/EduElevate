@@ -30,4 +30,14 @@ export class TutorRepository extends BaseRepository<ITutor> implements ITutorRep
         return await this.findByEmail(email)
     }
 
+    async getTutorById(id: string): Promise<ITutor | null> {
+        return await this.findById(id);    
+    }
+    async editTutorProfile(id: string, data: Partial<ITutor>): Promise<ITutor | null> {
+        return await this.findByIdAndUpdate(id,data)
+    }
+    async changeTutorPassword(tutorId: string, data: { password: string; }): Promise<ITutor | null> {
+        return await this.findByIdAndUpdate(tutorId,{password:data.password})
+    }
+
 }

@@ -20,7 +20,7 @@ export const editProfile = async(studentId:string,name: string )=>{
 
     export const changePassword = async(studentId:string,currentPassword:string,newPassword:string) =>{
         try {
-            const response= await axiosInstance.put(`updatePassword/${studentId}`,{currentPassword,newPassword});
+            const response= await axiosInstance.put(`/updatePassword/${studentId}`,{currentPassword,newPassword});
             return response.data
         } catch (error:any) {
             console.error('Error changing password:', error.response?.data?.message);

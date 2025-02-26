@@ -72,7 +72,7 @@ function App() {
          <Route path="/" element = {<Home/>}/>
          <Route path="/myCourses" element = {<MyCourses/>}/>
          <Route path="/myCourses/:courseId" element = {<LecturePage/>}/>
-         <Route path="/profile" element = {<Profile/>}/>
+         <Route path="/profile" element={<Profile userType="student" />} />
         </Route>
         
 
@@ -104,6 +104,7 @@ function App() {
          <Route path="/tutor/myCourses/:courseId" element = {<TutorCourseDetails/>}/>
          <Route path="/tutor/editCourse/:courseId" element = {<EditCoursePage/>}/>
          <Route path="/tutor/:courseId/lectures" element = {<TutorLecturePage/>}/>
+         <Route path="/tutorProfile" element={<Profile userType="tutor" />} />
     
         </Route>
        

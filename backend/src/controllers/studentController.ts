@@ -335,11 +335,9 @@ export class StudentController {
             const title = req.body.title
             const price = req.body.price
 
-
             console.log(courseId,"coyrseeeeeid");
             console.log(studentId,"studentttttttttt");
-            
-            
+                        
             if(!mongoose.Types.ObjectId.isValid(courseId)){
                 res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Invalid course ID"})
                 return;
@@ -379,22 +377,17 @@ export class StudentController {
         } catch (error) {
             console.error("Stripe payment error:", error);
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Payment setup failed", error: (error as Error).message,
-        });
-
-            
+        });  
         }
-
     }
 
 
     async editProfile(req:Request,res:Response):Promise<void>{
         try {
-            
             const {name} = req.body            
             const {studentId} =req.params
             
             const result = await this.studentService.editProfile(studentId,{name})
-
             if (!result) {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Student not found." });
                 return;
@@ -410,7 +403,6 @@ export class StudentController {
 
     async changePassword(req:Request,res:Response):Promise<void>{
         try {
-            
             const {studentId} = req.params;
             const {currentPassword,newPassword} = req.body;
                 await this.studentService.changePassword(studentId,currentPassword,newPassword)

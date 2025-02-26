@@ -58,7 +58,7 @@ export const login = async(email:string,password:string)=>{
                 isAuthenticated:true
             }))
             // console.log('tutorrrr', response.data?.tutor);
-            Cookies.set('tutorAuthToken',token,{expires:2/1440})
+            Cookies.set('tutorAuthToken',token,{expires:15/1440})
 
         }else{
             console.log('not logged in');
@@ -205,6 +205,28 @@ export const logoutTutor = async()=>{
     } catch (error) {
         console.log("error is", error);
         throw handleAxiosError(error); 
+        
+    }
+}
+
+export const editTutorProfile = async(tutorId:string,name:string)=>{
+    try {
+        const response = await axiosInstance.put(`/tutor/editProfile/${tutorId}`,{name})
+        return response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error);
+        
+    }
+}
+
+export const tutorChangePassword = async (tutorId:string,currentPassword:string,newPassword:string)=>{
+    try {
+        const response = await axiosInstance.put(`/tutor/updatePassword/${tutorId}`,{currentPassword,newPassword});
+        return response.data
+    } catch (error:any) {
+        console.error('Error changing password:', error.response?.data?.message);
+        throw new Error(error.response?.data?.message || 'Failed to change password');
         
     }
 }

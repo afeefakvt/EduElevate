@@ -57,7 +57,7 @@ export const login =  async(email:string,password:string)=>{
                 student:response.data.student,
                 isAuthenticated:true
             }))
-            Cookies.set('authToken', token, {expires: 2/1440})
+            Cookies.set('authToken', token, {expires: 15/1440})
         } else{
             console.log(' not logged in ');
 

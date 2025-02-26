@@ -142,6 +142,7 @@ export class TutorController {
                 const newAccessToken = generateToken({
                     id:tutor._id,
                     email:tutor.email,
+                    role:tutor.role,
                     isBlocked:tutor.isBlocked
                 })
                 console.log("generated new access token",newAccessToken);
@@ -255,6 +256,38 @@ export class TutorController {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
             error:(error as Error).message
             
+        }
+    }
+
+    async editTutorProfile(req:Request,res:Response):Promise<void>{
+        try {
+            const {name} = req.body;
+            const {tutorId} = req.params;
+
+            const result = await this.tutorService.editTutorProfile(tutorId,{name})
+            
+            if (!result) {
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Tutor not found." });
+                return;
+              }
+              res.status(HTTP_STATUS.CREATED).json({message:"editted profile successfully",result})
+            
+        } catch (error) {
+            console.error("error editing profile",error)
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})
+            
+            
+        }
+    }
+    async changeTutorPassword (req:Request,res:Response):Promise<void>{
+        try {
+            const {tutorId} =req.params;
+            const {currentPassword,newPassword} = req.body;
+            await this.tutorService.changeTutorPassword(tutorId,currentPassword,newPassword)
+            res.status(200).json({message:"Password updates successfully. Please login again"})
+
+        } catch (error:any) {            
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: error.message || 'Something went wrong' })
         }
     }
 

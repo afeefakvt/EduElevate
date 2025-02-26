@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import {store} from '../store/store'
 import { tutorLoginSuccess,tutorLogout } from "@/store/tutorAuthSlice";
-import { logoutTutor } from "./tutorApi";
 
 
 export const axiosInstance = axios.create({

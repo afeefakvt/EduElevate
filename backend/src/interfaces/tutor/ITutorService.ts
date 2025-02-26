@@ -14,4 +14,6 @@ export interface ITutorService{
     updatePassword(studentId:string,newPassword:string):Promise<ITutor | null>
     getTutorCourses(tutorId:string):Promise<ICourse[]>
     getTutorCourseDetails(courseId:string):Promise<ICourse | null>
+    editTutorProfile(tutorId:string,data:Partial<ITutor>):Promise<ITutor | null>;
+    changeTutorPassword(tutorId:string,currentPassword:string,newPassword:string):Promise<ITutor | null>
 }

@@ -109,4 +109,20 @@ export class TutorService implements ITutorService {
     async getTutorCourseDetails(courseId: string): Promise<ICourse | null> {
         return await this.tutorRepository.getTutorCourseDetails(courseId)
     }
+    async editTutorProfile(tutorId: string, data: Partial<ITutor>): Promise<ITutor | null> {
+        return this.tutorRepository.editTutorProfile(tutorId,data)
+    }
+    async changeTutorPassword(tutorId: string, currentPassword: string, newPassword: string): Promise<ITutor | null> {
+        const tutor = await this.tutorRepository.getTutorById(tutorId)
+        if(!tutor){
+            throw new Error("Student not found")
+        }
+        const isMatch = await comparePassword(currentPassword,tutor.password)
+        if(!isMatch){
+            throw new Error("Current Password is incorrect");
+        }
+        const hashedPassword = await hashPassword(newPassword)
+        return this.tutorRepository.changeTutorPassword(tutorId,{password:hashedPassword})
+
+    }
 }

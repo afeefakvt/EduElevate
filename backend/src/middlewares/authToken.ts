@@ -29,7 +29,7 @@ export const authenticateToken = async(req:RequestWithUser,res:Response,next:Nex
 
     try {
         const decoded  = verifyToken(token) as DecodedToken
-        console.log("12233w223qwdwads",decoded);
+        // console.log("12233w223qwdwads",decoded);
         let user;
 
         if(decoded.role==="student" || decoded.role==="admin"){

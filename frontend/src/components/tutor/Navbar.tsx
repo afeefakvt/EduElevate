@@ -138,7 +138,6 @@ const Navbar = () => {
                     </Typography>
                     {token ? (
                         <>
-                        {/* Avatar Button */}
                         <IconButton onClick={handleMenuOpen}>
                             <Avatar 
                                 // src={student?.profilePic || ""} 
@@ -155,7 +154,7 @@ const Navbar = () => {
                             open={Boolean(anchorEl)}
                             onClose={handleMenuClose}
                         >
-                            <MenuItem onClick={() => { navigate("/profile"); handleMenuClose(); }}>
+                            <MenuItem onClick={() => { navigate("/tutorProfile"); handleMenuClose(); }}>
                                 Profile
                             </MenuItem>
                             <MenuItem onClick={() => { handleLogout(); handleMenuClose(); }}>
