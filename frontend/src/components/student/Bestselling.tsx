@@ -6,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
-import { bestSellingCourses } from "../../api/courseApi"
-import { Bold } from "lucide-react";
+import { bestSellingCourses } from "../../api/enrollmentApi"
 
 
 interface Course {

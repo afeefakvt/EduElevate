@@ -56,7 +56,7 @@ export class CourseController{
 
     async listUnlistCourse(req:Request,res:Response):Promise<void>{
         try {
-            console.log("delte courseasc");
+            // console.log("delte courseasc");
             
             const {courseId} = req.params;
             const {isListed} = req.body
@@ -95,12 +95,12 @@ export class CourseController{
 
     async bestSellingCourses(req:Request,res:Response):Promise<void>{
         try {
-            console.log("cvas djchmndcdscas");
+            // console.log("cvas djchmndcdscas");
             
             const courses = await this.courseService.getBestSellingCourses()
-            res.status(200).json({courses:courses})
+            res.status(HTTP_STATUS.OK).json({courses:courses})
         } catch (error) {
-            res.status(500).json({ message: "Failed to fetch bestselling courses" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Failed to fetch bestselling courses" });
             
         }
 

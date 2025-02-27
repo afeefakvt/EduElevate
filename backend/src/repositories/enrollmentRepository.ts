@@ -1,4 +1,5 @@
 import  {IEnrollmentRepository } from "../interfaces/enrollment/IEnrollmentRepository";
+import Course from "../models/courseModel";
 import Enrollment,{IEnrollment} from "../models/enrollmentModel";
 import { BaseRepository } from "./baseRepository";
 
@@ -15,5 +16,29 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
         })
         .exec();
         
+    }
+    async getTutorEnrollments(tutorId: string): Promise<Record<string, number>> {
+        try {
+            const courses =await Course.find({tutorId})
+            const courseIds = courses.map(course=>course._id)
+            
+            const enrollments = await this.aggregate([
+                {$match:{courseId:{$in:courseIds}}},
+                {$group:{_id:"$courseId",count:{$sum:1}}}
+
+            ]);
+
+
+    // Convert array to a record (courseId -> count)
+            const enrollmentStats = enrollments.reduce((acc,curr)=>{
+                acc[curr._id.toString()] = curr.count;
+                return acc;
+            },{} as Record<string,number>)
+
+            return enrollmentStats
+        } catch (error){
+            console.error("Error fetching tutor enrollments:", error);
+            throw error    
+        }
     }
 }

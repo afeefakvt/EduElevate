@@ -26,8 +26,8 @@ tutorRouter.post('/tutor/resetPassword',validateForgotPassword,tutorController.r
 tutorRouter.get('/tutor/myCourses',authenticateToken,authorizeRoles(["tutor"]),tutorController.getTutorCourses.bind(tutorController))
 tutorRouter.get('/tutor/myCourses/:courseId',authenticateToken,authorizeRoles(["tutor"]),tutorController.getTutorCourseDetails.bind(tutorController))
 tutorRouter.post('/tutor/logout',tutorController.logoutTutor.bind(tutorController))
-tutorRouter.put('/tutor/editProfile/:tutorId',tutorController.editTutorProfile.bind(tutorController))
-tutorRouter.put('/tutor/updatePassword/:tutorId',tutorController.changeTutorPassword.bind(tutorController))
+tutorRouter.put('/tutor/editProfile/:tutorId',authenticateToken,authorizeRoles(["tutor"]),tutorController.editTutorProfile.bind(tutorController))
+tutorRouter.put('/tutor/updatePassword/:tutorId',authenticateToken,authorizeRoles(["tutor"]),tutorController.changeTutorPassword.bind(tutorController))
 
 
 

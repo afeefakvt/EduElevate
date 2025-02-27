@@ -279,7 +279,7 @@ export class TutorController {
             
         }
     }
-    async changeTutorPassword (req:Request,res:Response):Promise<void>{
+    async changeTutorPassword (req:RequestWithUser,res:Response):Promise<void>{
         try {
             const {tutorId} =req.params;
             const {currentPassword,newPassword} = req.body;
@@ -290,5 +290,7 @@ export class TutorController {
             res.status(HTTP_STATUS.BAD_REQUEST).json({ message: error.message || 'Something went wrong' })
         }
     }
+
+   
 
 }

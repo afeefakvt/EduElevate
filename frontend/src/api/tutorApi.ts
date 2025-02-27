@@ -230,3 +230,13 @@ export const tutorChangePassword = async (tutorId:string,currentPassword:string,
         
     }
 }
+
+export const fetchTutorEnrollments = async()=>{
+    try {
+        const response = await axiosInstance.get('/tutor/stats')
+        return response.data.enrollments
+    } catch (error) {
+        console.error('Error fetching tutor enrollments:', error);
+        throw handleAxiosError(error);
+    }
+}

@@ -38,7 +38,28 @@ export class EnrollmentController {
         } catch (error) {
             console.log("no course")
             
-        res.status(500).json({message: "An unexpected error occured.", error: (error as Error).message,});
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "An unexpected error occured.", error: (error as Error).message,});
         }
     }
+
+    async getTotalEnrolledCount(req:RequestWithUser,res:Response):Promise<void>{
+        try {
+            if (!req.tutor || !req.tutor._id) {
+                res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a tutor." });
+                return;
+              }
+            const tutorId = req.tutor._id.toString( )   
+            const enrollments= await this.enrollmentService.getTutorEnrollmentStats(tutorId) 
+            res.status(200).json({enrollments})       
+            
+        } catch (error:any) {
+
+            console.error(error.message);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: error.message });
+        
+            
+        }
+    }
+
+ 
 }

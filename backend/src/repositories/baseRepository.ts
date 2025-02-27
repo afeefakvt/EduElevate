@@ -34,4 +34,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T>{
     async findByEmail(email:string):Promise<T | null>{
         return await this.model.findOne({email})
     }
+    async aggregate(pipeline: any[]) {
+        return this.model.aggregate(pipeline);
+      }
 }

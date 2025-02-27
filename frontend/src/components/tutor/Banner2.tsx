@@ -1,21 +1,60 @@
+import { fetchTutorCourses } from '@/api/tutorApi';
 import { Box,Typography,Card,CardContent} from '@mui/material'
+import { useEffect, useState } from 'react';
+import { fetchTutorEnrollments } from '@/api/tutorApi';
+
+
+
+interface Course {
+  id: string;
+  title: string;
+  status:  'pending' | 'approved' | 'rejected';
+}
 
 
 const Banner2 = () => {
-    const details = [
-        {
-          name: "Total Revenue",
-        },
-        {
-          name: "Active Courses",
-        },
-        {
-          name: "Pending Courses",
-        },
-        {
-          name: "Students Enrolled",
-        },
-      ];
+  const [approvedCourses, setApprovedCourses] = useState(0);
+  const [pendingCourses, setPendingCourses] = useState(0);
+  const [studentsEnrolled, setStudentsEnrolled] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+
+
+  useEffect(()=>{
+    const fetchData = async()=>{
+      try {
+        const response = await fetchTutorCourses()
+        const courses:Course[] = response
+
+        const approved = courses.filter(course=>course.status==="approved").length;
+        const pending = courses.filter(course=>course.status==="pending").length
+
+                setApprovedCourses(approved);
+                setPendingCourses(pending);
+
+        const enrollments  = await fetchTutorEnrollments()
+        const totalStudents = Object.values(enrollments as Record<string, number>)
+        .reduce((sum, count) => sum + count, 0);
+      
+      setStudentsEnrolled(totalStudents);
+      
+               
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        
+      }
+    }
+    fetchData()
+  },[])
+
+  const details = [
+    { name: 'Total Revenue', value: `₹${totalRevenue}` },
+    { name: 'Active Courses', value: approvedCourses },
+    { name: 'Pending Courses', value: pendingCourses },
+    { name: 'Students Enrolled', value: studentsEnrolled }
+  ];
+
+
+
   return (
     <Box
       sx={{
@@ -59,6 +98,9 @@ const Banner2 = () => {
                 sx={{ fontWeight: "500", color: "#333" }}
               >
                 {detail.name}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: '700', marginTop: '0.5rem' }}>
+                {detail.value}
               </Typography>
               {/* <CardMedia sx={{ marginBottom: "1rem" }}>{category.icon}</CardMedia> */}
            

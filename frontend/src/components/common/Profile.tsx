@@ -183,7 +183,6 @@ const Profile: React.FC<ProfileProps> = ({ userType }) => {
                                     <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
                                     {userType === "tutor" && tutorProfileError?.name && <p className="text-red-500">{tutorProfileError.name}</p>}
                                     {userType === "student" && studentProfileError && <p className="text-red-500">{studentProfileError}</p>}
-                                    
                                 </div>
                                 {userType === "tutor" && user && "title" in user && "bio" in user && (
                                     <>
