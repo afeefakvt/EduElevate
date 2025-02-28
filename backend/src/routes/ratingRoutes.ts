@@ -14,5 +14,6 @@ const ratingRoutes = Router()
 
 ratingRoutes.post('/rating/addRating',authenticateToken,authorizeRoles(["student"]),ratingController.addRating.bind(ratingController))
 ratingRoutes.get('/rating/:courseId',ratingController.getCourseRatings.bind(ratingController))
+ratingRoutes.get('/mostRated',ratingController.getMostRatedCourse.bind(ratingController))
 
 export default ratingRoutes

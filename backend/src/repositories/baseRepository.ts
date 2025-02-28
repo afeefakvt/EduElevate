@@ -36,5 +36,8 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T>{
     }
     async aggregate(pipeline: any[]) {
         return this.model.aggregate(pipeline);
-      }
+    }
+    async count(filter:FilterQuery<T>):Promise<number>{
+        return this.model.countDocuments(filter)
+    }
 }

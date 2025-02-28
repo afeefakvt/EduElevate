@@ -32,6 +32,7 @@ adminRouter.get('/admin/courseApplications',authenticateToken,authorizeRoles(["a
 adminRouter.get('/admin/courseApplications/:courseId',authenticateToken,authorizeRoles(["admin"]),adminController.getCourseDetails.bind(adminController))
 adminRouter.patch('/admin/courseApplications/:courseId/approve',authenticateToken,authorizeRoles(["admin"]),adminController.approveCourse.bind(adminController))
 adminRouter.patch('/admin/courseApplications/:courseId/reject',authenticateToken,authorizeRoles(["admin"]),adminController.rejectCourse.bind(adminController))
+adminRouter.get('/dashboardCount',authenticateToken,authorizeRoles(["admin"]),adminController.getDashboardCounts.bind(adminController))
 // adminRouter.get('/admin/courses',authenticateToken,adminController.getCourses.bind(adminController))
 
 

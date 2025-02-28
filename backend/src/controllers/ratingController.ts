@@ -54,5 +54,20 @@ export class RatingController{
             
         }
     }
+    async getMostRatedCourse(req:Request,res:Response):Promise<void>{
+        try {
+            // console.log("ppppppppppppppppp");
+            
+            const course = await this.ratingService.getMostRatedCourse()
+            if(!course){
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"No course found"});
+                return;
+            }
+            res.status(HTTP_STATUS.OK).json(course)
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"Internal server error"})
+            
+        }
+    }
   
 }

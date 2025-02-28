@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../common/Navbar";
 import Footer from "./Navbar";
 import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem,Pagination } from "@mui/material";
-import { getCategories } from '../../api/tutorApi'
+import { getCategories, getEnrollmentCount } from '../../api/tutorApi'
 import Switch from "@mui/material/Switch";
 import { useNavigate } from "react-router-dom";
 import { fetchTutorCourses } from "@/api/tutorApi";
@@ -50,6 +50,7 @@ const TutorMyCourses = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [page, setPage] = useState(1);
   const rowsPerPage = 4;
+  const [count,setCount] = useState<{[key:string]:number}>({})
 
 
   useEffect(() => {
@@ -102,6 +103,28 @@ const TutorMyCourses = () => {
       fetchRatings();
     }
   }, [courses])
+
+
+  useEffect(()=>{
+    const fetchEnrollmentCount = async()=>{
+      try {
+        const counts: { [key: string]: number } = {};
+
+        for (const course of courses){
+          const count = await getEnrollmentCount(course._id)
+          counts[course._id] = count; 
+        }
+        setCount(counts)
+
+      } catch (error) {
+        console.error("failed to load enrollment count") 
+      }
+    }
+    if (courses.length>0){
+      fetchEnrollmentCount()
+    }
+  },[courses])
+  
 
 
   const handleListUnlistCourse = async (courseId: string, isCurrentlyListed: boolean) => {
@@ -234,6 +257,7 @@ const TutorMyCourses = () => {
                       {course.description}
                     </Typography>
                     <br />
+                    
                     <Typography variant="body2" color="text.secondary">
                       Status : {" "}
                       <span style={{ color: course.status === "approved" ? "green" : course.status === "rejected" ? "red" : "inherit" }}>
@@ -247,10 +271,10 @@ const TutorMyCourses = () => {
                       </Typography>
                     )}
 
-                    <Typography variant="body2" sx={{ display: "flex", mt: 1 }}>
-                      ⭐{ratings[course._id]?.average?.toFixed(1) || "N/A"}
-                      ({ratings[course._id]?.count || 0} reviews)
-                    </Typography>
+                      <Typography variant="body2" sx={{ display: "flex", mt: 1 }}>
+                        ⭐{ratings[course._id]?.average?.toFixed(1) || "N/A"}
+                        ({ratings[course._id]?.count || 0} reviews)
+                      </Typography>
                     {course.status === "approved" && (
                       <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
                         <Typography variant="body2" sx={{ mr: 1 }}>
@@ -262,6 +286,9 @@ const TutorMyCourses = () => {
                         />
                       </Box>
                     )}
+                    <Typography variant="body2" sx={{ display: "flex", mt: 1 }}>
+                      Number of students enrolled : {count[course._id]??0}
+                    </Typography>
 
                     <Button variant="contained" fullWidth sx={{ mt: 2, backgroundColor: "#550A8A" }} onClick={() => navigate(`/tutor/myCourses/${course._id}`)} >
                       View course

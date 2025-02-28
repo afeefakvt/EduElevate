@@ -240,3 +240,18 @@ export const fetchTutorEnrollments = async()=>{
         throw handleAxiosError(error);
     }
 }
+
+export const getEnrollmentCount = async(courseId:string)=>{
+   try {
+    
+    const response = await axiosInstance.get(`/enrollment/${courseId}`)
+    const data = response.data
+        // console.log(data.count)
+    return data.count
+
+   } catch (error) {
+    console.log('error is', error);
+        throw handleAxiosError(error)
+    
+   }
+}

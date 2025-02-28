@@ -48,5 +48,12 @@ export class AdminRepository  implements IAdminRepository{
     async findCourseById(courseId: string): Promise<ICourse | null> {
         return await this.courseRepository.findById(courseId).populate("lectures").populate("tutorId","email").exec()
     }
+    async getDashboardCounts(): Promise<{ courses: number; tutors: number; students: number; }> {
+        const students = await this.studentRepository.count({})
+        const tutors= await this.tutorRepository.count({});
+        const courses = await this.courseRepository.count({});
+
+        return {students,tutors,courses}
+    }
 
 }

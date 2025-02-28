@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { axiosInstance } from "./axiosInstance";
 import {store} from '../store/store'
@@ -215,3 +214,30 @@ export const rejectCourse = async(courseId:string,rejectReason:string)=>{
 //         throw handleAxiosError(error)
 //     }
 // }
+
+export const fetchDashboardCounts = async()=>{
+    try {
+        const response = await axiosInstance.get('/dashboardCount')
+        return  response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error)
+        
+    }
+}
+
+export const fetchMostRatedCourse = async()=>{
+    try {
+        // console.log("oooooooooooooooooo");
+        
+        const response = await axiosInstance.get('/mostRated');
+        // console.log(response.data,"kfkkkkkkkkkkd");
+        
+        return response.data
+    } catch (error) {
+        console.log("error is", error);
+        throw handleAxiosError(error)
+        
+    }
+}
+

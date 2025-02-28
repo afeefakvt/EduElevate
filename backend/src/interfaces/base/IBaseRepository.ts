@@ -10,4 +10,5 @@ export interface IBaseRepository<T extends Document>{
     findByIdAndDelete(id:string):Promise <T | null>
     findByEmail(email:string):Promise<T | null>;
     aggregate(pipeline: any[]): Promise<any[]>;
+    count(filter:FilterQuery<T>):Promise<number>;
 }

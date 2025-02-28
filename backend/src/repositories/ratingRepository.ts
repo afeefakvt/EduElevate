@@ -1,4 +1,5 @@
 import { IRatingRepository } from "../interfaces/rating/IRatingRepository";
+import { ICourse } from "../models/courseModel";
 import Rating, { IRating } from "../models/ratingModel";
 import { BaseRepository } from "./baseRepository";
 
@@ -12,6 +13,21 @@ export class RatingRepository extends BaseRepository<IRating> implements IRating
     }
     async getCourseRatings(courseId: string): Promise<IRating[]> {
         return await this.find({courseId});
+    }
+    async getMostRatedCourse(): Promise<ICourse | null> {
+        const mostRated = await this.model
+        .findOne({})
+        .sort({ rating: -1 })
+        .populate<{ courseId: ICourse }>('courseId')
+        .exec();
+    
+      if (!mostRated || !mostRated.courseId) {
+        return null; 
+      }
+    
+      return mostRated.courseId;
+      
+        
     }
   
 }

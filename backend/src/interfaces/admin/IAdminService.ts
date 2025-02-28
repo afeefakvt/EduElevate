@@ -13,5 +13,6 @@ export interface IAdminService{
     getAllCourseApplications():Promise<ICourse[]>
     getCourseDetails(courseId:string):Promise<ICourse>
     findCourseById(courseId:string):Promise<ICourse | null>
+    getDashboardCounts():Promise<{courses:number; tutors:number; students:number}>
 
 }

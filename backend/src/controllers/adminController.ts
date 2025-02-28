@@ -257,15 +257,16 @@ export class AdminController {
             
         }
     }
-
-//     async getCourses (req:Request,res:Response):Promise<void>{
-//         try {
-//             const courses = await this.adminService.getCourse
-//         } catch (error) {
+    
+    async getDashboardCounts(req:Request,res:Response):Promise<void>{
+        try {
+            const counts  = await this.adminService.getDashboardCounts()
+            res.status(HTTP_STATUS.OK).json(counts)
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({error:"Failed to fetch dashboard counts"})
             
-//         }
-//     }
-
+        }
+    }
 
 
  }

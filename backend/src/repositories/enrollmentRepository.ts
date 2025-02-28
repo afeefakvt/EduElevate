@@ -41,4 +41,7 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
             throw error    
         }
     }
+    async getEnrolledCountPerCourse(courseId: string): Promise<number> {
+        return this.count({courseId})
+    }
 }

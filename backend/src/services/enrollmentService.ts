@@ -19,5 +19,8 @@ export class EnrollmentService implements IEnrollmentService{
     async getTutorEnrollmentStats(tutorId: string): Promise<Record<string, number>> {
         return await this.enrollmentRepository.getTutorEnrollments(tutorId)
     }
+    async getEnrolledCountPerCourse(courseId: string): Promise<number> {
+        return await this.enrollmentRepository.getEnrolledCountPerCourse(courseId)
+    }
     
 }

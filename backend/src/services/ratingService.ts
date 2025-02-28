@@ -1,5 +1,6 @@
 import { IRatingRepository } from "../interfaces/rating/IRatingRepository";
 import { IRatingService } from "../interfaces/rating/IRatingService";
+import { ICourse } from "../models/courseModel";
 import { IRating } from "../models/ratingModel";
 import { RatingRepository } from "../repositories/ratingRepository";
 
@@ -21,6 +22,10 @@ export class RatingService implements IRatingService{
         const average = ratings.length > 0 ? total / ratings.length : 0;
     
         return { ratings, average };
+    }
+
+    async getMostRatedCourse(): Promise<ICourse | null> {
+        return await this.ratingRepository.getMostRatedCourse()
     }
     
 }

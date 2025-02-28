@@ -10,6 +10,8 @@ export interface IAdminRepository{
     updateStudent(studentId:string,studentData:Partial<IStudent>):Promise<IStudent | null>
     getAllCourseApplications():Promise<ICourse[]>
     findCourseById(courseId:string):Promise<ICourse | null>
+    getDashboardCounts():Promise<{courses:number; tutors:number; students:number}>
+
     
     
 }

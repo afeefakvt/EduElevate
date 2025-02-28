@@ -49,5 +49,8 @@ export class AdminService implements IAdminService {
     async findCourseById(courseId: string): Promise<ICourse | null> {
         return this.adminRepository.findCourseById(courseId)
     }
+    async getDashboardCounts(): Promise<{ courses: number; tutors: number; students: number; }> {
+        return await this.adminRepository.getDashboardCounts()
+    }
     
 }

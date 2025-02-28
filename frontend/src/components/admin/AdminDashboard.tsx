@@ -1,35 +1,122 @@
-import { Box, Toolbar } from '@mui/material';
+import { Box, Grid, Card, CardContent, Typography, Toolbar } from '@mui/material';
 import Navbar from './AdminNavbar';
-import Sidebar from './Sidebar';
+import Sidebar from './Sidebar'; 
+import { fetchDashboardCounts } from '@/api/adminApi'; 
+import { useEffect, useState } from 'react';
+import { fetchMostRatedCourse } from '@/api/adminApi';
 
+interface Course{
+  title:string;
+  thumbnail:string;
+}
 
 const AdminDashboard = () => {
   const navbarHeight = { xs: '64px', md: '80px' };
- 
-  return (
-    
-    <Box sx={{ display: 'flex',flexDirection:'column' }}>
-      
-     <Navbar/>
-     <Box sx={{ display: 'flex', marginTop: navbarHeight }}>
-        <Sidebar />
-      <Toolbar />
+  const [counts,setCounts] = useState({courses:0,tutors:0,students:0})
+  const [mostRatedCourse,setMostRatedCourse] = useState<Course | null>(null)
 
-      <Box sx={{ flexGrow: 1, p: 3 }}>
-          <Toolbar /> {/* Optional spacing */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%',
-            }}
-          >
-            <h4>Admin Dashboard</h4>
+  const metrics = [
+    { title: 'Total Courses', value: counts.courses },
+    { title: 'Total Tutors', value: counts.tutors },
+    { title: 'Total Students', value: counts.students },
+    { title: 'Total Revenue', value: '₹1,00,000' },
+  ];
+
+  const featured = [
+    { title: 'Featured Course', name: 'Javascript Crash course' },
+    { title: 'Featured Category', name: 'web development' },
+    { title: 'Most Rated Course', name: mostRatedCourse?.title,thumbnail:mostRatedCourse?.thumbnail },
+  ];
+
+  useEffect(()=>{
+    const loadData = async()=>{
+      const data = await fetchDashboardCounts()
+      setCounts(data)
+
+    const mostRatedCourse = await fetchMostRatedCourse()
+    setMostRatedCourse(mostRatedCourse) 
+    }
+    loadData()
+  },[]);
+
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh',  }}>
+      <Navbar />
+      <Box sx={{ display: 'flex', marginTop: navbarHeight }}>
+        <Sidebar />
+        <Box sx={{ flexGrow: 1, p: 10 }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: '#333', mb: 4 }}>
+            Dashboard
+          </Typography>
+
+          {/* Metrics Section */}
+          <Grid container spacing={3} mb={5}>
+            {metrics.map((metric, index) => (
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <Card
+                  sx={{
+                    padding: 3,
+                    textAlign: 'center',
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': { transform: 'translateY(-10px)', boxShadow: '0 12px 40px rgba(0,0,0,0.2)' },
+                  }}
+                >
+                  <Typography variant="h6" color="text.secondary">
+                    {metric.title}
+                  </Typography>
+                  <Typography variant="h5"  sx={{ fontWeight: 'bold' }}>
+                    {metric.value}
+                  </Typography>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Featured Cards Section */}
+          {/* <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
+            Featured Highlights
+          </Typography> */}
+          <Grid container spacing={3}>
+            {featured.map((item, index) => (
+              <Grid item xs={12} sm={4} key={index}>
+                <Card
+                  sx={{
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': { transform: 'scale(1.05)' },
+                  }}
+                >
+                  <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                    <Typography variant="h6" gutterBottom  sx={{fontWeight:"bold"}}>
+                      {item.title}
+                    </Typography>
+                    <img
+                      src={item.thumbnail}
+                      alt={item.name}
+                      style={{
+                        display: 'block',          
+                        margin: '0 auto',           
+                        width: '200px',
+                        borderRadius: '8px',
+                        transition: 'transform 0.3s ease-in-out',
+                      }}
+                    />
+                    <Typography variant="subtitle1" sx={{ mt: 2, fontWeight: 'bold', color: '#555' }}>
+                      {item.name}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Box>
     </Box>
-  </Box>
-  </Box>
   );
 };
 
