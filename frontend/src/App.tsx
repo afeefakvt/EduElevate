@@ -1,6 +1,7 @@
 import { BrowserRouter as Router,Routes,Route } from "react-router-dom"
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import NotFound from "./components/errors/NotFound";
 
 import Home from "./pages/Home"
 import LoginPage from "./pages/LoginPage"
@@ -12,7 +13,6 @@ import StudentProtected from "./components/protectedRoutes/Studentprotected"
 import MyCourses from "./components/student/MyCourses";
 import LecturePage from "./components/student/LecturePage";
 import Profile from "./components/common/Profile";
-
 
 
 import AdminLogin from "./components/admin/AdminLogin"
@@ -29,7 +29,6 @@ import EditApplications from "./components/admin/EditApllications";
 import EditCourseDetails from "./components/admin/EditCourseDetails";
 
 
- 
 import TutorHome from "./components/tutor/tutorHome"
 import TutorRegisterPage from "./components/tutor/RegisterPage"
 import TutorOtp from "./components/tutor/Otp"
@@ -105,8 +104,10 @@ function App() {
          <Route path="/tutor/editCourse/:courseId" element = {<EditCoursePage/>}/>
          <Route path="/tutor/:courseId/lectures" element = {<TutorLecturePage/>}/>
          <Route path="/tutorProfile" element={<Profile userType="tutor" />} />
-    
+         
         </Route>
+
+        <Route path="*" element= {<NotFound/>}/>  
        
       </Routes>
      </Router>

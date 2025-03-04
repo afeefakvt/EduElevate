@@ -1,4 +1,5 @@
 import express, { Application } from 'express'
+import http from 'http'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import connectDB from './config/db'
@@ -12,8 +13,9 @@ import lectureRoutes from './routes/lectureRoutes'
 import enrollmentRoutes from './routes/enrollmentRoutes'
 import webhookRoutes from './routes/webhookRoutes'
 import ratingRoutes from './routes/ratingRoutes'
+import messageRoutes from './routes/messageRoutes'
 import Stripe from 'stripe'
-
+import { initializeSocket } from './utils/socket'
 
 
 const app:Application = express()
@@ -32,6 +34,9 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 
+const server  = http.createServer(app)
+initializeSocket(server)
+
 //add morgan middleware for logging
 app.use(morganMiddleware);
 
@@ -44,6 +49,7 @@ app.use('/',courseRoutes);
 app.use('/',lectureRoutes);
 app.use('/',enrollmentRoutes);
 app.use('/',ratingRoutes);
+app.use('/',messageRoutes);
 
 
 
