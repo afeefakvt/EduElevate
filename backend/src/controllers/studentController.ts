@@ -413,5 +413,17 @@ export class StudentController {
             
         }
     }
+
+    async getStudent(req:Request,res:Response):Promise<void>{
+        try {
+            const {studentId} = req.params
+            const student = await this.studentService.getStudentById(studentId)
+            res.status(HTTP_STATUS.OK).json(student)
+
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})
+            
+        }
+    }
     
 }

@@ -15,4 +15,5 @@ export interface IStudentService{
     loginAdmin(email:string,password:string):Promise<{token:string,refreshToken:string,student:IStudent}>
     editProfile(id:string,data:Partial<IStudent>):Promise<IStudent | null>
     changePassword(studentId:string,currentPassword:string,newPassword:string):Promise<IStudent | null>
+    getStudentById(studentId:string):Promise<IStudent | null>
 }

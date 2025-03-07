@@ -2,8 +2,7 @@ import {Server as SocketIOServer} from 'socket.io';
 import http from 'http';
 import Message from '../models/messageModel'
 import MessageRoom from '../models/messageRoomModel';
-import mongoose, { mongo } from 'mongoose';
-import { timeStamp } from 'console';
+import mongoose from 'mongoose';
 
 export interface IMessageRoom extends Document{
     users: string[];
@@ -17,8 +16,15 @@ export const initializeSocket = (server:http.Server)=>{
     })
 
     io.on('connection',(socket)=>{
+        console.log(`User connected: ${socket.id}`);
+        socket.on('disconnect', (reason) => {
+            console.log('User disconnected:', socket.id, 'Reason:', reason);
+          });
+        
 
         const getOrCreateRoom = async(senderId:string, recipientId:string):Promise<string>=>{
+            console.log("create room");
+            
             let room =await MessageRoom.findOne({
                 users:{$all: [senderId,recipientId]},
             }).select("_id");
@@ -30,10 +36,19 @@ export const initializeSocket = (server:http.Server)=>{
             return (room._id as mongoose.Types.ObjectId).toString();
         }
         socket.on("joinroom", async({senderId,recipientId})=>{
+            console.log("join room",senderId,recipientId);
+            
             const roomId = await getOrCreateRoom(senderId,recipientId);
             socket.join(roomId.toString())
+            console.log("joined room",roomId);
+            console.log(`${socket.id} joined room: ${roomId}`);
+
+            
         })
         socket.on("message", async({senderId,recipientId,message,fileUrl,fileType})=>{
+            console.log("messageeee");
+            
+        
             const roomId = await getOrCreateRoom(senderId,recipientId);
 
             const newMessage = new Message({
@@ -50,7 +65,7 @@ export const initializeSocket = (server:http.Server)=>{
             await MessageRoom.findByIdAndUpdate(roomId,{lastMessage:message,lastMessageAt:new Date()},{new :true});
             io.to(roomId.toString()).emit("recieve_message",{
                 ...newMessage.toObject(),
-                timeStamp:newMessage.timestamp.toISOString()
+                timestamp:newMessage.timestamp.toISOString()
             });
 
             const unreadCounts = await Message.aggregate([

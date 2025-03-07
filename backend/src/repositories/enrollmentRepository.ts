@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import  {IEnrollmentRepository } from "../interfaces/enrollment/IEnrollmentRepository";
 import Course from "../models/courseModel";
 import Enrollment,{IEnrollment} from "../models/enrollmentModel";
@@ -43,5 +44,38 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
     }
     async getEnrolledCountPerCourse(courseId: string): Promise<number> {
         return this.count({courseId})
+    }
+
+    async getEnrolledStudents(tutorId: string): Promise<IEnrollment[] | null> {
+        const enrollments = await this.aggregate([
+            {
+               $lookup:{
+                from:"courses",
+                localField:"courseId",
+                foreignField:"_id",
+                as:"course"
+               } 
+            },
+            {
+                $unwind:"$course"
+            },
+            {
+                $match:{
+                    "course.tutorId": new mongoose.Types.ObjectId(tutorId)
+                },
+            },
+            {
+                $lookup:{
+                    from:"students",
+                    localField:"studentId",
+                    foreignField:"_id",
+                    as:"student"
+                }
+            },
+            {
+                $unwind:"$student"
+            }
+        ])
+        return enrollments;  
     }
 }

@@ -29,7 +29,7 @@ const messageSchema:Schema = new Schema({
     message:{
         type:String
     },
-    timeStamp:{
+    timestamp:{
         type:Date,
         default:Date.now
     },

@@ -4,11 +4,11 @@ import MessageRoom from '../models/messageRoomModel';
 import { upload,uploadVideo } from "../config/cloudinary";
 import { authenticateToken } from "../middlewares/authToken";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
-import { error } from "console";
+import { authorizeRoles } from "../middlewares/authRole";
 
 const messageRoutes = Router()
 
-messageRoutes.get('/messages/:senderId/:recipientId',authenticateToken , async(req,res):Promise<void>=>{
+messageRoutes.get('/messages/:senderId/:recipientId',authenticateToken ,authorizeRoles(["tutor","student"]), async(req,res):Promise<void>=>{
     const {senderId,recipientId} = req.params;
 
     const room = await MessageRoom.findOne({

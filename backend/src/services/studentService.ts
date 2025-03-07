@@ -139,4 +139,8 @@ export class StudentService implements IStudentService  {
         return this.studentRepository.changePassword(studentId,{password:hashedPassword})
     }
 
+    async getStudentById(studentId: string): Promise<IStudent | null> {
+        return await this.studentRepository.findStudentById(studentId)
+    }
+
 }

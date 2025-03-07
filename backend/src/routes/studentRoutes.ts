@@ -29,6 +29,7 @@ studentRouter.post( '/course/checkout/:courseId',authenticateToken,authorizeRole
 studentRouter.put( '/editProfile/:studentId',authenticateToken,authorizeRoles(["student"]),studentController.editProfile.bind(studentController))
 studentRouter.put( '/updatePassword/:studentId',authenticateToken,authorizeRoles(["student"]),studentController.changePassword.bind(studentController))
 studentRouter.post( '/logout',studentController.logout.bind(studentController))
+studentRouter.get( '/tutor/student/:studentId',authenticateToken,authorizeRoles(["tutor"]),studentController.getStudent.bind(studentController))
 
 studentRouter.post('/admin/login',studentController.adminLogin.bind(studentController))
 studentRouter.post('/admin/logout',studentController.adminLogout.bind(studentController))

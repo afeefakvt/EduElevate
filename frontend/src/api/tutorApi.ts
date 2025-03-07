@@ -251,7 +251,62 @@ export const getEnrollmentCount = async(courseId:string)=>{
 
    } catch (error) {
     console.log('error is', error);
-        throw handleAxiosError(error)
+    throw handleAxiosError(error)
     
    }
+}
+
+export const getMyStudents = async()=>{
+    try {
+        // console.log("ppppppppppp");
+        
+        const response  = await axiosInstance.get('/tutor/myStudents',{
+            withCredentials:true
+        })
+
+        // console.log(response.data,"jjjjjjjjjjjjjjjjjj");
+        
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
+
+export const getStudentById = async(studentId:string)=>{
+    try {
+        const response = await axiosInstance.get(`/tutor/student/${studentId}`)
+        return response.data
+        
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
+
+export const getTutorMessages = async(senderId:string,recipientId:string)=>{
+    try {
+        const response = await axiosInstance.get(`/messages/${senderId}/${recipientId}`)
+        return response.data;
+        
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+
+}
+
+export const uploadTutorMessageFile = async(formData:FormData,fileType:"image"| "video")=>{
+    try {
+        const endPoint = fileType==="image"? "/uploadImage" :"/uploadVideo"
+        const response = await axiosInstance.post(endPoint,formData)
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
 }

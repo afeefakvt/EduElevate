@@ -158,6 +158,9 @@ const Navbar = () => {
                             <MenuItem onClick={() => { navigate("/profile"); handleMenuClose(); }}>
                                 Profile
                             </MenuItem>
+                            <MenuItem onClick={() => { navigate("/messages"); handleMenuClose(); }}>
+                                Connect with Tutors
+                            </MenuItem>
                             <MenuItem onClick={() => { handleLogout(); handleMenuClose(); }}>
                                 Logout
                             </MenuItem>

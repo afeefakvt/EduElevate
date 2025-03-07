@@ -4,5 +4,6 @@ export interface IEnrollmentService{
     getEnrolledCoursesByStudent(id:string):Promise<IEnrollment[] | null>;
     getTutorEnrollmentStats(tutorId:string):Promise<Record<string,number>>;
     getEnrolledCountPerCourse(courseId:string):Promise<number>
+    getEnrolledStudents(tutorId:string):Promise<IEnrollment[] | null>
     
 }

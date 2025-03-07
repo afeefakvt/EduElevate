@@ -1,4 +1,4 @@
-import { BrowserRouter as Router,Routes,Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import NotFound from "./components/errors/NotFound";
@@ -13,6 +13,8 @@ import StudentProtected from "./components/protectedRoutes/Studentprotected"
 import MyCourses from "./components/student/MyCourses";
 import LecturePage from "./components/student/LecturePage";
 import Profile from "./components/common/Profile";
+import StudentContacts from "./components/chat/StudentContacts";
+import Chat from "./components/chat/Chat";
 
 
 import AdminLogin from "./components/admin/AdminLogin"
@@ -41,77 +43,105 @@ import TutorMyCourses from "./components/tutor/TutorMyCourses";
 import TutorCourseDetails from "./components/tutor/TutorCourseDetails";
 import EditCoursePage from "./components/tutor/EditCoursePage";
 import TutorLecturePage from "./components/tutor/TutorLecturePage";
+import TutorContacts from "./components/chat/TutorContacts";
 
 
-import { ThemeProvider} from './components/ui/themeProvider'
+import { ThemeProvider } from './components/ui/themeProvider'
 import PasswordReset from "./components/common/PasswordReset"
+import { useEffect } from "react";
+import { socket } from "./utils/socket";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 
 function App() {
+
+  useEffect(() => {
+    console.log("socket");
+    
+    socket.on("connect", () => {
+      console.log(`socket connected to server with id: ${socket.id} `);
+
+    })  
+    socket.on("connect_error", (err) => {
+      console.error("Socket connection error:", err.message);
+    });
+    return () => {
+      socket.disconnect()
+      console.log("Socket disconnected");
+    }
+
+  }, []);
+
   return (
     <>
-    <ThemeProvider>
+      <ThemeProvider>
 
-     <Router>
-      <Routes>
-     
-        <Route path="/" element = {<Home/>}/>
-        <Route path="/register" element = {<RegisterPage/>}/>
-        <Route path="/verifyOtp" element = {<OtpPage/>}/>
-        <Route path="/login" element = {<LoginPage/>}/>
-        <Route path="/resetPassword/:token" element = {<PasswordReset/>}/>
-        <Route path="/courses" element = {<Courses/>}/>
-        <Route path="/courses/:courseId" element = {
-          <Elements stripe={stripePromise}>
-            <CourseDetails/>
-          </Elements>
-          }/>
-        <Route element={<StudentProtected/>}>
-         <Route path="/" element = {<Home/>}/>
-         <Route path="/myCourses" element = {<MyCourses/>}/>
-         <Route path="/myCourses/:courseId" element = {<LecturePage/>}/>
-         <Route path="/profile" element={<Profile userType="student" />} />
-        </Route>
-        
+        <Router>
+          <Routes>
 
-        <Route path="/admin/login" element={<AdminLogin/>}/>
-        <Route element={<AdminProtected />}>
-         <Route path="/admin/home" element = {<AdminDashboard/>}/>
-         <Route path="/admin/students" element = {<Students/>}/>
-         <Route path="/admin/tutors" element = {<Tutors/>}/>
-         <Route path="/admin/tutors/:tutorId" element = {<TutorDetails/>}/>
-         <Route path="/admin/categories" element = {<Category/>}/>
-         <Route path="/admin/courses" element = {<AdminCourses/>}/>
-         <Route path="/admin/courseApplications" element = {<CourseApplications/>}/>
-         <Route path="/admin/courseApplications/:courseId" element = {<CourseDetailsAdmin/> }/>
-         <Route path="/admin/editApplications" element = {<EditApplications/> }/>
-         <Route path="/admin/editApplications/:courseId" element = {<EditCourseDetails/> }/>
-        </Route>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verifyOtp" element={<OtpPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/resetPassword/:token" element={<PasswordReset />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:courseId" element={
+              <Elements stripe={stripePromise}>
+                <CourseDetails />
+              </Elements>
+            } />
+            <Route element={<StudentProtected />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/myCourses" element={<MyCourses />} />
+              <Route path="/myCourses/:courseId" element={<LecturePage />} />
+              <Route path="/profile" element={<Profile userType="student" />} />
+              <Route path="/messages" element={<StudentContacts />}>
+                <Route path=":tutorId" element={<Chat />} />
+              </Route>
 
-       
+            </Route>
 
-        <Route path="/tutor/register" element = {<TutorRegisterPage/>}/>
-        <Route path="/tutor/verifyOtp" element = {<TutorOtp/>}/>
-        <Route path="/tutor/login" element = {<TutorLoginPage/>}/>
-        <Route path="/tutor/resetPassword/:token" element = {<TutorResetPassword/>}/>
-        <Route element={<TutorProtected/>}>
-         <Route path="/tutor/home" element = {<TutorHome/>}/>
-         <Route path="/tutor/addCourse" element = {<AddCourse/>}/>
-         <Route path="/tutor/addLecture/:courseId" element = {<AddLecture/>}/>
-         <Route path="/tutor/myCourses" element = {<TutorMyCourses/>}/>
-         <Route path="/tutor/myCourses/:courseId" element = {<TutorCourseDetails/>}/>
-         <Route path="/tutor/editCourse/:courseId" element = {<EditCoursePage/>}/>
-         <Route path="/tutor/:courseId/lectures" element = {<TutorLecturePage/>}/>
-         <Route path="/tutorProfile" element={<Profile userType="tutor" />} />
-         
-        </Route>
 
-        <Route path="*" element= {<NotFound/>}/>  
-       
-      </Routes>
-     </Router>
-     </ThemeProvider>
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route element={<AdminProtected />}>
+              <Route path="/admin/home" element={<AdminDashboard />} />
+              <Route path="/admin/students" element={<Students />} />
+              <Route path="/admin/tutors" element={<Tutors />} />
+              <Route path="/admin/tutors/:tutorId" element={<TutorDetails />} />
+              <Route path="/admin/categories" element={<Category />} />
+              <Route path="/admin/courses" element={<AdminCourses />} />
+              <Route path="/admin/courseApplications" element={<CourseApplications />} />
+              <Route path="/admin/courseApplications/:courseId" element={<CourseDetailsAdmin />} />
+              <Route path="/admin/editApplications" element={<EditApplications />} />
+              <Route path="/admin/editApplications/:courseId" element={<EditCourseDetails />} />
+            </Route>
+
+
+
+            <Route path="/tutor/register" element={<TutorRegisterPage />} />
+            <Route path="/tutor/verifyOtp" element={<TutorOtp />} />
+            <Route path="/tutor/login" element={<TutorLoginPage />} />
+            <Route path="/tutor/resetPassword/:token" element={<TutorResetPassword />} />
+            <Route element={<TutorProtected />}>
+              <Route path="/tutor/home" element={<TutorHome />} />
+              <Route path="/tutor/addCourse" element={<AddCourse />} />
+              <Route path="/tutor/addLecture/:courseId" element={<AddLecture />} />
+              <Route path="/tutor/myCourses" element={<TutorMyCourses />} />
+              <Route path="/tutor/myCourses/:courseId" element={<TutorCourseDetails />} />
+              <Route path="/tutor/editCourse/:courseId" element={<EditCoursePage />} />
+              <Route path="/tutor/:courseId/lectures" element={<TutorLecturePage />} />
+              <Route path="/tutorProfile" element={<Profile userType="tutor" />} />
+              <Route path="/tutor/contacts" element={<TutorContacts />} >
+                <Route path=":studentId" element={<Chat />} />
+              </Route>
+
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+
+          </Routes>
+        </Router>
+      </ThemeProvider>
 
     </>
   )

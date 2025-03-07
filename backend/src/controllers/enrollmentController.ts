@@ -77,5 +77,29 @@ export class EnrollmentController {
         }
     }
 
+    async getMyStudents(req:RequestWithUser,res:Response):Promise<void>{
+        try {
+            // console.log("llllllllllll");
+            
+            if (!req.tutor || !req.tutor._id) {
+                res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a tutor." });
+                return;
+            }
+            const tutorId = req.tutor._id.toString()
+            const enrolledStudents = await this.enrollmentService.getEnrolledStudents(tutorId)
+            if(!enrolledStudents || enrolledStudents.length===0){
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"no enrolled students"})
+            }
+            res.status(HTTP_STATUS.OK).json(enrolledStudents    )
+            
+        
+        } catch (error) {
+            console.error("Error fetching students:", error);
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+            
+        }
+
+    }
+
 
 }

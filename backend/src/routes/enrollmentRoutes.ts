@@ -15,6 +15,7 @@ const enrollmentRoutes = Router()
 enrollmentRoutes.get('/enrollment/myCourses',authenticateToken,authorizeRoles(["student"]),enrollmentController.getEnrolledCoursesByStudent.bind(enrollmentController));
 enrollmentRoutes.get('/tutor/stats',authenticateToken,authorizeRoles(["tutor"]),enrollmentController.getTotalEnrolledCount.bind(enrollmentController))
 enrollmentRoutes.get('/enrollment/:courseId',authenticateToken,authorizeRoles(["tutor"]),enrollmentController.getEnrolledCountPerCourse.bind(enrollmentController))
+enrollmentRoutes.get('/tutor/myStudents',authenticateToken,authorizeRoles(["tutor"]),enrollmentController.getMyStudents.bind(enrollmentController))
 
 
 export default enrollmentRoutes
