@@ -48,3 +48,9 @@ export interface IStudent{
 export interface MyStudent{
     student:IStudent    
 }
+export interface NotificationProps{
+    open:boolean;
+    message:string;
+    onClose:()=>void;
+    onClick:()=>void;
+}

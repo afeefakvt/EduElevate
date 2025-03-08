@@ -21,6 +21,7 @@ import Bgimage from '../../assets/bg.jpeg'
 import { getStudentById ,getTutorMessages, uploadTutorMessageFile} from "@/api/tutorApi";
 import { getTutorDetails } from "@/api/adminApi";
 import { getStudentMessages, uploadStudentMessageFile } from "@/api/chatApi";
+import Notification from "./Notification";
 
 
 // const fileInputRef = useRef<HTMLInputElement>(null)
@@ -47,24 +48,37 @@ const Chat = () => {
     const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
     const navigate = useNavigate()
     const isTutor = Boolean(tutor)
+    const isStudent = Boolean(student)
     const senderId = isTutor? tutor?._id : student?._id
     const recipientId = isTutor? studentId : tutorId
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const messagesEndRef = useRef<HTMLDivElement | null>(null)
+    const [openNotification,setOpenNotification] = useState(false)
+    const [notificationMessage,setNotificationMessage] = useState("")
+    const [notificationSenderId,setNotificationSenderId]=useState<string | null>(null)
+    const [snackbar,setSnackbar] = useState(false)
+    const [snackbarMessage,setSnackbarMessage] = useState('')
 
 
     useEffect(()=>{
-      // console.log("rhfvjbdfjvbhusfejdsbcisj");
-      
+      if(messagesEndRef.current){
+        messagesEndRef.current?.scrollIntoView({behavior:"auto"})
+      }
+    },[messages])
+
+    useEffect(()=>{     
       const fetchRecipientName = async()=>{
         if(!recipientId) return;
         try {          
           let data;
           if(isTutor){            
             data = await getStudentById(recipientId)   
-            // console.log("[[[[[[",data);
             setRecipientRole("student")
           }else{
-            data  = await getTutorDetails(recipientId)
+            // console.log(recipientId,"recipeeeeeee");
+            const response  = await getTutorDetails(recipientId)
+            data = response.tutor
+            // console.log("data",data);
             setRecipientRole("tutor")
           }
           setRecipientName(data?.name || "Unknown")
@@ -82,6 +96,7 @@ const Chat = () => {
       
       if(!senderId || !recipientId) return;
       
+      
       socket.emit('joinRoom',{senderId,recipientId});
 
       const fetchMessages = async()=>{
@@ -92,6 +107,8 @@ const Chat = () => {
           }else{
             response = await getStudentMessages(senderId,recipientId)
           }
+          // console.log(response,"messafess");
+          
           setMessages(response)
           if(response.some((msg)=>msg.senderId=== recipientId && !msg.read)){
             socket.emit("message_read",{senderId,recipientId})
@@ -103,8 +120,97 @@ const Chat = () => {
       }
       fetchMessages()
 
-    },[senderId,recipientId])
+      socket.on("receive_message",(msg)=>{
+        console.log("reciebvereeeeeeeeeeeeee");
+        
+        if(msg.senderId !== senderId && msg.senderId !== recipientId && msg.recipientId ===tutor?._id || msg.recipientId===student?._id ) {
+            setNotificationSenderId(msg.senderId)
+            setNotificationMessage(`New message from ${recipientName} || "Unknown`)
+            setOpenNotification(true);
+          
+        }
+        if(msg.senderId===senderId && msg.recipientId === recipientId || msg.senderId === recipientId && msg.recipientId === senderId){
+          setMessages((prevMessages)=>[...prevMessages,msg])
+          if(msg.senderId=== recipientId){
+            socket.emit("message_read",{senderId,recipientId})
+          }
 
+        }
+      });
+
+      // socket.on("recieve_message", (msg) => {
+      //   const isCurrentChat = 
+      //     (msg.senderId === senderId && msg.recipientId === recipientId) || 
+      //     (msg.senderId === recipientId && msg.recipientId === senderId);
+      
+      //   // Show notifications only if the message is NOT from the current chat
+      //   if (!isCurrentChat) {
+      //     const isForTutor = isTutor && msg.recipientId === tutor?._id;
+      //     const isForStudent = isStudent && msg.recipientId === student?._id;
+      
+      //     if (isForTutor || isForStudent) {
+      //       setNotificationSenderId(msg.senderId);
+      //       setNotificationMessage(`New message from ${recipientName || "Unknown"}`);
+      //       setOpenNotification(true);
+      //     }
+      //   }
+      
+      //   // Add the message to the chat if it's from the current chat
+      //   if (isCurrentChat) {
+      //     setMessages((prevMessages) => [...prevMessages, msg]);
+      
+      //     if (msg.senderId === recipientId) {
+      //       socket.emit("message_read", { senderId, recipientId });
+      //     }
+      //   }
+      // });
+      
+
+      socket.on("message_read",({senderId:msgSenderId,recipientId:msgRecipientId,readAt})=>{
+        console.log("read console");
+        
+        setMessages((prevMessages)=>
+          prevMessages.map((msg)=>{
+            if(msg.senderId===senderId && msg.recipientId===recipientId && !msg.read){
+              return{
+                ...msg,
+                read:true,
+                readAt:readAt
+              }
+            }
+            return msg
+          })
+        )
+      })
+
+      socket.on("message_deleted",({messageId})=>{
+        setMessages((prevMessages)=>
+        prevMessages.map((msg)=>
+          msg._id===messageId?{...msg,message:"This message was deleted"}:msg
+        )
+      )
+      })
+      return ()=>{
+        socket.off("receive_message")
+        socket.off("message_read")
+        socket.off("message_deleted")
+      }
+
+    },[senderId,recipientId,message]);
+
+    const handleNotificationClick = ()=>{
+      if(notificationSenderId){
+        if(recipientRole==="tutor"){
+          navigate(`/messages/${notificationSenderId}`)
+        }else{
+          navigate(`/tutor/contacts/${notificationSenderId}`)
+        }
+      }
+    }
+
+    const handleNotificationClose = ()=>{
+      setOpenNotification(false)
+    }
 
     const sendMessage = async()=>{
       // console.log(message,"kkkkkkk");
@@ -113,9 +219,7 @@ const Chat = () => {
       
       if((!message.trim() && !file) || !senderId || !recipientId) return;
       setLoading(true)
-      try {
-        console.log("pkppkpkpkpkpkpkp");
-        
+      try {        
         const messageData = {
           senderId,
           recipientId,
@@ -141,7 +245,10 @@ const Chat = () => {
           messageData.fileType = fileType
 
         }
+        // console.log("messgae",messageData);
+        
         socket.emit("message",messageData)
+        
         setMessage('')
         setFile(null)
         if(fileInputRef.current){
@@ -199,6 +306,9 @@ const Chat = () => {
 
   return (
     <>
+
+    <Notification open={openNotification} message = {notificationMessage} onClose = {handleNotificationClose} onClick={handleNotificationClick}/>
+
     <Box
     sx={{
       bgcolor: "#dbdbdb",
@@ -444,7 +554,7 @@ const Chat = () => {
         );
       })}
     </Box>
-    {/* <div ref={messagesEndRef} /> */}
+    <div ref={messagesEndRef} />
   </Box>
 
   <Box

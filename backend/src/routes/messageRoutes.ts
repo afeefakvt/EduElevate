@@ -20,7 +20,7 @@ messageRoutes.get('/messages/:senderId/:recipientId',authenticateToken ,authoriz
         return;
     }
     const messages =  await Message.find({roomId:room._id})
-    .select("senderId recipientId meesage read readAt timestamp fileUrl fileType")
+    .select("senderId recipientId message read readAt timestamp fileUrl fileType")
     .sort({timestamp:1});
     res.json(messages)
 })

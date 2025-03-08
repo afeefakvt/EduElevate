@@ -66,8 +66,10 @@ function App() {
       console.error("Socket connection error:", err.message);
     });
     return () => {
-      socket.disconnect()
-      console.log("Socket disconnected");
+      if (socket.connected) {
+        socket.disconnect();
+        console.log("Socket disconnected");
+      }
     }
 
   }, []);

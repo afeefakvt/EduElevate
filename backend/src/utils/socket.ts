@@ -17,10 +17,7 @@ export const initializeSocket = (server:http.Server)=>{
 
     io.on('connection',(socket)=>{
         console.log(`User connected: ${socket.id}`);
-        socket.on('disconnect', (reason) => {
-            console.log('User disconnected:', socket.id, 'Reason:', reason);
-          });
-        
+       
 
         const getOrCreateRoom = async(senderId:string, recipientId:string):Promise<string>=>{
             console.log("create room");
@@ -46,9 +43,7 @@ export const initializeSocket = (server:http.Server)=>{
             
         })
         socket.on("message", async({senderId,recipientId,message,fileUrl,fileType})=>{
-            console.log("messageeee");
-            
-        
+            console.log("messageeee");  
             const roomId = await getOrCreateRoom(senderId,recipientId);
 
             const newMessage = new Message({
@@ -63,7 +58,10 @@ export const initializeSocket = (server:http.Server)=>{
             await newMessage.save();
 
             await MessageRoom.findByIdAndUpdate(roomId,{lastMessage:message,lastMessageAt:new Date()},{new :true});
-            io.to(roomId.toString()).emit("recieve_message",{
+            console.log("Emitting receive_message to room:", roomId);
+
+
+            io.to(roomId.toString()).emit("receive_message",{
                 ...newMessage.toObject(),
                 timestamp:newMessage.timestamp.toISOString()
             });
@@ -84,8 +82,8 @@ export const initializeSocket = (server:http.Server)=>{
             ]);
             io.to(roomId.toString()).emit("unread_count_update",unreadCounts);
         }
+        
     );
-
     socket.on("message_read",async({senderId,recipientId})=>{
         const roomId = await getOrCreateRoom(senderId,recipientId);
         const currentTime = new Date()
@@ -141,5 +139,8 @@ export const initializeSocket = (server:http.Server)=>{
         socket.emit("unread_count_update",unreadCounts)
     })
 
+ 
     })
+   
+    
 }
