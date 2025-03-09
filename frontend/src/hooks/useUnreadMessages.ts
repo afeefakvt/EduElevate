@@ -8,9 +8,7 @@ export const useUnreadMessages = (userId:string)=>{
     useEffect(()=>{
         socket.emit("get_unread_count",{userId});
 
-        const handleUnreadUpdate =(
-            counts:Array<{_id:string; count:number}>
-        )=>{
+        const handleUnreadUpdate =(counts:Array<{_id:string; count:number}>)=>{
             const countsMap = counts.reduce((acc,{_id,count})=>{
                 acc[_id] = count;
                 return acc;

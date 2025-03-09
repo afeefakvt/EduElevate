@@ -3,6 +3,7 @@ import http from 'http';
 import Message from '../models/messageModel'
 import MessageRoom from '../models/messageRoomModel';
 import mongoose from 'mongoose';
+import { disconnect } from 'process';
 
 export interface IMessageRoom extends Document{
     users: string[];
@@ -18,10 +19,9 @@ export const initializeSocket = (server:http.Server)=>{
     io.on('connection',(socket)=>{
         console.log(`User connected: ${socket.id}`);
        
-
         const getOrCreateRoom = async(senderId:string, recipientId:string):Promise<string>=>{
             console.log("create room");
-            
+                
             let room =await MessageRoom.findOne({
                 users:{$all: [senderId,recipientId]},
             }).select("_id");
@@ -32,7 +32,7 @@ export const initializeSocket = (server:http.Server)=>{
             }
             return (room._id as mongoose.Types.ObjectId).toString();
         }
-        socket.on("joinroom", async({senderId,recipientId})=>{
+        socket.on("joinRoom", async({senderId,recipientId})=>{
             console.log("join room",senderId,recipientId);
             
             const roomId = await getOrCreateRoom(senderId,recipientId);
@@ -43,7 +43,7 @@ export const initializeSocket = (server:http.Server)=>{
             
         })
         socket.on("message", async({senderId,recipientId,message,fileUrl,fileType})=>{
-            console.log("messageeee");  
+            // console.log("messageeee");  
             const roomId = await getOrCreateRoom(senderId,recipientId);
 
             const newMessage = new Message({
@@ -121,6 +121,8 @@ export const initializeSocket = (server:http.Server)=>{
             await Message.findByIdAndUpdate(messageId,{
                 message:"This message was deleted"
             });
+            console.log("emittingg ",message.roomId);
+            
             io.to(message.roomId.toString()).emit("message_deleted",{messageId});
         } catch (error) {
             console.error("Failed to delete message")
@@ -135,12 +137,23 @@ export const initializeSocket = (server:http.Server)=>{
                     read:false
                 }
             },
+            {
+                $group:{
+                    _id:"$senderId",
+                    count:{$sum:1}
+                }
+            }
         ]);
         socket.emit("unread_count_update",unreadCounts)
     })
 
+    socket.on("disconnect",()=>{
+
+    })
+
  
     })
+    return io
    
     
 }
