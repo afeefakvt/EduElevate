@@ -5,7 +5,7 @@ import { fetchDashboardCounts } from '@/api/adminApi';
 import { useEffect, useState } from 'react';
 import { fetchMostRatedCourse,featuredCourses } from '@/api/adminApi';
 import category from '../../assets/category1.jpg'
-import PieChart from './PieChart';
+// import PieChart from './PieChart';
 
 interface Course{
   title:string;
