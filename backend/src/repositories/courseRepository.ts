@@ -93,4 +93,15 @@ export class CourseRepository extends BaseRepository<ICourse> implements ICourse
         ])    
     }
 
+    async countByStatus(): Promise<Record<string, number>> {
+        const pipeline = [
+          { $group: { _id: '$status', count: { $sum: 1 } } }
+        ];
+        const result: { _id: string; count: number }[] = await this.aggregate(pipeline);
+        return result.reduce((acc, { _id, count }) => {
+          acc[_id] = count;
+          return acc;
+        }, {} as Record<string, number>);
+      }
+
 }

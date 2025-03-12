@@ -119,5 +119,18 @@ export class CourseController{
         }
 
     }
+    async fetchStatusCounts(req:Request,res:Response):Promise<void>{
+        try {
+            const result  = await this.courseService.fetchStatusCounts()
+            console.log(result,"resss");
+            
+            res.status(HTTP_STATUS.OK).json({result})
+
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Failed to fetch bestselling courses" });
+
+            
+        }
+    }
 
 }

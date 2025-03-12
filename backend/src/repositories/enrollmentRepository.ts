@@ -3,6 +3,7 @@ import  {IEnrollmentRepository } from "../interfaces/enrollment/IEnrollmentRepos
 import Course from "../models/courseModel";
 import Enrollment,{IEnrollment} from "../models/enrollmentModel";
 import { BaseRepository } from "./baseRepository";
+import { ICourse } from "../models/courseModel";
 
 export class EnrollmentRepository extends BaseRepository<IEnrollment> implements IEnrollmentRepository{
     constructor(){
@@ -80,5 +81,53 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
             }
         ])
         return enrollments;  
+    }
+    async  getFeaturedCourse(): Promise<ICourse[]> {
+        return this.aggregate([
+            {
+                $group:{
+                    _id:"$courseId",
+                    count:{$sum:1}
+                }
+            },
+            {
+                $lookup:{
+                    from:"courses",
+                    localField:"_id",
+                    foreignField:"_id",
+                    as:"course"
+                }
+            },
+            {
+                $unwind:"$course"
+            },
+            {
+                $lookup: {
+                  from: "categories",
+                  localField: "course.categoryId",
+                  foreignField: "_id",
+                  as: "category"
+                }
+              },
+              {
+                $unwind: "$category"
+              },
+            {
+
+                $project:{
+                    id:"$course._id",
+                    title:"$course.title",
+                    tutorId:"$course.tutorId",
+                    price:"$course.price",
+                    description:"$course.description",
+                    categoryName:"$category.name",
+                    thumbnail:"$course.thumbnail",
+                    count:1
+                }
+            },
+            {$sort:{count:-1}},
+            {$limit:1}
+        ])
+        
     }
 }

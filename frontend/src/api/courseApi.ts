@@ -39,7 +39,6 @@ export const getCourseDetails = async(courseId:string)=>{
 }
 export const bestSellingCourses = async()=>{
     try {
-        console.log("pppppppppppppppppppppp");
         
         const response = await axiosInstance.get('/bestSelling')
         return response.data 

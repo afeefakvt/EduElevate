@@ -7,6 +7,7 @@ export interface ICourseRepository{
     listUnlistCourse(courseId:string,courseData:Partial<ICourse>):Promise<ICourse | null>;
     editCourse(courseId:string,updatedData:Partial<ICourse>,status:string):Promise<ICourse | null>;
     getBestSellingCourses():Promise<ICourse[]>
+    countByStatus():Promise<Record<string,number>>
 
     
 }

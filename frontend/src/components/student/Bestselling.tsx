@@ -26,15 +26,12 @@ const Bestselling = () => {
   const [courses, setCourses] = useState<Course[]>([])
 
   useEffect(() => {
-    console.log("hdbc mjdshmcbbdk");
 
     const fetchBestSellingCourses = async () => {
       try {
-        console.log("gdvc hsn");
-
         const response = await bestSellingCourses()
-        console.log("bestee");
-
+        console.log(response.courses);
+        
         setCourses(response.courses)
 
       } catch (error) {

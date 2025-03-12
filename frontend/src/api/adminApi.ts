@@ -241,3 +241,25 @@ export const fetchMostRatedCourse = async()=>{
     }
 }
 
+export const featuredCourses = async()=>{
+    try {        
+        const response = await axiosInstance.get('/featured')
+        return response.data 
+        
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error);
+    }
+}
+
+export const fetchCourseStatusCounts = async()=>{
+    try {
+        const response = await axiosInstance.get('/courses/status')
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error);
+        
+    }
+}
+

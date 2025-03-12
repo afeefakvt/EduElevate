@@ -7,6 +7,7 @@ export interface ICourseService{
     listUnlistCourse(courseId:string,courseData:Partial<ICourse>):Promise<ICourse | null>
     editCourse(courseId:string,updatedData:Partial<ICourse>,file?:Express.Multer.File):Promise<ICourse | null>
     getBestSellingCourses():Promise<ICourse[]>
+    fetchStatusCounts():Promise<Record<string,number>>
     
     
 }

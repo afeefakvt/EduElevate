@@ -1,6 +1,7 @@
 import { IEnrollmentRepository } from "../interfaces/enrollment/IEnrollmentRepository";
 import { IEnrollmentService } from "../interfaces/enrollment/IEnrollmentService";
 import { IEnrollment } from "../models/enrollmentModel";
+import { ICourse } from "../models/courseModel";
 
 export class EnrollmentService implements IEnrollmentService{
     private enrollmentRepository:IEnrollmentRepository
@@ -23,5 +24,8 @@ export class EnrollmentService implements IEnrollmentService{
     }
     async getEnrolledStudents(tutorId: string): Promise<IEnrollment[] | null> {
         return await this.enrollmentRepository.getEnrolledStudents(tutorId)
+    }
+    async getFeaturedCourse(): Promise<ICourse[]> {
+        return await this.enrollmentRepository.getFeaturedCourse()
     }
 }

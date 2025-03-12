@@ -65,15 +65,17 @@ const Chat = () => {
   }, [messages])
 
   useEffect(() => {
-    const fetchRecipientName = async () => {
+    const fetchRecipientName = async () => {      
       if (!recipientId) return;
       try {
         let data;
         if (isTutor) {
+          console.log(recipientId,"recipeeeeeee");
+
           data = await getStudentById(recipientId)
           setRecipientRole("student")
         } else {
-          // console.log(recipientId,"recipeeeeeee");
+          console.log(recipientId,"recipeeeeeee");
           const response = await getTutorDetails(recipientId)
           data = response.tutor
           // console.log("data",data);
