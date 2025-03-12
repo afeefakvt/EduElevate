@@ -56,4 +56,7 @@ export class LectureService implements ILectureService{
             
         }
     }
+    async listUnlistLecture(lectureId: string, lectureData: Partial<ILecture>): Promise<ILecture | null> {
+        return await this.lectureRepository.listUnlistlecture(lectureId,lectureData)
+    }
 }

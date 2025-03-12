@@ -17,9 +17,9 @@ export const getCategories = async()=>{
         
     }
 }
-export const getCourses = async()=>{
+export const getCourses = async(queryParams:string)=>{
     try {
-        const response = await axiosInstance.get('/courses')
+        const response = await axiosInstance.get(`/courses/?${queryParams}`)
         return response.data
     } catch (error) {
         console.log("error is", error);

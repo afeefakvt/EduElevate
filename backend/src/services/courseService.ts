@@ -35,8 +35,8 @@ export class CourseService implements ICourseService{
         }
     }
 
-    async getCourses(): Promise<ICourse[]> {
-        return this.courseRepository.getCourses()
+    async getCourses(search: string, category: string, sort: string, page: number, limit: number): Promise<{courses:ICourse[]; total:number}> {
+        return await this.courseRepository.getCourses(search,category,sort,page,limit)
     }
     async getCourseDetails(courseId: string): Promise<ICourse> {
         const course = await this.courseRepository.getCourseDetails(courseId)

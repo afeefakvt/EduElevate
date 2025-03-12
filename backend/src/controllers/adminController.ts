@@ -200,7 +200,8 @@ export class AdminController {
                 return;
             }
             course.isApproved = true;
-            course.status  = "approved"
+            course.status  = "approved";
+            course.isRequestedToEdit=false
             await course.save()
 
             const tutor = course.tutorId as {_id:mongoose.Types.ObjectId; email:string;}
@@ -235,6 +236,7 @@ export class AdminController {
             course.isApproved = false;
             course.status = "rejected";
             course.rejectReason = rejectReason;
+            course.isRequestedToEdit=false
 
             await course.save();
 

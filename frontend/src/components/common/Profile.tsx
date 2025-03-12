@@ -213,8 +213,6 @@ const Profile: React.FC<ProfileProps> = ({ userType }) => {
                             </CardFooter>
                         </Card>
                     </TabsContent>
-
-
                     <TabsContent value="password">
                         <Card>
                             <CardHeader>

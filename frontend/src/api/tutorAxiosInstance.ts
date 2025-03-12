@@ -2,6 +2,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import {store} from '../store/store'
 import { tutorLoginSuccess,tutorLogout } from "@/store/tutorAuthSlice";
+// import { toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+
 
 
 export const axiosInstance = axios.create({
@@ -41,7 +44,7 @@ axiosInstance.interceptors.response.use(
   
         if (status === 401) {
           store.dispatch(tutorLogout());
-          Cookies.remove("authToken");
+          Cookies.remove("tutorAuthToken");
           window.location.href = "/login";
           return Promise.reject(error); // Ensure flow stops here
         }
@@ -49,10 +52,18 @@ axiosInstance.interceptors.response.use(
         if (status === 403) {
           if (message === "User is blocked") {
             console.error("Tutor is blocked.");
+            alert("Your account has been blocked. Please contact for support.");
             store.dispatch(tutorLogout());
             Cookies.remove("tutorAuthToken");
-            alert("Your account has been blocked. Please contact support.");
-            window.location.href = "/tutor/login";
+
+            // toast.error("Your account has been blocked. Redirecting to login...", {
+            //   position: "top-center",
+            //   autoClose: 3000, 
+            //   onClose: () => {
+               
+            //   }
+            // });
+            
             return Promise.reject(error); // EXIT immediately, no token refresh
           }
   

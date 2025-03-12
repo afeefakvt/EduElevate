@@ -11,8 +11,42 @@ export class CourseRepository extends BaseRepository<ICourse> implements ICourse
         return await this.create(courseData)
 
     }
-    async getCourses(): Promise<ICourse[]> {
-        return await this.find({}).populate("categoryId", "name").populate("tutorId", "name").exec();
+    async getCourses(search:string,category:string,sort:string,page:number,limit:number): Promise<{courses:ICourse[]; total:number}> {
+        const filter:any = {
+            status:"approved",
+            isListed:true,
+        };
+        if(search){
+            filter.title = {$regex:search, $options:"i"};
+        }
+        if(category!=="all"){
+            filter.categoryId = category
+        }
+        let sortOption:any = {}
+        switch(sort){
+            case 'priceAsc':
+                sortOption.price = 1;
+                break;
+            case "priceDesc":
+                sortOption.price  =-1
+                break;
+            case "ratingAsc":
+                sortOption.averageRating = 1
+                break;
+            case "ratingDesc":
+                sortOption.averageRating = -1
+                break;
+            default:
+                sortOption = {}
+                break;
+        }
+        const skip = (page-1)*limit
+        const total = await this.count(filter)
+        const courses = await this.find(filter).populate('categoryId', 'name').populate('tutorId', 'name')
+            .sort(sortOption).skip(skip).limit(limit).exec();
+
+        return {courses,total}
+
     }
     async getCourseDetails(courseId: string): Promise<ICourse | null> {
         return await this.findById(courseId).populate("lectures").populate("tutorId").exec()

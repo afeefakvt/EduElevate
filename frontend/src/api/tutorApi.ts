@@ -107,18 +107,16 @@ export const addCourse =async(formData:FormData)=>{
     }
 }
 
-
-
-export const fetchTutorCourses = async()=>{
+export const fetchTutorCourses = async(queryParams:string)=>{
     try {
-        const response = await axiosInstance.get('/tutor/myCourses')
+        const response = await axiosInstance.get(`/tutor/myCourses/?${queryParams}`)
         return response.data
     } catch (error) {
         console.log('error is', error);
-        throw handleAxiosError(error)
-        
+        throw handleAxiosError(error)    
     }
 }
+
 export const getTutorCourseDetails = async(courseId:string)=>{
     try {
         const response = await axiosInstance.get(`/tutor/myCourses/${courseId}`)
@@ -160,6 +158,17 @@ export const listUnlistCourse = async(courseId:string,isCurrentlyListed:Boolean)
     }
 }
 
+export const listUnlistLecture = async(lectureId:string,isListed:boolean)=>{
+    try {
+        const response= await axiosInstance.patch(`/tutor/lecture/${lectureId}`,{isListed:!isListed})
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
+
 export const editCourse = async(courseId:string,formData:FormData)=>{
     try {
         const response = await axiosInstance.put(`/tutor/editCourse/${courseId}`,formData);
@@ -167,6 +176,20 @@ export const editCourse = async(courseId:string,formData:FormData)=>{
     } catch (error) {
         console.log('error is', error);
         throw handleAxiosError(error)
+        
+    }
+}
+
+export const editLecture = async (lectureId:string,formData:FormData)=>{
+    try {
+        const response = await axiosInstance.put(`/tutor/editLecture/${lectureId}`,formData,{
+            headers:{
+                "Content-Type":"multipart/form-data"
+            }
+        })
+        return response.data
+
+    } catch (error) {
         
     }
 }
@@ -230,6 +253,28 @@ export const tutorChangePassword = async (tutorId:string,currentPassword:string,
         
     }
 }
+
+export const approvedCount = async(tutorId:string)=>{
+    try {
+        const response = await axiosInstance.get(`/tutor/approved/${tutorId}`)
+        // console.log(response,"\\");
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)    
+    }
+}
+
+export const pendingCount = async(tutorId:string)=>{
+    try {
+        const response = await axiosInstance.get(`/tutor/pending/${tutorId}`)
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)    
+    }
+}
+
 
 export const fetchTutorEnrollments = async()=>{
     try {

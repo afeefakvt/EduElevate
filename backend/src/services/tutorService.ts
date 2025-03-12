@@ -103,8 +103,8 @@ export class TutorService implements ITutorService {
     async updatePassword(studentId: string, newPassword: string): Promise<ITutor | null> {
         return this.tutorRepository.updatePassword(studentId, newPassword)
     } 
-    async  getTutorCourses(tutorId: string): Promise<ICourse[]> {
-        return await this.tutorRepository.getTutorCourses(tutorId)
+    async  getTutorCourses(tutorId: string,search:string,category:string,sort:string,page:number,limit:number): Promise<{courses:ICourse[]; total:number}> {
+        return await this.tutorRepository.getTutorCourses(tutorId,search,category,sort,page,limit)
     }
     async getTutorCourseDetails(courseId: string): Promise<ICourse | null> {
         return await this.tutorRepository.getTutorCourseDetails(courseId)
@@ -124,5 +124,11 @@ export class TutorService implements ITutorService {
         const hashedPassword = await hashPassword(newPassword)
         return this.tutorRepository.changeTutorPassword(tutorId,{password:hashedPassword})
 
+    }
+    async getApprovedCount(tutorId: string): Promise<number> {
+        return await this.tutorRepository.getApprovedCount(tutorId)    
+    }
+    async getPendingCount(tutorId: string): Promise<number> {
+        return await this.tutorRepository.getPendingCount(tutorId)    
     }
 }

@@ -51,16 +51,24 @@ const TutorMyCourses = () => {
   const [page, setPage] = useState(1);
   const rowsPerPage = 4;
   const [count,setCount] = useState<{[key:string]:number}>({})
+    const [totalCourses,setTotalCourses] = useState(0)
+  
 
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const courseResponse = await fetchTutorCourses();
-        const response = courseResponse.filter((course: Course) => course.status === "approved" || course.status === "rejected")
-        console.log("Fetched  courses:", response);
+        const queryParams = new URLSearchParams({
+          search:searchQuery,
+          category:selectedCategory,
+          sort:sortOption,
+          page:page.toString(),
+          limit:rowsPerPage.toString()
+        }).toString();
 
-        setCourses(response);
+        const courseResponse = await fetchTutorCourses(queryParams);
+        setCourses(courseResponse.courses);
+        setTotalCourses(courseResponse.total)
       } catch (error) {
         console.error("Failed to fetch  courses:", error);
       }
@@ -78,8 +86,9 @@ const TutorMyCourses = () => {
         }
     fetchCourses();
     fetchCategories()
-  }, []);
+  }, [searchQuery,selectedCategory,sortOption,page]);
 
+  const totalPages = Math.ceil(totalCourses/rowsPerPage)
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -144,24 +153,24 @@ const TutorMyCourses = () => {
     }
   }
 
-  const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || course.categoryId._id === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // const filteredCourses = courses.filter((course) => {
+  //   const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+  //   const matchesCategory = selectedCategory === "all" || course.categoryId._id === selectedCategory;
+  //   return matchesSearch && matchesCategory;
+  // });
 
   
-  const sortedCourses = [...filteredCourses].sort((a,b)=>{
-    if(sortOption==="priceAsc") return a.price- b.price;
-    if(sortOption==="priceDesc") return b.price-a.price;
-    if(sortOption==="ratingAsc") return (ratings[a._id]?.average || 0)-(ratings[b._id]?.average || 0);
-    if(sortOption==="ratingDesc") return (ratings[b._id]?.average || 0)-(ratings[a._id]?.average || 0);
+  // const sortedCourses = [...filteredCourses].sort((a,b)=>{
+  //   if(sortOption==="priceAsc") return a.price- b.price;
+  //   if(sortOption==="priceDesc") return b.price-a.price;
+  //   if(sortOption==="ratingAsc") return (ratings[a._id]?.average || 0)-(ratings[b._id]?.average || 0);
+  //   if(sortOption==="ratingDesc") return (ratings[b._id]?.average || 0)-(ratings[a._id]?.average || 0);
 
-    return 0;
-  }) 
+  //   return 0;
+  // }) 
 
-  const totalPages = Math.ceil(sortedCourses.length / rowsPerPage);
-  const paginatedCourses = sortedCourses.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  // const totalPages = Math.ceil(sortedCourses.length / rowsPerPage);
+  // const paginatedCourses = sortedCourses.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -215,8 +224,8 @@ const TutorMyCourses = () => {
 
 
         <Grid container spacing={4}>
-          {paginatedCourses.length > 0 ? (
-            paginatedCourses.map((course) => (
+          {courses.length > 0 ? (
+            courses.map((course) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={course._id}>
                 <Card
                   sx={{

@@ -629,7 +629,6 @@ const Chat = () => {
               component="span"
               sx={{ display: { xs: "none", sm: "inline" } }}
             >
-              Send
             </Box>
           </Button>
         </Box>

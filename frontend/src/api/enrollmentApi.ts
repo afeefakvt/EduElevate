@@ -4,9 +4,11 @@ import { handleAxiosError } from "@/utils/errorHandler";
 
 export const fetchEnrolledCourses = async()=>{
     try {
-        const response = await axiosInstance.get('/enrollment/myCourses',{
+        const response = await axiosInstance.get('/enrollment/myCourses/',{
             withCredentials:true
         })
+        // console.log(response.data,"pppppp");
+        
         return response.data
 
     } catch (error) {

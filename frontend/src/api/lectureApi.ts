@@ -3,10 +3,7 @@ import { handleAxiosError } from "../utils/errorHandler";
 
 export const addLecture = async(courseId:string,formData:FormData)=>{
     try {
-        // console.log("addddddddddd");
-        console.log(courseId,".cnds,jmc ,s");
-        
-        
+        // console.log("addddddddddd");       
         const response = await axiosInstance.post(`/tutor/addLecture/${courseId}`,formData);
         // console.log("responseeeeeeeee got");
         

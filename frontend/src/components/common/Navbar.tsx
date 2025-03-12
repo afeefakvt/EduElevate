@@ -1,6 +1,6 @@
 import logo from "../../assets/logoaf.png"
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem,Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { persistor, RootState, store } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
@@ -19,8 +19,9 @@ const Navbar = () => {
     const token = useSelector((state: RootState) => state.auth.token)
     const student = useSelector((state: RootState) => state.auth.student)
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
+    const [dialogOpen, setDialogOpen] = useState(false);
     const dispatch = useDispatch()
+
     useEffect(() => {
         console.log("Current Redux state:", store.getState());
     }, [])
@@ -32,8 +33,16 @@ const Navbar = () => {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
+    const handleLogoutClick = () => {
+        setDialogOpen(true);
+        handleMenuClose();
+    };
 
-    const handleLogout = async () => {
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    };  
+
+    const handleConfirmLogout = async () => {
         try {
             console.log("Before logout:", Cookies.get("authToken")); 
 
@@ -53,6 +62,8 @@ const Navbar = () => {
 
         } catch (error) {
             console.log(error);
+        }finally{
+            setDialogOpen(false)
         }
     }
     return (
@@ -161,7 +172,7 @@ const Navbar = () => {
                             <MenuItem onClick={() => { navigate("/messages"); handleMenuClose(); }}>
                                 Connect with Tutors
                             </MenuItem>
-                            <MenuItem onClick={() => { handleLogout(); handleMenuClose(); }}>
+                            <MenuItem onClick={handleLogoutClick}>
                                 Logout
                             </MenuItem>
                         </Menu>
@@ -189,11 +200,28 @@ const Navbar = () => {
                         </Button>
                     </>
                 )}
-
-
                 </Box>
-
             </Toolbar>
+             <Dialog
+                    open={dialogOpen}
+                    onClose={handleDialogClose}
+                  >
+                    <DialogTitle>Confirm Logout</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        Are you sure you want to log out?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleDialogClose} variant="contained" color="primary" sx={{background:"#550A8A"}}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleConfirmLogout} variant="contained" color="primary" sx={{background:"#550A8A"}} autoFocus>
+                        Logout
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+
         </AppBar>
 
     )

@@ -1,7 +1,9 @@
-import { fetchTutorCourses } from '@/api/tutorApi';
+import { approvedCount,pendingCount } from '@/api/tutorApi';
 import { Box,Typography,Card,CardContent} from '@mui/material'
 import { useEffect, useState } from 'react';
 import { fetchTutorEnrollments } from '@/api/tutorApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 
 
@@ -17,30 +19,30 @@ const Banner2 = () => {
   const [pendingCourses, setPendingCourses] = useState(0);
   const [studentsEnrolled, setStudentsEnrolled] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const tutorId = useSelector((state:RootState)=>state.tutorAuth?.tutor?._id)
+  const [loading,setLoading] = useState(true)
 
 
   useEffect(()=>{
     const fetchData = async()=>{
       try {
-        const response = await fetchTutorCourses()
-        const courses:Course[] = response
+        if (tutorId) {
+          const approved = await approvedCount(tutorId);
+          setApprovedCourses(approved);
 
-        const approved = courses.filter(course=>course.status==="approved").length;
-        const pending = courses.filter(course=>course.status==="pending").length
-
-                setApprovedCourses(approved);
-                setPendingCourses(pending);
-
+          const pending = await pendingCount(tutorId)
+          setPendingCourses(pending);
+        }
         const enrollments  = await fetchTutorEnrollments()
         const totalStudents = Object.values(enrollments as Record<string, number>)
         .reduce((sum, count) => sum + count, 0);
       
-      setStudentsEnrolled(totalStudents);
-      
-               
+      setStudentsEnrolled(totalStudents);         
       } catch (error) {
         console.error('Error fetching courses:', error);
         
+      }finally{
+        setLoading(false)
       }
     }
     fetchData()
@@ -48,12 +50,10 @@ const Banner2 = () => {
 
   const details = [
     { name: 'Total Revenue', value: `₹${totalRevenue}` },
-    { name: 'Active Courses', value: approvedCourses },
-    { name: 'Pending Courses', value: pendingCourses },
-    { name: 'Students Enrolled', value: studentsEnrolled }
+    { name: 'Active Courses', value: approvedCourses ??0 },
+    { name: 'Pending Courses', value: pendingCourses ?? 0 },
+    { name: 'Students Enrolled', value: studentsEnrolled ?? 0 }
   ];
-
-
 
   return (
     <Box
@@ -69,6 +69,9 @@ const Banner2 = () => {
      
       }}
     >
+        {loading ? (
+      <Typography variant="h6">Loading...</Typography>
+    ) : (
     
       <Box
         sx={{
@@ -108,6 +111,7 @@ const Banner2 = () => {
           </Card>
         ))}
       </Box>
+    )}
     </Box>
   
   )

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import  {IEnrollmentRepository } from "../interfaces/enrollment/IEnrollmentRepository";
 import Course from "../models/courseModel";
 import Enrollment,{IEnrollment} from "../models/enrollmentModel";
@@ -9,15 +9,18 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
         super(Enrollment)
     }
 
+
+   
     async getEnrolledCoursesByStudent(id: string): Promise<IEnrollment[] | null> {
-        return await this.find({studentId:id}).populate({path:"courseId",populate:
-            [{path:"tutorId",select:"name"},
-            {path:"categoryId",select:"name"}
-            ]
-        })
-        .exec();
-        
-    }
+      return await this.find({studentId:id}).populate({path:"courseId",populate:
+          [{path:"tutorId",select:"name"},
+          {path:"categoryId",select:"name"}
+          ]
+      })
+      .exec();
+      
+  }
+
     async getTutorEnrollments(tutorId: string): Promise<Record<string, number>> {
         try {
             const courses =await Course.find({tutorId})

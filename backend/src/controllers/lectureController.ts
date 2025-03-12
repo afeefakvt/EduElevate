@@ -102,6 +102,7 @@ export class LectureController {
                     });
                     updatedData.videoUrl = result.secure_url; // Replace old video URL with new one
                 }
+        
             
                 // if (Array.isArray(req.files) && req.files.length > 0) {
                 //     updatedData.videoUrls = req.files.map((file) => file.path);
@@ -122,4 +123,20 @@ export class LectureController {
                 res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: (error as Error).message })
             }
         }
+
+    async listUnlistLecture (req:Request,res:Response):Promise<void>{
+        try {
+            const {lectureId} = req.params
+            const {isListed} = req.body;
+            const updatedLecture = await this.lectureService.listUnlistLecture(lectureId,{isListed});
+            if(!updatedLecture){
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Lecture not found"})
+                return;
+            }
+            res.status(HTTP_STATUS.OK).json({success:true,message:`Lecture ${isListed ? "listed" : "unlisted"} successfully`,lecture:updatedLecture})
+            
+        } catch (error) {
+            
+        }
+    }
 }

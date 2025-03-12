@@ -38,6 +38,7 @@ interface Lecture {
   videoUrl: string;
   description: string;
   duration: string;
+  isListed: boolean;
 
 }
 
@@ -177,8 +178,9 @@ const CourseDetails = () => {
                     Course Content
                   </Typography>
                   <List>
-                    {course.lectures.length > 0 ? (
-                      course.lectures.map((lecture, index) => (
+                    {course.lectures.filter(lecture => lecture.isListed).length > 0 ? (
+                    course.lectures.filter(lecture =>lecture.isListed)
+                      .map((lecture, index) => (
                         <Accordion key={index}>
                           <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ bgcolor: "#f5f5f5" }}>
                             <Typography variant="body1" fontWeight="bold">
@@ -191,7 +193,8 @@ const CourseDetails = () => {
                             </Typography>
                             <Typography variant="body2" fontWeight="bold" sx={{ mt: 1 }}>
                               Duration: {lecture.duration}
-                            </Typography>
+                            </Typography>  
+
                           </AccordionDetails>
                         </Accordion>
                       ))

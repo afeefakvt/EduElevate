@@ -48,10 +48,9 @@ axiosInstance.interceptors.response.use(
         if (status === 403) {
           if (message === "User is blocked") {
             console.error("User is blocked.");
+            alert("Your account has been blocked. Please contact for support.");
             store.dispatch(logout());
             Cookies.remove("authToken");
-            alert("Your account has been blocked. Please contact support.");
-            window.location.href = "/login";
             return Promise.reject(error); // EXIT immediately, no token refresh
           }
   

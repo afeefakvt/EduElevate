@@ -57,6 +57,8 @@ const MyCourses = () => {
   const [sortOption,setSortOption] = useState<string>("default")
   const [page, setPage] = useState(1);
   const rowsPerPage = 4;
+  // const [totalCourses,setTotalCourses] = useState(0)
+  
 
 
 
@@ -76,7 +78,7 @@ const MyCourses = () => {
     const fetchCategories = async()=>{
       try {
         const categories = await getCategories()
-        console.log(categories,"dvkdvndkfjndjfnk");
+        // console.log(categories,"dvkdvndkfjndjfnk");
         
         const categoryResponse = categories.filter((category:Category)=>category.isListed===true)
         setCategories(categoryResponse)
@@ -87,8 +89,9 @@ const MyCourses = () => {
     }
     fetchCourses();
     fetchCategories();
-  }, []);
+  }, [searchQuery,selectedCategory,sortOption,page]);
 
+  // const totalPages = Math.ceil(totalCourses/rowsPerPage)
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -226,7 +229,7 @@ const MyCourses = () => {
                       {course.courseId.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" >
-                      {course.courseId.tutorId.name}
+                      {/* {course.courseId.tutorId.name} */}
                     </Typography>
                     <Typography variant="h6" fontWeight="Bold" >
                       ₹{course.courseId.price}

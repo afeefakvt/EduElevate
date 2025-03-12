@@ -6,5 +6,6 @@ export interface ILectureService{
     addLectureToCourse(courseId:mongoose.Types.ObjectId,lectureId:mongoose.Types.ObjectId):Promise<void>;
     getLecturesByCourse(courseId:string):Promise<ILecture[]>;
     editLecture(lectureId:string,updatedData:Partial<ILecture>):Promise<ILecture | null>
+    listUnlistLecture(lectureId:string,lectureData:Partial<ILecture>):Promise<ILecture | null>
 
 }

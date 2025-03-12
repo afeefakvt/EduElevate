@@ -8,6 +8,7 @@ import { getCourseDetails } from "@/api/tutorApi";
 import { updateLecture } from "@/api/lectureApi";
 import { validateEditLectureForm } from "@/utils/validations";
 import { Snackbar, Alert } from "@mui/material";
+import { listUnlistLecture } from "@/api/tutorApi";
 
 
 
@@ -19,6 +20,7 @@ interface Lecture {
   videoUrl: string;
   description: string;
   duration: string;
+  isListed: boolean;
 
 }
 interface Course {
@@ -42,6 +44,7 @@ const TutorLecturePage = () => {
     description: "",
     duration: "",
     videoUrl: "",
+    isListed: true
   });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openModal, setOpenModal] = useState(false);
@@ -78,6 +81,32 @@ const TutorLecturePage = () => {
   //   navigate('/myCourses')
   // }
 
+  const handleListUnlistLecture = async (lectureId: string, isListed: boolean) => {
+    try {
+      const reponse = await listUnlistLecture(lectureId,isListed)
+
+      setCourse((prevCourse) => {
+        if (!prevCourse) return prevCourse;
+        return {
+          ...prevCourse,
+          lectures: prevCourse.lectures.map((lecture) =>
+            lecture._id === lectureId ? { ...lecture, isListed: !isListed } : lecture
+          ),
+        };
+      });
+      setSnackbarMessage(isListed ? "Lecture unlisted successfully!" : "Lecture listed successfully!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      handleMenuClose();
+    } catch (error) {
+      console.error("Error updating lecture status:", error);
+      setSnackbarMessage("An error occurred while updating lecture status.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+
+    }
+  }
+
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>, lecture: Lecture) => {
     setAnchorEl(event.currentTarget);
@@ -90,6 +119,9 @@ const TutorLecturePage = () => {
     setOpenModal(true);
     setAnchorEl(null);
   };
+
+
+
 
   const handleSaveChanges = async () => {
     if (!editLecture || !editLecture._id) {
@@ -239,6 +271,8 @@ const TutorLecturePage = () => {
       {/* Menu Options */}
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={handleEditClick}>Edit Lecture</MenuItem>
+        <MenuItem onClick={() => handleListUnlistLecture(editLecture?._id, editLecture?.isListed)}> {editLecture?.isListed ? "Unlist Lecture" : "List Lecture"}
+        </MenuItem>
       </Menu>
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -290,7 +324,7 @@ const TutorLecturePage = () => {
             value={editLecture?.videoUrl || ""}
             onChange={(e) => setEditLecture((prev) => ({ ...prev || {}, videoUrl: e.target.value }))}
           />
-          <Button sx={{ mt: 2, background:"#550A8A"}} variant="contained" fullWidth onClick={handleSaveChanges}>
+          <Button sx={{ mt: 2, background: "#550A8A" }} variant="contained" fullWidth onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </Box>

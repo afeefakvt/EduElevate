@@ -221,20 +221,23 @@ export class TutorController {
 
     async getTutorCourses(req:RequestWithUser,res:Response):Promise<void>{
         try {
-            console.log("coursee tutor");
             
             // const {tutor} = req as AuthenticatedRequest;
+            // console.log(req.url);
+            const {search="", category="all",sort="default",page=1,limit=4} = req.query
+            const pageNumber = parseInt(page as string, 10);
+            const limitNumber = parseInt(limit as string, 10);
 
             if (!req.tutor || !req.tutor._id) {
                 res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a tutor." });
                 return;
               }
-            const tutorId = req.tutor._id.toString( )            
-            const courses = await this.tutorService.getTutorCourses(tutorId);
+            const tutorId = req.tutor._id.toString()            
+            const {courses,total} = await this.tutorService.getTutorCourses(tutorId,search as string,category as string,sort as string,pageNumber,limitNumber);
             if(!courses){
                 res.status(HTTP_STATUS.NOT_FOUND).json({message:"No courses created"})
             }
-            res.status(HTTP_STATUS.OK).json(courses)
+            res.status(HTTP_STATUS.OK).json({courses,total})
             
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
@@ -256,6 +259,27 @@ export class TutorController {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
             error:(error as Error).message
             
+        }
+    }
+
+    async approvedCount(req:Request,res:Response):Promise<void>{
+        try {
+            const {tutorId} = req.params;
+            const approvedCount = await this.tutorService.getApprovedCount(tutorId);
+            // console.log(approvedCount,"countt");
+            res.status(HTTP_STATUS.OK).json(approvedCount) 
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})    
+        }
+    }
+    async pendingCount(req:Request,res:Response):Promise<void>{
+        try {
+            const {tutorId} = req.params;
+            const pendingCount = await this.tutorService.getPendingCount(tutorId);
+            // console.log(approvedCount,"countt");
+            res.status(HTTP_STATUS.OK).json(pendingCount) 
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})    
         }
     }
 

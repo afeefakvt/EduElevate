@@ -1,6 +1,6 @@
 import logo from "../../assets/afeefalogo.png"
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem,Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { RootState, store,persistor } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
@@ -17,9 +17,9 @@ const Navbar = () => {
     const token = useSelector((state: RootState) => state.tutorAuth.token)
     const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    
-
+    const [dialogOpen, setDialogOpen] = useState(false);
     const dispatch = useDispatch()
+
     useEffect(() => {
         console.log("Current Redux state:", store.getState());
     }, [])
@@ -32,26 +32,32 @@ const Navbar = () => {
         setAnchorEl(null);
     };
 
+    const handleLogoutClick = () => {
+        setDialogOpen(true);
+        handleMenuClose();
+      };
 
-    const handleLogout = async() => {
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    };
+
+    const handleConfirmLogout = async() => {
         try {
             console.log("Before logout:", Cookies.get("tutorAuthToken")); 
-
             dispatch(tutorLogout())
             await persistor.flush();
             storage.removeItem('persist:tutorAuth');
-            console.log("Tutor logged out successfully");
             console.log("After logout:", Cookies.get("tutorAuthToken"));
-
             await logoutTutor()
             localStorage.setItem("logoutSuccess","true")  //Store logout success message in local storage
-
             navigate('/tutor/login')
-
         } catch (error) {
             console.log(error);
+        } finally{
+            setDialogOpen(false)
         }
     }
+
     return (
 
         <AppBar
@@ -160,7 +166,7 @@ const Navbar = () => {
                             <MenuItem onClick={() => { navigate("/tutor/contacts"); handleMenuClose(); }}>
                                 Connect with Students
                             </MenuItem>
-                            <MenuItem onClick={() => { handleLogout(); handleMenuClose(); }}>
+                            <MenuItem onClick={handleLogoutClick}>
                                 Logout
                             </MenuItem>
                         </Menu>
@@ -194,6 +200,25 @@ const Navbar = () => {
                 </Box>
 
             </Toolbar>
+            <Dialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+      >
+        <DialogTitle>Confirm Logout</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to log out?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} variant="contained" color="primary" sx={{background:"#550A8A"}}>
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmLogout} variant="contained" color="primary" sx={{background:"#550A8A"}} autoFocus>
+            Logout
+          </Button>
+        </DialogActions>
+      </Dialog>
         </AppBar>
 
     )

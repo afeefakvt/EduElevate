@@ -4,6 +4,14 @@ import { HTTP_STATUS } from "../constants/httpStatusCode";
 
 
 
+interface CourseQuery {
+    search?: string;
+    category?: string;
+    sort?: string;
+    page?: string;
+    limit?: string;
+}
+
 export class CourseController{
     constructor(
         private courseService:ICourseService
@@ -28,8 +36,14 @@ export class CourseController{
     }
     async getCourses(req:Request,res:Response):Promise<void>{
         try {
-            const courses = await this.courseService.getCourses()
-            res.status(HTTP_STATUS.OK).json({success:true,courses})
+            // console.log(req.url);
+            const{search='',category="all",sort="default",page=1,limit=4} = req.query;
+
+            const pageNumber = parseInt(page as string, 10);
+            const limitNumber = parseInt(limit as string, 10);
+
+            const {courses,total} = await this.courseService.getCourses(search as string,category as string,sort as string,pageNumber,limitNumber)
+            res.status(HTTP_STATUS.OK).json({success:true,courses,total})
         } catch (error) {
             console.error('error')
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"internal server error",error:error instanceof Error ? error.message : error,})

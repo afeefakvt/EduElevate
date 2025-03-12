@@ -134,10 +134,11 @@ import { useEffect, useState } from "react";
 import AdminNavbar from "./AdminNavbar";
 import Sidebar from "./Sidebar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // ShadCN input field
+import { Input } from "@/components/ui/input"; 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
 import { getStudents, studentBlockUnblock } from "../../api/adminApi";
+// import Modal from "../common/modal";
 
 interface Student {
   _id: string; 
@@ -153,6 +154,10 @@ export default function Students() {
   const [searchTerm, setSearchTerm] = useState(""); 
   const studentsPerPage = 5;
   const navbarHeight = { xs: '64px', md: '80px' };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<{ id: string; action: string } | null>(null);
+
+
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -169,6 +174,7 @@ export default function Students() {
 
     fetchStudents();
   }, []); 
+
 
 
   const handleBlockToggle = async (studentId: string, isCurrentlyBlocked: boolean) => {
@@ -191,7 +197,6 @@ export default function Students() {
     student.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-  // Pagination Logic
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudent = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
@@ -265,6 +270,12 @@ export default function Students() {
           </>
         )}      
     </div>
+    {/* <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirm={handleConfirm}
+        action={selectedStudent?.action || ""}
+      /> */}
     </div>
 
   );

@@ -6,7 +6,8 @@ export interface ILecture extends Document{
     videoUrl:string,
     duration:string,
     order:number,
-    courseId:mongoose.Types.ObjectId
+    courseId:mongoose.Types.ObjectId,
+    isListed:boolean
 }
 
 const LectureSchems:Schema = new Schema<ILecture>(
@@ -35,6 +36,10 @@ const LectureSchems:Schema = new Schema<ILecture>(
             type:mongoose.Schema.Types.ObjectId,
             ref:"Course",
             required:true
+        },
+        isListed:{
+            type:Boolean,
+            default:true
         }
     },
     {timestamps:true}

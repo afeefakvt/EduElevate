@@ -12,7 +12,7 @@ const Notification = ({open,message,onClose,onClick}:NotificationProps) => {
         action={
             <>
             <Button color="primary" size="small" onClick={onClick}>
-              Go to Chat
+              View In Chat
             </Button>
             <IconButton color="inherit" size="small" onClick={onClose}>
               <CloseIcon />

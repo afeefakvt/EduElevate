@@ -12,7 +12,7 @@ export class RatingRepository extends BaseRepository<IRating> implements IRating
         return await this.create(ratingData)
     }
     async getCourseRatings(courseId: string): Promise<IRating[]> {
-        return await this.find({courseId});
+        return await this.find({courseId}).populate("courseId").exec()
     }
     async getMostRatedCourse(): Promise<ICourse | null> {
         const mostRated = await this.model
