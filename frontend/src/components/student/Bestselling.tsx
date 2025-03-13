@@ -7,17 +7,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEffect, useState } from "react";
 import { bestSellingCourses } from "../../api/enrollmentApi"
+import { Course } from "@/interfaces/interface";
 
-
-interface Course {
-  _id: string;
-  tutorId:{name:string};
-  title: string;
-  description: string;
-  thumbnail: string;
-  count: number;
-  price:number
-};
 
 const Bestselling = () => {
 
@@ -30,7 +21,7 @@ const Bestselling = () => {
     const fetchBestSellingCourses = async () => {
       try {
         const response = await bestSellingCourses()
-        console.log(response.courses);
+        // console.log(response.courses);
         
         setCourses(response.courses)
 

@@ -9,39 +9,9 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useLocation } from "react-router-dom";
 import {  getCourseRatings } from "@/api/ratingApi";
+import { Category } from "@/interfaces/interface";
+import { Enrollment } from "@/interfaces/interface";
 
-
-
-interface Course {
-  _id: string;
-  title: string;
-  thumbnail: string;
-  tutorId: {
-    name: string;
-  };
-  categoryId:{
-    _id:string;
-    name:string;
-  }
-  price: number;
-  description: string;
-}
-
-
-interface Enrollment {
-  _id: string;
-  courseId: Course;
-  studentId: string;
-  paymentStatus: string;
-  paymentAmount: string;
-}
-
-
-interface Category {
-  _id: string;
-  name: string;
-  isListed: boolean;
-}
 
 const MyCourses = () => {
   const [enrolledCourses, setEnrolledCourses] = useState<Enrollment[]>([]);

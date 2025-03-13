@@ -9,28 +9,7 @@ import { updateLecture } from "@/api/lectureApi";
 import { validateEditLectureForm } from "@/utils/validations";
 import { Snackbar, Alert } from "@mui/material";
 import { listUnlistLecture } from "@/api/tutorApi";
-
-
-
-
-interface Lecture {
-  order: number;
-  _id: string;
-  title: string;
-  videoUrl: string;
-  description: string;
-  duration: string;
-  isListed: boolean;
-
-}
-interface Course {
-  _id: string;
-  title: string;
-  tutorId: { _id: string; name: string }
-  description: string;
-  lectures: Lecture[]
-}
-
+import { Course ,Lecture} from "@/interfaces/interface";
 
 
 const TutorLecturePage = () => {

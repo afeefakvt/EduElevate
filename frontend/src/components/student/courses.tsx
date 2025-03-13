@@ -6,26 +6,9 @@ import { getCategories } from "../../api/courseApi"
 import { getCourses } from "@/api/courseApi";
 import { useNavigate } from "react-router-dom";
 import { getCourseRatings } from "@/api/ratingApi";
+import { Course } from "@/interfaces/interface";
+import { Category } from "@/interfaces/interface";
 
-interface Course {
-  _id: string;
-  thumbnail: string;
-  title: string;
-  description: string;
-  tutorId: { _id: string; name: string };
-  categoryId: { _id: string; name: string };
-  price: number;
-  duration: string;
-  status: string;
-  isListed: Boolean
-}
-
-
-interface Category {
-  _id: string;
-  name: string;
-  isListed: boolean;
-}
 
 const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);

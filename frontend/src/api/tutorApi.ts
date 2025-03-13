@@ -308,8 +308,6 @@ export const getMyStudents = async()=>{
         const response  = await axiosInstance.get('/tutor/myStudents',{
             withCredentials:true
         })
-
-        // console.log(response.data,"jjjjjjjjjjjjjjjjjj");
         
         return response.data
     } catch (error) {

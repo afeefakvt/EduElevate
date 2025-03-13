@@ -91,14 +91,12 @@ export class EnrollmentController {
         } catch (error) {
             console.error("Error fetching students:", error);
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
-            
         }
 
     }
     
     async getFeaturedCourse(req:Request,res:Response):Promise<void>{
         try {
-            
             const courses = await this.enrollmentService.getFeaturedCourse()
             res.status(HTTP_STATUS.OK).json({courses:courses})
         } catch (error) {

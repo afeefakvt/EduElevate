@@ -25,9 +25,6 @@ import contact from '../../assets/contact.jpeg'
 
 
 
-
-
-
 interface Course {
   _id: string;
   thumbnail: string;

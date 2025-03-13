@@ -7,27 +7,8 @@ import Footer from "../common/Footer";
 import { getCourseDetails } from "@/api/courseApi";
 import { addRatings } from "@/api/ratingApi";
 import { Snackbar, Alert } from "@mui/material"; 
-
-
-
-
-interface Lecture {
-  order: number;
-  _id: string;
-  title: string;
-  videoUrl: string;
-  description: string;
-  duration: string;
-
-}
-interface Course {
-  _id: string;
-  title: string;
-  tutorId: { _id: string; name: string }
-  description: string;
-  lectures: Lecture[]
-}
-
+import { Lecture } from "@/interfaces/interface";
+import { Course } from "@/interfaces/interface";
 
 
 const LecturePage = () => {

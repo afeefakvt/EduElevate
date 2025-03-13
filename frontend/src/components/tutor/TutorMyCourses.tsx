@@ -9,34 +9,11 @@ import { fetchTutorCourses } from "@/api/tutorApi";
 import { getCourseRatings } from "@/api/tutorApi";
 import { listUnlistCourse } from "../../api/tutorApi";
 import { Snackbar, Alert } from "@mui/material";
+import { Course } from "@/interfaces/interface";
+import { Category } from "@/interfaces/interface";
 
 
 
-
-interface Course {
-  _id: string;
-  title: string;
-  thumbnail: string;
-  tutorId: {
-    name: string;
-  };
-  categoryId:{
-    _id:string;
-    name:string;
-  };
-  price: number;
-  description: string;
-  status: string;
-  rejectReason: string;
-  isListed: boolean;
-}
-
-
-interface Category {
-  _id: string;
-  name: string;
-  isListed: boolean;
-}
 
 const TutorMyCourses = () => {
   const [courses, setCourses] = useState<Course[]>([]);

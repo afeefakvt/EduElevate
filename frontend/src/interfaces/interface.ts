@@ -55,7 +55,17 @@ export interface NotificationProps{
     onClick:()=>void;
 }
 
+export interface Lecture {
+    order: number;
+    _id: string;
+    title: string;
+    videoUrl: string;
+    description: string;
+    duration: string;
+    isListed: boolean;
 
+  
+  }
 export interface Course {
     _id: string;
     title: string;
@@ -72,14 +82,22 @@ export interface Course {
     isApproved:boolean,
     isListed:boolean,
     level:string,
-    
-
+    description:string,
+    lectures:Lecture[],
+    rejectReason:string
 
   }
  
-
   export interface Category {
     _id: string;
     name: string;
     isListed: boolean;
+  }
+
+ export interface Enrollment {
+    _id: string;
+    courseId: Course;
+    studentId: string;
+    paymentStatus: string;
+    paymentAmount: string;
   }

@@ -3,7 +3,6 @@ import http from 'http';
 import Message from '../models/messageModel'
 import MessageRoom from '../models/messageRoomModel';
 import mongoose from 'mongoose';
-import { disconnect } from 'process';
 
 export interface IMessageRoom extends Document{
     users: string[];
