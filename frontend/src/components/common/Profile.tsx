@@ -24,11 +24,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { editTutorProfile, tutorChangePassword } from "@/api/tutorApi";
 import { tutorLogout, updateTutor } from "@/store/tutorAuthSlice";
+import { ProfileProps } from "@/interfaces/interface";
 
-
-interface ProfileProps {
-    userType: "student" | "tutor";
-}
 
 const Profile: React.FC<ProfileProps> = ({ userType }) => {
 

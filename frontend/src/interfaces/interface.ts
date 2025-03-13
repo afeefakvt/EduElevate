@@ -106,3 +106,7 @@ export interface Course {
     date:string,
     totalRevenue:number
   }
+
+ export interface ProfileProps {
+    userType: "student" | "tutor";
+}

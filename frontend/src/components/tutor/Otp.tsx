@@ -155,7 +155,7 @@ const Otp = () => {
                         type="button"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 2 }}
+                        sx={{ mt: 2 ,background:"#550A8A"}}
                         onClick={handleVerifyOtp}
                     >
                         Verify OTP

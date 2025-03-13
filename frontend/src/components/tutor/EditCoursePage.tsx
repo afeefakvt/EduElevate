@@ -23,10 +23,6 @@ import { RootState } from "@/store/store";
 import { validateAddCourseForm } from "../../utils/validations";
 
 
-
-
-
-
 const EditCoursePage = () => {
 
   const [formData, setFormData] = useState({

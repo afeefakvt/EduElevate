@@ -101,7 +101,6 @@ const TutorLecturePage = () => {
 
 
 
-
   const handleSaveChanges = async () => {
     if (!editLecture || !editLecture._id) {
       setSnackbarMessage("Lecture data is incomplete.");
@@ -110,7 +109,6 @@ const TutorLecturePage = () => {
       return;
     }
     try {
-
       // console.log("before upsatinf",editLecture);
       const validationErrors = validateEditLectureForm({ ...editLecture, order: String(editLecture.order) });
       if (Object.keys(validationErrors).length > 0) {
@@ -140,7 +138,7 @@ const TutorLecturePage = () => {
         setSnackbarMessage("Lecture updated successfully!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
-
+        setErrors({})
 
       } else {
         setSnackbarMessage("Failed to update lecture.");

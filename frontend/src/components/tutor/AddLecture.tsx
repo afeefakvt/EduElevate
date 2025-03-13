@@ -20,9 +20,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { addLecture } from "@/api/lectureApi";
 import { validateAddLectureForm } from "@/utils/validations";
 
+
 const AddLecture = () => {
-
-
     const [lectures, setLectures] = useState<{ title: string; description: string; order: number; duration: string; video: File | null }[]>([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');

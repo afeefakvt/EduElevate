@@ -30,17 +30,7 @@ import Alert from "@mui/material/Alert";
 import contact from "../../assets/contact.jpeg"
 import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
-interface Lecture {
-  order: number;
-  _id: string;
-  title: string;
-  videoUrl: string;
-  description: string;
-  duration: string;
-  isListed: boolean;
-
-}
+import { Lecture } from "@/interfaces/interface";
 
 
 interface Course {

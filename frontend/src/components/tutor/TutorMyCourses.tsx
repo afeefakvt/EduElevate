@@ -13,8 +13,6 @@ import { Course } from "@/interfaces/interface";
 import { Category } from "@/interfaces/interface";
 
 
-
-
 const TutorMyCourses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
