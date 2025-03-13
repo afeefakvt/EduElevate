@@ -8,17 +8,7 @@
   import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
   import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
   import { getCourseApplications } from "../../api/adminApi"; 
-
-  interface Course {
-    _id: string;
-    title: string;
-    tutorId: {_id:string; name:string}
-    categoryId: {_id:string; name:string}
-    price: number;
-    totalRatings: number;
-    studentsEnrolled: number;
-    status:string;
-  }
+  import { Course } from "@/interfaces/interface";
 
   export default function AdminCourses() {
     const [courses, setCourses] = useState<Course[]>([]);

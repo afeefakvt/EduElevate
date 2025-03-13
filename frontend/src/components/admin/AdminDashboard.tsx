@@ -5,13 +5,9 @@ import { fetchDashboardCounts } from '@/api/adminApi';
 import { useEffect, useState } from 'react';
 import { fetchMostRatedCourse,featuredCourses } from '@/api/adminApi';
 import category from '../../assets/category1.jpg'
+import { Course } from '@/interfaces/interface';
 // import PieChart from './PieChart';
 
-interface Course{
-  title:string;
-  thumbnail:string;
-  categoryName:string
-}
 
 const AdminDashboard = () => {
   const navbarHeight = { xs: '64px', md: '80px' };

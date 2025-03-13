@@ -138,17 +138,13 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
 import { getStudents, studentBlockUnblock } from "../../api/adminApi";
+import { IStudent } from "@/interfaces/interface";
 // import Modal from "../common/modal";
 
-interface Student {
-  _id: string; 
-  name: string;
-  email: string;
-  isBlocked: boolean;
-}
+
 
 export default function Students() {
-  const [students, setStudents] = useState<Student[]>([]);
+  const [students, setStudents] = useState<IStudent[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState(""); 

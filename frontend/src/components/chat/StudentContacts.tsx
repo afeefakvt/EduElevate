@@ -12,7 +12,7 @@ import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 
 const ChatContainer = styled(Box)({
   display: "flex",
-  height: "100vh", // Full height of viewport
+  height: "100vh", 
   marginTop: "83px", // Adjust for the navbar height
   overflow: "hidden", // Prevent overflow breaking
 });
@@ -21,11 +21,11 @@ const ContactsList = styled(Box)(({ theme }) => ({
   width: "25%",
   backgroundColor: theme.palette.background.paper,
   borderRight: `1px solid ${theme.palette.divider}`,
-  overflowY: "hidden", // Make it scrollable
-  height: "100vh", // Full height minus navbar
+  overflowY: "hidden", 
+  height: "100vh", 
   [theme.breakpoints.down("sm")]: {
     width: "100%",
-    display: "block", // Responsive handling
+    display: "block", 
   },
 }));
 
@@ -61,7 +61,6 @@ const StudentContacts = () => {
   const navigate = useNavigate()
   const { tutorId } = useParams()
   const student = useSelector((state: RootState) => state.auth.student)
-  const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
   const unreadCounts = useUnreadMessages(student?._id ?? "")
 
   useEffect(() => {

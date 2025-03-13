@@ -9,18 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
 import { getCourseApplications } from "../../api/adminApi";
 import { useNavigate } from "react-router-dom";
-
-interface Course {
-  _id: string;
-  title: string;
-  tutorId: {_id:string; name:string}
-  categoryId: {_id:string; name:string}
-  price: number;
-  duration:string;
-  status:string;
-  isRequestedToEdit:Boolean;
-
-}
+import { Course } from "@/interfaces/interface";
 
 export default function EditApplications() {
   const [courses, setCourses] = useState<Course[]>([]);

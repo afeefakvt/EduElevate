@@ -10,13 +10,7 @@ import AdminNavbar from "./AdminNavbar";
 import Sidebar from "./Sidebar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
-
-
-interface Category {
-  _id: string;
-  name: string;
-  isListed: boolean;
-}
+import { Category } from "@/interfaces/interface";
 
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);

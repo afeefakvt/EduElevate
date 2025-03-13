@@ -12,8 +12,8 @@ import Navbar from "../tutor/Navbar";
 
 const ChatContainer = styled(Box)({
     display: "flex",
-    height: "100vh", // Full height of viewport
-    marginTop: "83px", // Adjust for the navbar height
+    height: "100vh", 
+    marginTop: "83px", 
     overflow: "hidden", // Prevent overflow breaking
   });
   
@@ -21,11 +21,11 @@ const ChatContainer = styled(Box)({
     width: "23%",
     backgroundColor: theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.divider}`,
-    overflowY: "auto", // Make it scrollable
-    height: "100vh", // Full height minus navbar
+    overflowY: "auto", 
+    height: "100vh", 
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      display: "block", // Responsive handling
+      display: "block", 
     },
   }));
   

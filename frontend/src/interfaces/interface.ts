@@ -42,7 +42,7 @@ export interface IStudent{
     _id:string;
     name:string;
     email:string;
-    isBlocked:Boolean;
+    isBlocked:boolean;
     createdAt:string
 }
 export interface MyStudent{
@@ -54,3 +54,32 @@ export interface NotificationProps{
     onClose:()=>void;
     onClick:()=>void;
 }
+
+
+export interface Course {
+    _id: string;
+    title: string;
+    tutorId: {_id:string; name:string}
+    categoryId: {_id:string; name:string}
+    price: number;
+    totalRatings: number;
+    studentsEnrolled: number;
+    status:string;
+    categoryName:string,
+    thumbnail:string,
+    isRequestedToEdit:Boolean,
+    duration:string,
+    isApproved:boolean,
+    isListed:boolean,
+    level:string,
+    
+
+
+  }
+ 
+
+  export interface Category {
+    _id: string;
+    name: string;
+    isListed: boolean;
+  }
