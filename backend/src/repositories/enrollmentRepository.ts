@@ -130,4 +130,43 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
         ])
         
     }
+
+    async getSalesReport(timeRange: string, startDate?: string, endDate?: string): Promise<any> {
+        let matchStage:any = {paymentStatus:"success"}
+        const today =new Date()
+
+        if(timeRange==='daily'){
+            const thirtDaysAgo = new Date();
+            thirtDaysAgo.setDate(today.getDate()-30)
+            matchStage["createdAt"] = {$gte:thirtDaysAgo}
+        }else if(timeRange==='monthly'){
+            const startOfYear = new Date(today.getFullYear(),0,1)
+            matchStage["createdAt"] = {$gte:startOfYear}
+        }else if(timeRange==="yearly"){
+            const startOfAllTime = new Date("2000-01-01")
+            matchStage["createdAt"] = {$gte:startOfAllTime}
+        }else if(timeRange==="custom" && startDate && endDate){
+            matchStage["createdAt"] = {
+                $gte:new Date(startDate),
+                $lte:new Date(endDate)
+
+            }
+        }
+
+        let dateFormat = "%Y-%m-%d";
+        if(timeRange==="monthly") dateFormat = "%Y-%m";
+        if(timeRange==="yearly") dateFormat = "%Y";
+
+        return await this.aggregate([
+            {$match:matchStage},
+            {
+                $group:{
+                    _id:{$dateToString:{format:dateFormat, date:"$createdAt"}},
+                    totalRevenue:{$sum:"$paymentAmount"}
+                }
+            },
+            {$sort:{_id:1}}
+        ])
+
+    }
 }

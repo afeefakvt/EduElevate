@@ -17,6 +17,7 @@ enrollmentRoutes.get('/tutor/stats',authenticateToken,authorizeRoles(["tutor"]),
 enrollmentRoutes.get('/enrollment/:courseId',authenticateToken,authorizeRoles(["tutor"]),enrollmentController.getEnrolledCountPerCourse.bind(enrollmentController))
 enrollmentRoutes.get('/tutor/myStudents',authenticateToken,authorizeRoles(["tutor"]),enrollmentController.getMyStudents.bind(enrollmentController))
 enrollmentRoutes.get('/featured',authenticateToken,authorizeRoles(["admin"]),enrollmentController.getFeaturedCourse.bind(enrollmentController))
+enrollmentRoutes.get('/salesReport',authenticateToken,authorizeRoles(["admin"]),enrollmentController.getSalesReport.bind(enrollmentController))
 
 
 export default enrollmentRoutes

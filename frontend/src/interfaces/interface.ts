@@ -101,3 +101,8 @@ export interface Course {
     paymentStatus: string;
     paymentAmount: string;
   }
+
+  export interface SalesEntry{
+    date:string,
+    totalRevenue:number
+  }

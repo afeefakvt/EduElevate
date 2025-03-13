@@ -1,4 +1,4 @@
-import { Box, Grid, Card, CardContent, Typography, Toolbar } from '@mui/material';
+import { Box, Grid, Card, CardContent, Typography, Toolbar,TextField,MenuItem,Select } from '@mui/material';
 import Navbar from './AdminNavbar';
 import Sidebar from './Sidebar'; 
 import { fetchDashboardCounts } from '@/api/adminApi'; 
@@ -6,6 +6,10 @@ import { useEffect, useState } from 'react';
 import { fetchMostRatedCourse,featuredCourses } from '@/api/adminApi';
 import category from '../../assets/category1.jpg'
 import { Course } from '@/interfaces/interface';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+import { fillMissingDates } from '@/utils/dateHandler';
+import { getSalesReport } from '@/api/enrollmentApi';
+import { Co2Sharp } from '@mui/icons-material';
 // import PieChart from './PieChart';
 
 
@@ -14,6 +18,10 @@ const AdminDashboard = () => {
   const [counts,setCounts] = useState({courses:0,tutors:0,students:0})
   const [mostRatedCourse,setMostRatedCourse] = useState<Course | null>(null)
   const [featuredCourse,setfeaturedCourse] = useState<Course | null>(null)
+  const [timeRange,setTimeRange] = useState<"daily" | "monthly" | "yearly" | "custom">("daily")
+  const [customDates,setCustomDates] = useState({startDate:"",endDate:""})
+  const [salesData,setSalesData] = useState<{date:string,totalRevenue:number}[]>([])
+  
 
   const metrics = [
     { title: 'Total Courses', value: counts.courses },
@@ -41,7 +49,32 @@ const AdminDashboard = () => {
     }
     loadData()
   },[]);
+ 
+  useEffect(()=>{
+    
+    if(timeRange==="custom" && (!customDates.startDate || !customDates.endDate)) return;
+    const debounceFetch = setTimeout(fetchsalesReport, 500);
 
+    return () => clearTimeout(debounceFetch);
+
+  },[timeRange,customDates])
+
+  const fetchsalesReport = async()=>{
+    try {
+      // console.log("slaeeee");
+      
+      const data = await getSalesReport(timeRange,customDates.startDate,customDates.endDate)
+      console.log(data);
+      
+      const formattedData = fillMissingDates(data,timeRange, new Date(customDates.startDate),new Date(customDates.endDate))
+      console.log(formattedData);
+      
+      setSalesData(formattedData)
+    } catch (error) {
+      console.error("Error fetching sales report", error);
+    }
+
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -77,6 +110,119 @@ const AdminDashboard = () => {
             </Grid>
           ))}
         </Grid>
+
+        <Card sx={{ flex: 2, p: 2, bgcolor: "#FAFAFA", mb:10 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+            <Typography
+              variant="h6"
+              fontWeight={"bold"}
+              sx={{ fontSize: { xs: 16, md: 20 } }}
+            >
+              Sales Report
+            </Typography>
+          
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "start",
+              height: "30px",
+              mb: 4,
+              mt: 2,
+              gap: 2,
+            }}
+          >
+            <Select
+              value={timeRange}
+              onChange={(e) =>
+                setTimeRange(
+                  e.target.value as
+                    | "daily"
+                    | "monthly"
+                    | "yearly"
+                    | "custom"
+                )
+              }
+              size="small"
+              sx={{ fontSize: { xs: 12, md: 16 } }}
+            >
+              <MenuItem value="daily" sx={{ fontSize: { xs: 12, md: 16 } }}>
+                Daily
+              </MenuItem>
+              <MenuItem value="monthly" sx={{ fontSize: { xs: 12, md: 16 } }}>
+                Monthly
+              </MenuItem>
+              <MenuItem value="yearly" sx={{ fontSize: { xs: 12, md: 16 } }}>
+                Yearly
+              </MenuItem>
+              {/* <MenuItem value="custom" sx={{ fontSize: { xs: 12, md: 16 } }}>
+                Custom
+              </MenuItem> */}
+            </Select>
+
+            {timeRange === "custom" && (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", sm: "row" },
+                  gap: 1,
+                  alignItems: { xs: "stretch", sm: "center" },
+                  width: "100%",
+                  mt: { xs: -4, md: 0 },
+                }}
+              >
+                <TextField
+                  type="date"
+                  label="Start Date"
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ fontSize: { xs: 12, md: 14 } }}
+                  onChange={(e) =>
+                    setCustomDates({
+                      ...customDates,
+                      startDate: e.target.value,
+                    })
+                  }
+                />
+                <TextField
+                  type="date"
+                  label="End Date"
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ fontSize: { xs: 12, md: 14 } }}
+                  onChange={(e) =>
+                    setCustomDates({ ...customDates, endDate: e.target.value })
+                  }
+                />
+              </Box>
+            )}
+          </Box>
+          <Box sx={{ width: "100%", height: { xs: 200, md: 300 } }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={salesData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  angle={0}
+                  tickFormatter={(date) => {
+                    const dateObj = new Date(date);
+                    if (timeRange === "daily") {
+                      return String(dateObj.getDate());
+                    } else if (timeRange === "monthly") {
+                      return String(dateObj.getMonth() + 1);
+                    } else if (timeRange === "yearly") {
+                      return String(dateObj.getFullYear());
+                    }
+                    return dateObj.toLocaleDateString();
+                  }}
+                />
+                <YAxis />
+                {/* <Tooltip /> */}
+                <Bar dataKey="totalRevenue" fill="#107dac" barSize={30} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Box>
+        </Card>
 
         {/* Featured Cards Section */}
         <Grid container spacing={3} alignItems="stretch">

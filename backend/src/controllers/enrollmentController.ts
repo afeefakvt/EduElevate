@@ -105,6 +105,19 @@ export class EnrollmentController {
         }
 
     }
+    async getSalesReport(req:Request,res:Response):Promise<void>{
+        try {
+            const { timeRange, startDate, endDate } = req.query;
+            const reportData = await this.enrollmentService.getSalesReport(timeRange as string,startDate as string,endDate as string)
+
+            // console.log(reportData);
+            
+            res.status(HTTP_STATUS.OK).json(reportData)
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+            
+        }
+    }
 
 
 }

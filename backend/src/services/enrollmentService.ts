@@ -28,4 +28,7 @@ export class EnrollmentService implements IEnrollmentService{
     async getFeaturedCourse(): Promise<ICourse[]> {
         return await this.enrollmentRepository.getFeaturedCourse()
     }
+    async getSalesReport(timeRange: string, startDate?: string, endDate?: string): Promise<any> {
+        return await this.enrollmentRepository.getSalesReport(timeRange,startDate,endDate)
+    }
 }
