@@ -4,7 +4,7 @@
 EduElevate is an innovative e-learning platform designed to make online education interactive and engaging. 
 
 Features
-User Registration & Authentication (JWT)
+User Registration & Authentication (JWT) 
 OTP-based Email Verification for registration
 Course Management for Tutors
 Student Enrollment in courses
