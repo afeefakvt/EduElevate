@@ -14,6 +14,7 @@ import enrollmentRoutes from './routes/enrollmentRoutes'
 import webhookRoutes from './routes/webhookRoutes'
 import ratingRoutes from './routes/ratingRoutes'
 import messageRoutes from './routes/messageRoutes'
+import paymentRoutes from './routes/paymentRoutes'
 import Stripe from 'stripe'
 import { initializeSocket } from './utils/socket'
 
@@ -50,6 +51,7 @@ app.use('/',lectureRoutes);
 app.use('/',enrollmentRoutes);
 app.use('/',ratingRoutes);
 app.use('/',messageRoutes);
+app.use('/',paymentRoutes)
 
 
 

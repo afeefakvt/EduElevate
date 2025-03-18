@@ -2,6 +2,9 @@ import Stripe from "stripe";
 import Enrollment from "../models/enrollmentModel";
 import { Request, Response } from "express";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
+import Course from "../models/courseModel";
+import  Payment  from "../models/paymentModel";
+import mongoose from "mongoose";
 
 if (!process.env.STRIPE_SECRET_KEY) {
     throw new Error("Stripe secret key is not defined in the .env.");
@@ -57,6 +60,37 @@ export default class WebhookController {
                         paymentStatus: "success",
                         paymentAmount
                     });
+
+
+                    const course = await Course.findById(courseId).select("price tutorId").populate({path:"tutorId",select:"name"})
+                    if(!course){
+                        return;
+                    }
+                    const tutorId = course.tutorId._id
+                    const coursePrice = course.price
+
+                    const existingPayment = await Payment.findOne({
+                        courseId: new mongoose.Types.ObjectId(courseId),
+                        tutorId: new mongoose.Types.ObjectId(tutorId),
+                        settlementStatus:"pending"
+                    })
+
+                    const amountPayable = coursePrice * 0.8
+                    if(existingPayment){
+                        
+                        existingPayment.settlementPrice+=amountPayable;
+                        existingPayment.newEnrollments = (existingPayment.newEnrollments || 0)+1
+                        await existingPayment.save()
+                    }else{
+                        
+                        await Payment.create({
+                            tutorId,
+                            courseId,
+                            settlementPrice : amountPayable,
+                            settlementStatus : "pending",
+                            newEnrollments:1
+                        })
+                    }
 
                     console.log("Enrollment created for student", studentId);
                     responseSent = true;

@@ -127,8 +127,6 @@
 
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "@/components/ui/data-table";
 import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
 import AdminNavbar from "./AdminNavbar";
@@ -193,10 +191,10 @@ export default function Students() {
     student.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-  const indexOfLastStudent = currentPage * studentsPerPage;
-  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudent = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
-  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+    const indexOfLastStudent = currentPage * studentsPerPage;
+    const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+    const currentStudent = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
+    const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
 
 
   

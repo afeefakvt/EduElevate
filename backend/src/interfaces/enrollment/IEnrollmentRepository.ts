@@ -8,6 +8,7 @@ export interface IEnrollmentRepository{
     getEnrolledStudents(tutorId:string):Promise<IEnrollment[] | null>
     getFeaturedCourse():Promise<ICourse[]>
     getSalesReport(timeRange:string,startDate?:string,endDate?:string):Promise<any>
+    getTotalRevenue():Promise<number>;
     
 
 }

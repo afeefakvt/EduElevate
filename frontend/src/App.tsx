@@ -29,6 +29,7 @@ import CourseApplications from "./components/admin/CourseApplications"
 import CourseDetailsAdmin from "./components/admin/CourseDetails"
 import EditApplications from "./components/admin/EditApllications";
 import EditCourseDetails from "./components/admin/EditCourseDetails";
+import PendingPayments from "./components/admin/PendingPayments";
 
 
 import TutorHome from "./components/tutor/tutorHome"
@@ -44,6 +45,7 @@ import TutorCourseDetails from "./components/tutor/TutorCourseDetails";
 import EditCoursePage from "./components/tutor/EditCoursePage";
 import TutorLecturePage from "./components/tutor/TutorLecturePage";
 import TutorContacts from "./components/chat/TutorContacts";
+import Payments from "./components/tutor/Payments";
 
 
 import { ThemeProvider } from './components/ui/themeProvider'
@@ -116,6 +118,7 @@ function App() {
               <Route path="/admin/courseApplications/:courseId" element={<CourseDetailsAdmin />} />
               <Route path="/admin/editApplications" element={<EditApplications />} />
               <Route path="/admin/editApplications/:courseId" element={<EditCourseDetails />} />
+              <Route path="/admin/payments/pending" element={<PendingPayments />} />
             </Route>
 
 
@@ -136,6 +139,8 @@ function App() {
               <Route path="/tutor/contacts" element={<TutorContacts />} >
                 <Route path=":studentId" element={<Chat />} />
               </Route>
+              <Route path="/tutor/payments" element={<Payments/>} />
+
 
             </Route>
 

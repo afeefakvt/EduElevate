@@ -110,3 +110,19 @@ export interface Course {
  export interface ProfileProps {
     userType: "student" | "tutor";
 }
+
+export interface Payment{
+    _id:string,
+    tutorId:{
+        name:string
+    },
+    courseId:{
+        title:string,
+        price:number
+    },
+    newEnrollments:number,
+    settlementPrice:number,
+    updatedAt:string,
+    settlementDate:string
+    settlementStatus:string
+}

@@ -3,7 +3,6 @@ import { ILecture } from "../models/lectureModel";
 import { ILectureRepository } from "../interfaces/lecture/ILectureRepository";
 import Course from "../models/courseModel";
 import mongoose from "mongoose";
-import { log } from "console";
 import { cloudinary } from "../config/cloudinary";
 
 export class LectureService implements ILectureService{

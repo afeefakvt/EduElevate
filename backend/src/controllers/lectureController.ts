@@ -16,7 +16,7 @@ interface LectureData {
 export class LectureController {
     constructor(
         private lectureService: ILectureService
-    ) { }
+    ) {}
 
     async addLecture(req: Request, res: Response): Promise<void> {
         try {

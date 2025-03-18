@@ -169,4 +169,20 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
         ])
 
     }
+    async getTotalRevenue(): Promise<number> {
+        const totalRevenue = await this.aggregate([
+            {
+                $match:{
+                    paymentStatus:"success"
+                },
+            },
+            {
+                $group:{
+                    _id:null,
+                    totalAmount:{$sum:"$paymentAmount"}
+                }
+            }
+        ]);
+        return totalRevenue[0]?.totalAmount || 0
+    }
 }

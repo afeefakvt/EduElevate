@@ -119,5 +119,22 @@ export class EnrollmentController {
         }
     }
 
+    async getTotalRevenue(req:Request,res:Response){
+        try {
+            console.log("ppppppppppppppppoooooooooooo");
+            
+            const total = await this.enrollmentService.getTotalRevenue()
+            if(!total){
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Total Revenue not found"})
+                return
+            }
+            console.log(total,"ooo");
+            
+            res.status(HTTP_STATUS.OK).json(total)
+        } catch (error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });            
+        }
+    }
+
 
 }

@@ -263,3 +263,16 @@ export const fetchCourseStatusCounts = async()=>{
     }
 }
 
+export const fetchTotalRevenue = async()=>{
+    try {
+        console.log("pooooooooooo");
+        
+        const response = await axiosInstance.get('/enrollments/revenue')
+        return response.data
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error);
+        
+    }
+}
+

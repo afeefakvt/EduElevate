@@ -9,7 +9,7 @@ import { Course } from '@/interfaces/interface';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import { fillMissingDates } from '@/utils/dateHandler';
 import { getSalesReport } from '@/api/enrollmentApi';
-import { Co2Sharp } from '@mui/icons-material';
+import { fetchTotalRevenue } from '@/api/adminApi';
 // import PieChart from './PieChart';
 
 
@@ -21,13 +21,16 @@ const AdminDashboard = () => {
   const [timeRange,setTimeRange] = useState<"daily" | "monthly" | "yearly" | "custom">("daily")
   const [customDates,setCustomDates] = useState({startDate:"",endDate:""})
   const [salesData,setSalesData] = useState<{date:string,totalRevenue:number}[]>([])
+  const [totalAmount,setTotalAmount] = useState(0)
+
+
   
 
   const metrics = [
     { title: 'Total Courses', value: counts.courses },
     { title: 'Total Tutors', value: counts.tutors },
     { title: 'Total Students', value: counts.students },
-    { title: 'Total Revenue', value: '₹1,00,000' },
+    { title: 'Total Revenue', value: totalAmount },
   ];
 
   const featured = [
@@ -40,6 +43,9 @@ const AdminDashboard = () => {
     const loadData = async()=>{
       const data = await fetchDashboardCounts()
       setCounts(data)
+
+      const total  = await fetchTotalRevenue()
+      setTotalAmount(total)
 
     const featuredCourse = await featuredCourses()    
     setfeaturedCourse(featuredCourse.courses[0])
@@ -104,7 +110,7 @@ const AdminDashboard = () => {
                   {metric.title}
                 </Typography>
                 <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                  {metric.value}
+                {metric.title === 'Total Revenue' ? `₹${metric.value}` : metric.value}
                 </Typography>
               </Card>
             </Grid>
