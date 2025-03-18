@@ -38,7 +38,7 @@ import {
     const indexOfLastPayment = currentPage * rowsPerPage;
     const indexOfFirstPayment = indexOfLastPayment - rowsPerPage;
     const currentPayments = payments.slice(indexOfFirstPayment, indexOfLastPayment);
-    const totalPages = Math.ceil(currentPayments.length / rowsPerPage);
+    const totalPages = Math.ceil(payments.length / rowsPerPage);
   
     return (
       <Box

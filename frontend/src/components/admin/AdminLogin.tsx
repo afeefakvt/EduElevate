@@ -59,7 +59,8 @@
 
 
 
-import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, Paper,Alert ,IconButton, InputAdornment} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import  { useEffect, useState } from 'react';
 import {  useNavigate } from 'react-router-dom';
 import { loginAdmin } from '../../api/adminApi';
@@ -72,6 +73,7 @@ import { validateLoginForm } from '../../utils/validations';
 const AdminLogin = () => {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false);
     const [errMessage,setErrMessage] = useState('')
     const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
 
@@ -164,13 +166,22 @@ const AdminLogin = () => {
                         fullWidth
                         name="password"
                         label="Password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}                       
                         id="password"
                         autoComplete="current-password"
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
                         error= {Boolean(formErrors.password)}
                         helperText ={formErrors.password}
+                        InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
+                                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
                     />
                     <Button
                         type="submit"

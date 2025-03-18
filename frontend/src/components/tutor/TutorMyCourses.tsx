@@ -26,7 +26,7 @@ const TutorMyCourses = () => {
   const [page, setPage] = useState(1);
   const rowsPerPage = 4;
   const [count,setCount] = useState<{[key:string]:number}>({})
-    const [totalCourses,setTotalCourses] = useState(0)
+  const [totalCourses,setTotalCourses] = useState(0)
   
 
 

@@ -1,4 +1,6 @@
-import { Box, Button, Container, TextField, Typography, Paper,Alert } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, Paper,Alert , IconButton, InputAdornment} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUp } from '../../api/authApi';
@@ -11,6 +13,7 @@ const Register = () => {
   const [name,setName] = useState("")
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword,setConfirmPassword] = useState("")
   const [errMessage,setErrMessage] = useState('')
   const [formErrors,setFormErrors] = useState<{name?:string,email?:string,password?:string,confirmPassword?:string}>({})
@@ -119,13 +122,22 @@ const Register = () => {
                         fullWidth
                         name="password"
                         label="Password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}                        
                         id="password"
                         autoComplete="password"
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
                         error={Boolean(formErrors.password)}
                         helperText={formErrors.password}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
                     />
                      <TextField
                         margin="normal"
