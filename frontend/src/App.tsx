@@ -30,6 +30,7 @@ import CourseDetailsAdmin from "./components/admin/CourseDetails"
 import EditApplications from "./components/admin/EditApllications";
 import EditCourseDetails from "./components/admin/EditCourseDetails";
 import PendingPayments from "./components/admin/PendingPayments";
+import PaymentHistory from "./components/admin/paymentHistory";
 
 
 import TutorHome from "./components/tutor/tutorHome"
@@ -119,6 +120,7 @@ function App() {
               <Route path="/admin/editApplications" element={<EditApplications />} />
               <Route path="/admin/editApplications/:courseId" element={<EditCourseDetails />} />
               <Route path="/admin/payments/pending" element={<PendingPayments />} />
+              <Route path="/admin/payments/history" element={<PaymentHistory />} />
             </Route>
 
 

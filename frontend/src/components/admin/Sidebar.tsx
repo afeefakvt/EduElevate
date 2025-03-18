@@ -39,6 +39,7 @@ const menuItems = [
   { text: "Course Applications", path: "/admin/courseApplications", icon: <ApplicationsIcon /> },
   { text: "Edit Applications", path: "/admin/editApplications", icon: <ApplicationsIcon /> },
   { text: "Payment Management", path: "/admin/payments/pending", icon: <PaymentIcon /> },
+  { text: "Payment History", path: "/admin/payments/history", icon: <PaymentIcon /> },
   { text: "Logout", path: "/admin/logout", icon: <LogoutIcon /> },
 ];
 

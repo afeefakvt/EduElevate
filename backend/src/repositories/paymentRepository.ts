@@ -25,9 +25,10 @@ export class PaymentRepository extends BaseRepository<IPayment> implements IPaym
     }
 
     async getPaymentHistory(): Promise<IPayment[]> {
-        const result = await this.find({$status:{$nin:"pending"}})
+        
+        const result = await this.find({settlementStatus:{$nin:"pending"}})
         .populate({path:"tutorId",select:"name"})
-        .populate({path:"courseId",select:"title ,price"})
+        .populate({path:"courseId",select:"title price"})        
         return result
         
     }

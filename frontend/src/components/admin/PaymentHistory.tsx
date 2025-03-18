@@ -14,68 +14,36 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import Sidebar from "./Sidebar";
 import AdminNavbar from "./AdminNavbar";
-import { getPendingPayments, updatePaymentStatus } from "@/api/paymentApi";
+import { getPaymentHistory } from "@/api/paymentApi";
 import { useEffect, useState } from "react";
 import { Payment } from "../../interfaces/interface";
 
-const PendingPayments = () => {
-  const [paymentsPending, setPaymentsPending] = useState<Payment[]>([]);
+const PaymentHistory = () => {
+  const [paymentHistory, setPaymentHistory] = useState<Payment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const paymentsPerPage = 5;
 
   useEffect(() => {
-    const fetchPendingPayments = async () => {
+    const fetchPaymentHistory = async () => {
       try {
-        const data = await getPendingPayments();
-        console.log(data);
-        setPaymentsPending(data);
+        const data = await getPaymentHistory();
+        setPaymentHistory(data);
       } catch (error) {
-        console.error("Error fetching pending payments:", error);
+        console.error("Error fetching  payments:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchPendingPayments();
+
+    fetchPaymentHistory();
   }, []);
 
-  const handleSettlePayment = async (paymentId: string) => {
-    setSelectedPayment(paymentId);
-    setIsModalOpen(true);
-  };
-
-  const handleConfirmSettlement = async () => {
-    if (selectedPayment) {
-      try {
-        await updatePaymentStatus(selectedPayment);
-        setIsModalOpen(false);
-        setPaymentsPending((prev) =>
-          prev.filter((payment) => selectedPayment !== payment._id)
-        );
-      } catch (error) {
-        console.log("Error settling payment", error);
-      }
-    }
-  };
-
-  const handleCancelSettlement = async () => {
-    setIsModalOpen(false);
-  };
-
-  const filteredPayments = paymentsPending.filter(
+  const filteredPayments = paymentHistory.filter(
     (payment) =>
       payment.tutorId.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       payment.courseId.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -100,7 +68,7 @@ const PendingPayments = () => {
         style={{ paddingTop: "150px", width: "1100px", marginLeft: "350px" }}
       >
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Pending Payments</h1>
+          <h1 className="text-2xl font-bold">Payment History</h1>
           {/* Search Input */}
           <Input
             type="text"
@@ -121,8 +89,9 @@ const PendingPayments = () => {
                   <TableHead>Course Name</TableHead>
                   <TableHead>New Enrollments</TableHead>
                   <TableHead>Course Price</TableHead>
-                  <TableHead>Amount Payable</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>Paid Amount</TableHead>
+                  <TableHead>PaymentDate</TableHead>
+                  <TableHead>Payment Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -134,13 +103,20 @@ const PendingPayments = () => {
                     <TableCell>₹{payment.courseId.price}</TableCell>
                     <TableCell>₹{payment.settlementPrice.toFixed(2)}</TableCell>
                     <TableCell>
-                      <Button
-                        onClick={() => handleSettlePayment(payment._id)}
-                        size="sm"
-                      >
-                        Settle Payment
-                      </Button>
+                      {new Date(payment.settlementDate).toLocaleDateString(
+                        "en-GB"
+                      )}
                     </TableCell>
+                    <TableCell
+                      style={{
+                        color:
+                          payment.settlementStatus === "completed"
+                            ? "green"
+                            : "red",
+                      }}
+                    >
+                      {payment.settlementStatus}
+                    </TableCell>{" "}
                   </TableRow>
                 ))}
               </TableBody>
@@ -178,32 +154,8 @@ const PendingPayments = () => {
           </>
         )}
       </div>
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Payment</DialogTitle>
-          </DialogHeader>
-
-          <p className="text-center mt-2">
-            Are you sure you want to settle this payment?
-          </p>
-
-          <div className="flex justify-between mt-4">
-            <Button
-              onClick={handleCancelSettlement}
-              variant="outline"
-              className="w-1/2 mr-2"
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmSettlement} className="w-1/2">
-              Confirm
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
 
-export default PendingPayments;
+export default PaymentHistory;

@@ -264,9 +264,7 @@ export const fetchCourseStatusCounts = async()=>{
 }
 
 export const fetchTotalRevenue = async()=>{
-    try {
-        console.log("pooooooooooo");
-        
+    try {        
         const response = await axiosInstance.get('/enrollments/revenue')
         return response.data
     } catch (error) {

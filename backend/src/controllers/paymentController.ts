@@ -33,8 +33,8 @@ export class PaymentController{
         }
     }
     async getPaymentHistory(req:Request,res:Response){
-        try {
-            const payments = await this.paymentService.getPaymentHistory()
+        try {            
+            const payments = await this.paymentService.getPaymentHistory()            
             res.status(HTTP_STATUS.OK).json(payments)
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"Internal server error"})

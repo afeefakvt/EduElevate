@@ -22,3 +22,15 @@ export const updatePaymentStatus = async(paymentId:string)=>{
         
     }
 }
+
+export const getPaymentHistory = async()=>{
+    try {
+        const response = await axiosInstance.get('/payments/history')
+        return response.data
+        
+    } catch (error) {
+        console.log('error is', error);
+        throw handleAxiosError(error)
+        
+    }
+}
