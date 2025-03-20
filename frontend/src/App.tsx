@@ -129,8 +129,8 @@ function App() {
             <Route path="/tutor/verifyOtp" element={<TutorOtp />} />
             <Route path="/tutor/login" element={<TutorLoginPage />} />
             <Route path="/tutor/resetPassword/:token" element={<TutorResetPassword />} />
+            <Route path="/tutor/home" element={<TutorHome />} />
             <Route element={<TutorProtected />}>
-              <Route path="/tutor/home" element={<TutorHome />} />
               <Route path="/tutor/addCourse" element={<AddCourse />} />
               <Route path="/tutor/addLecture/:courseId" element={<AddLecture />} />
               <Route path="/tutor/myCourses" element={<TutorMyCourses />} />

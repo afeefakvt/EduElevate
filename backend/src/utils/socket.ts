@@ -164,6 +164,8 @@ export const initializeSocket = (server:http.Server)=>{
     })
     
     socket.on("ice_candidate",async({senderId,recipientId,candidate})=>{
+        // console.log(senderId,recipientId);
+        
         const roomId = await getOrCreateRoom(senderId,recipientId)
         io.to(roomId.toString()).emit("ice_candidate",{
             senderId,recipientId,candidate

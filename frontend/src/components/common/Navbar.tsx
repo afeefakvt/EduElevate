@@ -6,7 +6,6 @@ import { persistor, RootState, store } from "../../store/store";
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect,useState } from "react";
 import { logout } from "../../store/authSlice";
-import { ModeToggle } from "../ui/modeToggle";
 import { logoutStudent } from "@/api/authApi";
 import Cookies from "js-cookie";
 import storage from 'redux-persist/lib/storage';

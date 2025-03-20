@@ -59,7 +59,7 @@ const Chat = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('')
 
   const [isVideoCallActive,setIsVideoCallActive] = useState(false)
-  const [peerConnection,setPeerConnection] = useState<any>(null)
+  const [peerConnections,setPeerConnections] = useState<any>(null)
   const [localStream,setLocalStream] = useState<MediaStream | null>(null)
   const [remoteStream,setRemoteStream] = useState<MediaStream | null>(null)
   const [incomingCall,setIncomingCall]  = useState(false)
@@ -352,7 +352,7 @@ const Chat = () => {
       setIsVideoCallActive(true)
 
       const peerConnection = await createPeerConnection(stream)
-      setPeerConnection(peerConnection)
+      setPeerConnections(peerConnection)
 
       const offer = await peerConnection.createOffer()
       await peerConnection.setLocalDescription(offer)
@@ -376,7 +376,7 @@ const Chat = () => {
       setCallAccepted(true)
 
       const peerConnection = await createPeerConnection(stream)
-      setPeerConnection(peerConnection)
+      setPeerConnections(peerConnection)
 
       await peerConnection.setRemoteDescription(
         new RTCSessionDescription(callOffer?.offer)
@@ -431,22 +431,22 @@ const Chat = () => {
     });
 
     socket.on("video_call_answer", async({senderId,recipientId:recieverId,answer})=>{
-      if(recieverId === isTutor ?tutor?._id : student?._id && peerConnection){
+      if(recieverId === isTutor ?tutor?._id : student?._id && peerConnections){
         try {
-          await peerConnection.setRemoteDescription(
+          await peerConnections.setRemoteDescription(
             new RTCSessionDescription(answer)
           )
         } catch (error) {
-          console.error("Cannot set remote description in the current state:", peerConnection.signalingState);
+          console.error("Cannot set remote description in the current state:", peerConnections.signalingState);
           
         }
       }
     })
 
     socket.on("ice_candidate",async({senderId,recipientId:recieverId,candidate})=>{
-      if(recieverId === (isTutor ? tutor?._id : student?._id) && peerConnection){
+      if(recieverId === (isTutor ? tutor?._id : student?._id) && peerConnections){
         try {
-          await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+          await peerConnections.addIceCandidate(new RTCIceCandidate(candidate));
         } catch (error) {
           console.error("Error adding ICE candidate:", error);   
         }
@@ -457,8 +457,8 @@ const Chat = () => {
 
     socket.on("call_ended", async({senderId,recipientId:recieverId})=>{
       if(recieverId === (isTutor ? tutor?._id : student?._id)){
-        if(peerConnection){
-          peerConnection.close()
+        if(peerConnections){
+          peerConnections.close()
         }
         if(localStream){
           localStream.getTracks().forEach((track)=>track.stop())
@@ -467,7 +467,7 @@ const Chat = () => {
         setIsVideoCallActive(false)
         setLocalStream(null)
         setRemoteStream(null)
-        setPeerConnection(null)
+        setPeerConnections(null)
         setSnackbar(true)
         setSnackbarMessage("This video call has ended")
       }
@@ -492,11 +492,11 @@ const Chat = () => {
       socket.off("call_ended")
       socket.off("call_rejected")
     }
-  },[socket,isTutor? tutor?._id : student?._id,peerConnection]);
+  },[socket,isTutor? tutor?._id : student?._id,peerConnections]);
 
   const endVideoCall = ()=>{
-    if(peerConnection){
-      peerConnection.close()
+    if(peerConnections){
+      peerConnections.close()
     }
     if(localStream){
       localStream.getTracks().forEach((track)=>track.stop())
@@ -506,13 +506,13 @@ const Chat = () => {
     setIsVideoCallActive(false)
     setLocalStream(null)
     setRemoteStream(null)
-    setPeerConnection(null)
+    setPeerConnections(null)
   }
 
   const rejectCall = ()=>{
     setIncomingCall(false)
-    if(peerConnection){
-      peerConnection.close()
+    if(peerConnections){
+      peerConnections.close()
     }
     if(localStream){
       localStream.getTracks().forEach((track)=>track.stop())
