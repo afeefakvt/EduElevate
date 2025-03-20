@@ -132,7 +132,7 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
     }
 
     async getSalesReport(timeRange: string, startDate?: string, endDate?: string): Promise<any> {
-        let matchStage:any = {paymentStatus:"success"}
+        const matchStage:any = {paymentStatus:"success"}
         const today =new Date()
 
         if(timeRange==='daily'){

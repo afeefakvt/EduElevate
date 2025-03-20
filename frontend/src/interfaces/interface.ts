@@ -1,3 +1,5 @@
+import { MutableRefObject } from "react";
+
 export interface ITutor{
     _id:string;
     name:string;
@@ -125,4 +127,18 @@ export interface Payment{
     updatedAt:string,
     settlementDate:string
     settlementStatus:string
+}
+
+export interface VideoCallProps{
+    isVideoCallActive:boolean,
+    localVideoRef:MutableRefObject<HTMLVideoElement | null>,
+    remoteVideoRef:MutableRefObject<HTMLVideoElement | null>,
+    localStream:MediaStream | null,
+    remoteStream:MediaStream | null,
+    onStartCall:()=>void
+    onEndCall:()=>void
+    onAcceptCall:()=>void
+    onRejectCall:()=>void
+    incomingCall:boolean
+
 }

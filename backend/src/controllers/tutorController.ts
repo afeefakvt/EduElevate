@@ -241,7 +241,7 @@ export class TutorController {
             
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
-            error:(error as Error).message
+            (error as Error).message
             
         }
     }
@@ -257,7 +257,7 @@ export class TutorController {
             res.status(HTTP_STATUS.OK).json(courseDetails)
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
-            error:(error as Error).message
+            (error as Error).message
             
         }
     }

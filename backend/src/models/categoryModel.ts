@@ -1,8 +1,8 @@
 import mongoose,{Schema,Document} from "mongoose";
 
 export interface ICategory extends Document{
-    name:String,
-    isListed:Boolean
+    name:string,
+    isListed:boolean
 }
 
 const CategorySchema :Schema  = new Schema<ICategory>(

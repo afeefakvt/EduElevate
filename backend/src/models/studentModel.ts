@@ -6,7 +6,7 @@ export interface IStudent extends Document{
     email:string,
     password:string,
     role:string,
-    isBlocked:Boolean,
+    isBlocked:boolean,
     createdAt:Date,
     updatedAt:Date
 

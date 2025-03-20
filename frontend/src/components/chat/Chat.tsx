@@ -22,6 +22,7 @@ import { getStudentById, getTutorMessages, uploadTutorMessageFile } from "@/api/
 import { getTutorDetails } from "@/api/adminApi";
 import { getStudentMessages, uploadStudentMessageFile } from "@/api/chatApi";
 import Notification from "./Notification";
+import VideoCall from "./VideoCall";
 
 
 
@@ -57,6 +58,21 @@ const Chat = () => {
   const [snackbar, setSnackbar] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
 
+  const [isVideoCallActive,setIsVideoCallActive] = useState(false)
+  const [peerConnection,setPeerConnection] = useState<any>(null)
+  const [localStream,setLocalStream] = useState<MediaStream | null>(null)
+  const [remoteStream,setRemoteStream] = useState<MediaStream | null>(null)
+  const [incomingCall,setIncomingCall]  = useState(false)
+  const [callOffer,setCallOffer] = useState<{
+    senderId:string;
+    offer:any
+  } | null>(null);
+  const [callAccepted,setCallAccepted] = useState(false)
+  
+  const localVideoRef = useRef<HTMLVideoElement>(null)
+  const remoteVideoRef = useRef<HTMLVideoElement>(null)
+
+
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -65,7 +81,7 @@ const Chat = () => {
   }, [messages])
 
   useEffect(() => {
-    const fetchRecipientName = async () => {      
+    const fetchRecipientName = async () => {   
       if (!recipientId) return;
       try {
         let data;
@@ -181,6 +197,8 @@ const Chat = () => {
 
   }, [senderId, recipientId]);
 
+  
+
   const handleNotificationClick = () => {
     if (notificationSenderId) {
       if (recipientRole === "tutor") {
@@ -287,6 +305,228 @@ const Chat = () => {
   };
 
 
+  const initializeLocalStream = async ()=>{
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video:true,
+        audio:true
+      });
+      setLocalStream(stream)
+      return stream
+    } catch (error) {
+      console.error("error accessing media devices:", error)
+      throw error
+      
+    }
+
+  }
+
+  const createPeerConnection = async(stream:MediaStream)=>{
+    const peerConnection = new RTCPeerConnection({
+      iceServers:[{ urls: 'stun:stun.l.google.com:19302'}]
+    });
+
+    stream.getTracks().forEach((track:MediaStreamTrack)=>{
+      peerConnection.addTrack(track,stream)
+    })
+
+    peerConnection.ontrack = (event)=>{
+      setRemoteStream(event.streams[0])
+    }
+    peerConnection.onicecandidate = (event)=>{
+      if(event.candidate){
+        socket.emit('ice_candidate',{
+          senderId:isTutor ? tutor?._id : student?._id,
+          recipientId,
+          candidate:event.candidate
+        })
+      }
+    }
+    return peerConnection
+
+  }
+
+  const startVideoCall = async()=>{
+    try {
+      const stream = await initializeLocalStream()
+      setIsVideoCallActive(true)
+
+      const peerConnection = await createPeerConnection(stream)
+      setPeerConnection(peerConnection)
+
+      const offer = await peerConnection.createOffer()
+      await peerConnection.setLocalDescription(offer)
+
+      socket.emit("video_call_offer",{
+        senderId: isTutor? tutor?._id : student?._id,
+        recipientId,
+        offer
+      })
+    } catch (error) {
+      console.error("Error satrting call", error)
+      handleCallError()
+      
+    }
+  }
+
+  const acceptCall = async()=>{
+    try {
+      const stream = await initializeLocalStream()
+      setIsVideoCallActive(true)
+      setCallAccepted(true)
+
+      const peerConnection = await createPeerConnection(stream)
+      setPeerConnection(peerConnection)
+
+      await peerConnection.setRemoteDescription(
+        new RTCSessionDescription(callOffer?.offer)
+      );
+
+      const answer = await peerConnection.createAnswer()
+      await peerConnection.setLocalDescription(answer);
+
+      socket.emit("video_call_answer",{
+        senderId: isTutor? tutor?._id : student?._id,
+        recipientId:callOffer?.senderId,
+        answer
+      });
+
+      setIncomingCall(false)
+
+    } catch (error) {
+      console.error("error accepting call:",error)
+      handleCallError()
+      
+    }
+  }
+
+  const handleCallError =()=>{
+    setIncomingCall(false)
+    setIsVideoCallActive(false)
+    if(localStream){
+      localStream.getTracks().forEach((track)=>track.stop())
+    }
+    setLocalStream(null)
+    setRemoteStream(null)
+  }
+
+  useEffect(()=>{
+    if(localVideoRef.current && localStream){
+      localVideoRef.current.srcObject = localStream
+    }
+  },[localStream,localVideoRef])
+
+  useEffect(()=>{
+    if(remoteVideoRef.current && remoteStream){
+      remoteVideoRef.current.srcObject = remoteStream
+    }
+  },[remoteStream,remoteVideoRef])
+
+  useEffect(()=>{
+    socket.on("video_call_offer",({senderId,recipientId:recieverId,offer})=>{
+      if(recieverId === isTutor ? tutor?._id : student?._id){
+        setIncomingCall(true)
+        setCallOffer({senderId,offer})
+      }
+    });
+
+    socket.on("video_call_answer", async({senderId,recipientId:recieverId,answer})=>{
+      if(recieverId === isTutor ?tutor?._id : student?._id && peerConnection){
+        try {
+          await peerConnection.setRemoteDescription(
+            new RTCSessionDescription(answer)
+          )
+        } catch (error) {
+          console.error("Cannot set remote description in the current state:", peerConnection.signalingState);
+          
+        }
+      }
+    })
+
+    socket.on("ice_candidate",async({senderId,recipientId:recieverId,candidate})=>{
+      if(recieverId === (isTutor ? tutor?._id : student?._id) && peerConnection){
+        try {
+          await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        } catch (error) {
+          console.error("Error adding ICE candidate:", error);   
+        }
+      }
+
+    })
+
+
+    socket.on("call_ended", async({senderId,recipientId:recieverId})=>{
+      if(recieverId === (isTutor ? tutor?._id : student?._id)){
+        if(peerConnection){
+          peerConnection.close()
+        }
+        if(localStream){
+          localStream.getTracks().forEach((track)=>track.stop())
+        }
+        setIncomingCall(false)
+        setIsVideoCallActive(false)
+        setLocalStream(null)
+        setRemoteStream(null)
+        setPeerConnection(null)
+        setSnackbar(true)
+        setSnackbarMessage("This video call has ended")
+      }
+    });
+
+    socket.on("call_rejected",({senderId,recipientId})=>{
+      if(recipientId === isTutor ? tutor?._id : student?._id){
+        if(localStream){
+          localStream.getTracks().forEach((track)=>track.stop())
+        }
+        setIsVideoCallActive(false)
+        setLocalStream(null)
+        setSnackbar(true)
+        setSnackbarMessage("Your call was rejected")
+      }
+    });
+
+    return()=>{
+      socket.off("video_call_offer")
+      socket.off("video_call_answer")
+      socket.off("ice_candidate")
+      socket.off("call_ended")
+      socket.off("call_rejected")
+    }
+  },[socket,isTutor? tutor?._id : student?._id,peerConnection]);
+
+  const endVideoCall = ()=>{
+    if(peerConnection){
+      peerConnection.close()
+    }
+    if(localStream){
+      localStream.getTracks().forEach((track)=>track.stop())
+    }
+    socket.emit("call_ended",{senderId:isTutor? tutor?._id : student?._id,recipientId });
+
+    setIsVideoCallActive(false)
+    setLocalStream(null)
+    setRemoteStream(null)
+    setPeerConnection(null)
+  }
+
+  const rejectCall = ()=>{
+    setIncomingCall(false)
+    if(peerConnection){
+      peerConnection.close()
+    }
+    if(localStream){
+      localStream.getTracks().forEach((track)=>track.stop())
+    }
+    socket.emit("call_rejected",{senderId: isTutor ? tutor?._id : student?._id,recipientId});
+
+    setIsVideoCallActive(false)
+    setLocalStream(null)
+    setRemoteStream(null)
+  } 
+
+
+
+
   return (
     <>
 
@@ -329,6 +569,20 @@ const Chat = () => {
           {recipientName ? recipientName[0]?.toUpperCase() : "?"}
         </Avatar>
         <Typography sx={{ ml: 2 }}>{recipientName || "Unknown"}</Typography>
+        <Box sx={{ml:"auto"}}>
+          <VideoCall
+            isVideoCallActive = {isVideoCallActive}
+            localVideoRef = {localVideoRef}
+            remoteVideoRef = {remoteVideoRef}
+            localStream = {localStream}
+            remoteStream = {remoteStream}
+            onStartCall = {startVideoCall}
+            onEndCall = {endVideoCall}
+            onAcceptCall = {acceptCall} 
+            onRejectCall = {rejectCall}
+            incomingCall = {incomingCall}
+            />
+        </Box>
 
       </Box>
       <Box

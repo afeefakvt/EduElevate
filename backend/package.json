@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec ts-node src/index.ts"
+    "start": "nodemon --exec ts-node src/index.ts",
+    "lint": "eslint .",
+    "lint:fix" : "eslint . --fix"
   },
   "keywords": [],
   "author": "",
@@ -36,6 +38,7 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.22.0",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
@@ -43,8 +46,11 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.6",
     "@types/nodemailer": "^6.4.17",
+    "eslint": "^9.22.0",
+    "globals": "^16.0.0",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.27.0"
   }
 }

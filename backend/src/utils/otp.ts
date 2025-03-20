@@ -34,7 +34,7 @@ const generateOtp= () : string => {
 
 }
 
-let otpStore: Record<string, {otp:string; expiresAt:number}> = {};
+const otpStore: Record<string, {otp:string; expiresAt:number}> = {};
 
 export const validateOtp = async(email:string,otp:string):Promise<boolean> =>{
     const storedOtp = otpStore[email]

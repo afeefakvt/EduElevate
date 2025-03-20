@@ -146,13 +146,44 @@ export const initializeSocket = (server:http.Server)=>{
         socket.emit("unread_count_update",unreadCounts)
     })
 
-    socket.on("disconnect",()=>{
+    socket.on("video_call_offer",async({senderId,recipientId,offer})=>{
+        console.log(`Received video call offer from ${senderId} to ${recipientId},${offer},"opopopopopopopopopopop");`)  
 
+        const roomId =await getOrCreateRoom(senderId,recipientId);
+        io.to(roomId.toString()).emit("video_call_offer",{
+            senderId,recipientId,offer
+        })
+         console.log(`emitted video call to reciever ${recipientId}`);
+    });
+
+    socket.on("video_call_answer",async({senderId,recipientId,answer})=>{
+        const roomId = await getOrCreateRoom(senderId,recipientId)
+        io.to(roomId.toString()).emit("video_call_answer",{
+            senderId,recipientId,answer
+        })
+    })
+    
+    socket.on("ice_candidate",async({senderId,recipientId,candidate})=>{
+        const roomId = await getOrCreateRoom(senderId,recipientId)
+        io.to(roomId.toString()).emit("ice_candidate",{
+            senderId,recipientId,candidate
+        })
     })
 
- 
+    socket.on("call_ended",async({senderId,recpientId})=>{
+        const roomId= await getOrCreateRoom(senderId,recpientId);
+        io.to(roomId.toString()).emit("call_ended",{senderId,recpientId})
+    })
+    socket.on("call_rejected",async({senderId,recipientId})=>{
+        const roomId = await getOrCreateRoom(senderId,recipientId);
+        io.to(roomId.toString()).emit("call_rejected",{senderId,recipientId})
+        console.log(`Call from ${senderId} to ${recipientId} was rejected.`);
+
+    })
+    socket.on("disconnect",()=>{
+    })
+
     })
     return io
-   
     
 }

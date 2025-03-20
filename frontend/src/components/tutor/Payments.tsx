@@ -70,14 +70,14 @@ import {
                   <TableCell>Received Date</TableCell>
                   <TableCell>Status</TableCell>
                 </TableRow>
-              </TableHead>
+              </TableHead>  
               <TableBody>
                 {currentPayments.map((payment, index) => (
                   <TableRow key={index}>
                     <TableCell>{payment.courseId?.title || "N/A"}</TableCell>
                     <TableCell>{payment.newEnrollments || 0}</TableCell>
                     <TableCell>{payment.courseId?.price || 0}</TableCell>
-                    <TableCell>{payment.settlementPrice || 0}</TableCell>
+                    <TableCell>{payment.settlementPrice.toFixed(2) || 0}</TableCell>
                     <TableCell>
                       {payment.settlementDate
                         ? new Date(payment.settlementDate).toLocaleDateString("en-GB")

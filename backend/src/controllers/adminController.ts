@@ -1,7 +1,6 @@
 import { Request,Response } from "express";
 import { IAdminService } from "../interfaces/admin/IAdminService";
 import { sendEmail } from "../utils/mail";
-import { TutorService } from "../services/tutorService";
 import mongoose from "mongoose";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
 

@@ -1,19 +1,19 @@
 import mongoose,{Schema,Document} from "mongoose";
 
 export interface ICourse extends Document{
-    title:String,
+    title:string,
     categoryId:mongoose.Types.ObjectId,
     tutorId:mongoose.Types.ObjectId | {_id:mongoose.Types.ObjectId; email:string;}
-    description:String,
+    description:string,
     price:number,
-    thumbnail:String,
-    language:String,
-    duration:String,
-    level:String,
-    status:String,
-    isApproved:Boolean,
-    isListed:Boolean,
-    isRequestedToEdit:Boolean,
+    thumbnail:string,
+    language:string,
+    duration:string,
+    level:string,
+    status:string,
+    isApproved:boolean,
+    isListed:boolean,
+    isRequestedToEdit:boolean,
     rejectReason:string,
     lectures:mongoose.Types.ObjectId[]
     createdAt:Date,
