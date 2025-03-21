@@ -172,9 +172,9 @@ export const initializeSocket = (server:http.Server)=>{
         })
     })
 
-    socket.on("call_ended",async({senderId,recpientId})=>{
-        const roomId= await getOrCreateRoom(senderId,recpientId);
-        io.to(roomId.toString()).emit("call_ended",{senderId,recpientId})
+    socket.on("call_ended",async({senderId,recipientId})=>{
+        const roomId= await getOrCreateRoom(senderId,recipientId);
+        io.to(roomId.toString()).emit("call_ended",{senderId,recipientId})
     })
     socket.on("call_rejected",async({senderId,recipientId})=>{
         const roomId = await getOrCreateRoom(senderId,recipientId);

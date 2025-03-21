@@ -57,7 +57,7 @@ const VideoCall:React.FC<VideoCallProps> = ({
         console.log(callConnected);
         console.log(remoteStream);
         
-    },[remoteStream]);
+    },[remoteStream,isCalling,callConnected]);
 
     const toggleMute =()=>{
         if(localStream){
@@ -240,12 +240,12 @@ const VideoCall:React.FC<VideoCallProps> = ({
           <IconButton
             onClick={onStartCall}
             sx={{
-              backgroundColor: "blue.500",
+              backgroundColor: "#fff",
               color: "white",
               padding: 2,
               borderRadius: "50%",
               "&:hover": {
-                backgroundColor: "blue.600",
+                backgroundColor: "#fff",
               },
             }}
           >

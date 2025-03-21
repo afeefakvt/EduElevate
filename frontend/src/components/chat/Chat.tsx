@@ -431,7 +431,7 @@ const Chat = () => {
     });
 
     socket.on("video_call_answer", async({senderId,recipientId:recieverId,answer})=>{
-      if(recieverId === isTutor ?tutor?._id : student?._id && peerConnections){
+      if(recieverId === (isTutor ? tutor?._id : student?._id )&& peerConnections){
         try {
           await peerConnections.setRemoteDescription(
             new RTCSessionDescription(answer)
@@ -447,6 +447,8 @@ const Chat = () => {
       if(recieverId === (isTutor ? tutor?._id : student?._id) && peerConnections){
         try {
           await peerConnections.addIceCandidate(new RTCIceCandidate(candidate));
+          console.log("ICE candidate added successfully.");
+
         } catch (error) {
           console.error("Error adding ICE candidate:", error);   
         }
@@ -474,7 +476,7 @@ const Chat = () => {
     });
 
     socket.on("call_rejected",({senderId,recipientId})=>{
-      if(recipientId === isTutor ? tutor?._id : student?._id){
+      if(recipientId === isTutor ? student?._id : tutor?._id){
         if(localStream){
           localStream.getTracks().forEach((track)=>track.stop())
         }
@@ -486,11 +488,11 @@ const Chat = () => {
     });
 
     return()=>{
-      socket.off("video_call_offer")
-      socket.off("video_call_answer")
-      socket.off("ice_candidate")
-      socket.off("call_ended")
-      socket.off("call_rejected")
+      socket.off("video_call_offer");
+      socket.off("video_call_answer");
+      socket.off("ice_candidate");
+      socket.off("call_ended");
+      socket.off("call_rejected");
     }
   },[socket,isTutor? tutor?._id : student?._id,peerConnections]);
 
