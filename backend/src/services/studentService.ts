@@ -40,9 +40,6 @@ export class StudentService implements IStudentService  {
     }
 
 
-
-
-
     async createStudent(studentData:IStudent):Promise<IStudent>{
         const existingStudent = await this.studentRepository.findStudentByEmail(studentData.email);
         if(existingStudent){
@@ -124,9 +121,6 @@ export class StudentService implements IStudentService  {
         
     }
     async changePassword(studentId: string, currentPassword: string, newPassword: string): Promise<IStudent | null> {
-        console.log("chngeeeee");
-        
-
         const student  = await this.studentRepository.findStudentById(studentId)
         if(!student){
             throw new Error("Student not found")

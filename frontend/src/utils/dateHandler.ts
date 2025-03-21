@@ -6,7 +6,7 @@ export const fillMissingDates = (data:SalesEntry[],timeRange:"daily" | "monthly"
     const currentDate = new Date(startDate)
     let formattedDate = "";
     
-    while(currentDate<= endDate){
+    while(currentDate <= endDate){
         if(timeRange=== "daily"){
             formattedDate = currentDate.toISOString().split('T')[0];
             currentDate.setDate(currentDate.getDate()+1)

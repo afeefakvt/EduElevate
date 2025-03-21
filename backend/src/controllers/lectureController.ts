@@ -3,6 +3,7 @@ import { ILectureService } from "../interfaces/lecture/ILectureService";
 import mongoose from "mongoose";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
 import { cloudinary } from "../config/cloudinary";
+import { MESSAGES } from "../constants/message";
 
 interface LectureData {
     title: string,
@@ -24,19 +25,19 @@ export class LectureController {
 
 
             if (!req.files || !Array.isArray(req.files)) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "video files are required for all lectures" });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.FILE_REQUIRED });
                 return;
             }
             const lectureDatas = JSON.parse(req.body.lectures) as LectureData[];
             // console.log(lectureDatas,"khv hn")
 
             if (!lectureDatas.length || !mongoose.Types.ObjectId.isValid(lectureDatas[0].courseId)) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Invalid courseId format" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.INVALID_COURSE_ID })
                 return;
             }
             const videos = req.files as Express.Multer.File[];
             if (videos.length !== lectureDatas.length) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Each lecture must have corresponding video file " });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.VIDEO_FILE_MISMATCH });
                 return;
             }
             const addedLectures = []
@@ -63,7 +64,7 @@ export class LectureController {
                 addedLectures.push(newLecture)
 
             }
-            res.status(HTTP_STATUS.CREATED).json({ message: "lectures added successfully", lectures: addedLectures })
+            res.status(HTTP_STATUS.CREATED).json({ message: MESSAGES.LECTURES_ADDED_SUCCESS, lectures: addedLectures })
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: (error as Error).message })
             console.error("error adding lectures", error);
@@ -77,7 +78,7 @@ export class LectureController {
             const lectures = await this.lectureService.getLecturesByCourse(courseId);
 
             if (!lectures) {
-                throw new Error('lecture cannot found');
+                throw new Error(MESSAGES.LECTURE_NOT_FOUND);
             }
             res.status(HTTP_STATUS.OK).json({ lectures })
 
@@ -115,10 +116,10 @@ export class LectureController {
                     lectureId, updatedData
                 )
                 if (!updatedLecture) {
-                    res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Lecture not found" });
+                    res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.LECTURE_NOT_FOUND });
                     return;
                 }
-                res.status(HTTP_STATUS.OK).json({success:true,message:"lecture updated successfully",lecture:updatedLecture})
+                res.status(HTTP_STATUS.OK).json({success:true,message:MESSAGES.LECTURE_UPDATED_SUCCESS,lecture:updatedLecture})
             } catch (error) {
                 res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: (error as Error).message })
             }
@@ -130,7 +131,7 @@ export class LectureController {
             const {isListed} = req.body;
             const updatedLecture = await this.lectureService.listUnlistLecture(lectureId,{isListed});
             if(!updatedLecture){
-                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Lecture not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.LECTURE_NOT_FOUND})
                 return;
             }
             res.status(HTTP_STATUS.OK).json({success:true,message:`Lecture ${isListed ? "listed" : "unlisted"} successfully`,lecture:updatedLecture})

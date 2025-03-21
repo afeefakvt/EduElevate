@@ -1,6 +1,7 @@
 import { Request,Response } from "express";
 import { ICourseService } from "../interfaces/course/ICourseService";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
+import { MESSAGES } from "../constants/message";
 
 
 
@@ -29,7 +30,7 @@ export class CourseController{
             const newCourse = await this.courseService.addCourse(courseData,req.file)
             // console.log(" Course Saved:", newCourse);
 
-            res.status(201).json({newCourse,message:" course added successfully"})
+            res.status(201).json({newCourse,message:MESSAGES.COURSE_ADD_SUCCESS})
         } catch (error) {
             res.status(HTTP_STATUS.BAD_REQUEST).json({ error: (error as Error).message });
         }
@@ -46,7 +47,7 @@ export class CourseController{
             res.status(HTTP_STATUS.OK).json({success:true,courses,total})
         } catch (error) {
             console.error('error')
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"internal server error",error:error instanceof Error ? error.message : error,})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:MESSAGES.INTERNAL_SERVER_ERROR,error:error instanceof Error ? error.message : error,})
 
             
         }
@@ -58,7 +59,7 @@ export class CourseController{
             if(course){
                 res.status(HTTP_STATUS.OK).json({success:true,course:course})
             }else{
-                res.status(HTTP_STATUS.NOT_FOUND).json({sucess:false,message:"no course found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({sucess:false,message:MESSAGES.COURSE_NOT_FOUND})
 
             }
         } catch (error:any) {
@@ -77,7 +78,7 @@ export class CourseController{
             const deletedCourse = await this.courseService.listUnlistCourse(courseId,{isListed})
 
             if (!deletedCourse) {
-                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Course not found" });
+                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.COURSE_NOT_FOUND });
                  return;
               }
 
@@ -85,7 +86,7 @@ export class CourseController{
           
         } catch (error) {
             console.error("Error deleting course:", error);
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
         }
     }
     
@@ -102,7 +103,7 @@ export class CourseController{
             res.status(HTTP_STATUS.OK).json({message:"Edit course details submitted successfully for admin review",course:updatedCourse})
         } catch (error) {
             console.error("Error deleting course:", error);
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
             
         }
     }
@@ -114,7 +115,7 @@ export class CourseController{
             const courses = await this.courseService.getBestSellingCourses()
             res.status(HTTP_STATUS.OK).json({courses:courses})
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Failed to fetch bestselling courses" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.FAILED_FETCH_BESTSELLING });
             
         }
 
@@ -127,7 +128,7 @@ export class CourseController{
             res.status(HTTP_STATUS.OK).json({result})
 
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Failed to fetch bestselling courses" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.FAILED_FETCH_BESTSELLING });
 
             
         }

@@ -1,6 +1,7 @@
 import { Request,Response } from "express";
 import { ICategoryService } from "../interfaces/category/ICategoryService";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
+import { MESSAGES } from "../constants/message";
 
 
 export class CategoryController{
@@ -15,11 +16,11 @@ export class CategoryController{
             if(categories.length){
                 res.status(HTTP_STATUS.OK).json({success:true,categories:categories})
             }else{
-                res.status(HTTP_STATUS.NOT_FOUND).json({success:false,message:"no categories found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({success:false,message:MESSAGES.NO_CATEGORIES_FOUND})
             }
             
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal Server Error", error: error instanceof Error ? error.message : error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR, error: error instanceof Error ? error.message : error });
 
             
         }
@@ -33,13 +34,13 @@ export class CategoryController{
             const {name} = req.body
 
             if(!name || typeof name !=='string'){
-                res.status(HTTP_STATUS.BAD_REQUEST).json({success:false,message:"Valid Category name is required"})
+                res.status(HTTP_STATUS.BAD_REQUEST).json({success:false,message:MESSAGES.VALID_CATEGORY_REQUIRED})
                 return;
             }
             const result = await this.categoryService.addCategory(name);
     
             if(result.success){
-                res.status(HTTP_STATUS.OK).json({success:true,message:"category added successfully",category:result.category})
+                res.status(HTTP_STATUS.OK).json({success:true,message:MESSAGES.CATEGORY_ADDED_SUCCESS,category:result.category})
             }else{
                 res.status(HTTP_STATUS.BAD_REQUEST).json({ success: false, message: result.message });
             }
@@ -47,7 +48,7 @@ export class CategoryController{
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
-                message: "Internal Server Error",
+                message: MESSAGES.INTERNAL_SERVER_ERROR,
                 error: error instanceof Error ? error.message : error,
             });
             
@@ -61,7 +62,7 @@ export class CategoryController{
             const category = await this.categoryService.listUnlistCategory(id,{isListed});
 
             if(!category){
-                res.status(HTTP_STATUS.NOT_FOUND).json({message:"category not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.CATEGORY_NOT_FOUND})
                 return;
             }
 
@@ -69,7 +70,7 @@ export class CategoryController{
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
-                message: "Internal server error",
+                message: MESSAGES.INTERNAL_SERVER_ERROR,
                 error: error instanceof Error ? error.message : error,
               });
             
@@ -82,23 +83,23 @@ export class CategoryController{
             const {name} = req.body;
             const updatedCategory = await this.categoryService.editCategory(id,name)
 
-            res.status(HTTP_STATUS.OK).json({message:"Category updated sccessfully",updatedCategory})            
+            res.status(HTTP_STATUS.OK).json({message:MESSAGES.CATEGORY_UPDATED_SUCCESS,updatedCategory})            
         } catch (error) {
 
-            if (error instanceof Error && error.message === "category name already exists") {
+            if (error instanceof Error && error.message === MESSAGES.CATEGORY_NAME_EXISTS) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({
                     success: false,
                     message: "Category name already exists",
                 });
-            } else if (error instanceof Error && error.message === "Category not found") {
+            } else if (error instanceof Error && error.message === MESSAGES.CATEGORY_NOT_FOUND) {
                 res.status(HTTP_STATUS.NOT_FOUND).json({
                     success: false,
-                    message: "Category not found",
+                    message: MESSAGES.CATEGORY_NOT_FOUND,
                 });
             } else{
                 res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                     success: false,
-                    message: "Internal server error",
+                    message: MESSAGES.INTERNAL_SERVER_ERROR,
                     error: error instanceof Error ? error.message : error,
                   });
 

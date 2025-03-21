@@ -24,8 +24,6 @@ export class CourseService implements ICourseService{
                 console.log("No file received for upload");
             }
             const newCourse = await this.courseRepository.addCourse(courseData);
-
-            // console.log(newCourse,"newwwwwwwww");
             return newCourse
             
         } catch (error) {

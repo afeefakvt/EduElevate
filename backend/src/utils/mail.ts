@@ -4,7 +4,6 @@ export const sendEmail= async(email: string,subject:string,text:string):Promise<
     try {
       
         const transporter = nodemailer.createTransport({
-    
             service:'gmail',
             port:587,
             secure:false,
@@ -12,8 +11,7 @@ export const sendEmail= async(email: string,subject:string,text:string):Promise<
                 user:process.env.GMAIL_USER,
                 pass:process.env.GMAIL_PASS
             }
-        
-        })
+        });
   
         const mailOptions = {
             from:process.env.GMAIL_USER,

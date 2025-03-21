@@ -1,6 +1,7 @@
 import { Request,Response } from "express";
 import { IPaymentService } from "../interfaces/payment/IPaymentService";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
+import { MESSAGES } from "../constants/message";
 
 
 export class PaymentController{
@@ -13,7 +14,7 @@ export class PaymentController{
             const payments = await this.paymentService.getPendingPayments();
             res.status(HTTP_STATUS.OK).json(payments)
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"Internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:MESSAGES.INTERNAL_SERVER_ERROR})
             
         }
     }
@@ -23,12 +24,12 @@ export class PaymentController{
            const {paymentId} = req.params
            const payment = await this.paymentService.settlePayment(paymentId)
            if(!payment){
-            res.status(HTTP_STATUS.NOT_FOUND).json({success:false,message:"Payment not found"})
+            res.status(HTTP_STATUS.NOT_FOUND).json({success:false,message:MESSAGES.PAYMENT_NOT_FOUND})
             return;
            } 
            res.status(HTTP_STATUS.OK).json(payment)
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"Internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})
             
         }
     }
@@ -37,7 +38,7 @@ export class PaymentController{
             const payments = await this.paymentService.getPaymentHistory()            
             res.status(HTTP_STATUS.OK).json(payments)
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"Internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:MESSAGES.INTERNAL_SERVER_ERROR})
             
         }
     }
@@ -51,7 +52,7 @@ export class PaymentController{
             } 
             res.status(HTTP_STATUS.OK).json(tutorsAmount)
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"Internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:MESSAGES.INTERNAL_SERVER_ERROR})
 
             
         }
@@ -68,7 +69,7 @@ export class PaymentController{
             
             res.status(HTTP_STATUS.OK).json(total) 
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:"Internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({success:false,message:MESSAGES.INTERNAL_SERVER_ERROR})
             
         }
     }

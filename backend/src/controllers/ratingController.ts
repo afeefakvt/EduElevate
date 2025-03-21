@@ -3,6 +3,7 @@ import { Request,Response } from "express";
 import { AuthenticatedRequest } from "../types/types";
 import mongoose from "mongoose";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
+import { MESSAGES } from "../constants/message";
 
 
 
@@ -19,7 +20,7 @@ export class RatingController{
             const {student} = req as AuthenticatedRequest; // Extract student from request
 
             if (!student || !student.id) {
-                res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Unauthorized: Student not found" });
+                res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: MESSAGES.STUDENT_NOT_FOUND });
                 return;
             }
 
@@ -29,7 +30,7 @@ export class RatingController{
             const newRating = await this.ratingService.addRating(ratingData)
 
             if(!newRating){
-                res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Failed to add Ratings to the course"})
+                res.status(HTTP_STATUS.BAD_REQUEST).json({message:MESSAGES.RATING_ADD_FAILED})
                 return;
             
             }
@@ -38,7 +39,7 @@ export class RatingController{
             
         } catch (error) {
             console.log("error adding ratings",error);
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error adding rating" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message:MESSAGES.RATING_ADD_FAILED });
             return;
         }
     }
@@ -50,7 +51,7 @@ export class RatingController{
 
         } catch (error) {
             console.error(error);
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error fetching ratings" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.RATING_FETCH_ERROR });
             
         }
     }
@@ -60,12 +61,12 @@ export class RatingController{
             
             const course = await this.ratingService.getMostRatedCourse()
             if(!course){
-                res.status(HTTP_STATUS.NOT_FOUND).json({message:"No course found"});
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.COURSE_NOT_FOUND});
                 return;
             }
             res.status(HTTP_STATUS.OK).json(course)
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"Internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})
             
         }
     }

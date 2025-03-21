@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { storeOtp, sendOtptoEmail } from "../utils/otp";
-import { generateToken, verifyPasswordResetToken, verifyRefreshToken ,generateRefreshToken} from "../utils/jwt";
+import { generateToken, verifyPasswordResetToken, verifyRefreshToken } from "../utils/jwt";
 import { IStudentService } from "../interfaces/student/IStudentService";
 import { OAuth2Client } from "google-auth-library";
 import { Student } from "../models/studentModel";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import Stripe from "stripe";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
+import { MESSAGES } from "../constants/message";
 
 
 
@@ -30,7 +31,7 @@ export class StudentController {
             const { name, email, password, confirmPassword } = req.body;
 
             if (password !== confirmPassword) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "passwords do not match" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.PASSWORD_MISMATCH })
                 return;
             }
 
@@ -41,9 +42,9 @@ export class StudentController {
 
             const student = await this.studentService.createStudent({ name, email, password } as any)
 
-            res.status(HTTP_STATUS.CREATED).json({ message: 'student created successfully, otp is send to the email address' })
+            res.status(HTTP_STATUS.CREATED).json({ message: MESSAGES.STUDENT_CREATED })
         } catch (error: any) {
-            const message = error.message || 'Internal server error';
+            const message = error.message || MESSAGES.INTERNAL_SERVER_ERROR;
             res.status(HTTP_STATUS.BAD_REQUEST).json({ message });
 
         }
@@ -60,14 +61,14 @@ export class StudentController {
                 if (student) {
                     await student.save()
                 }
-                res.status(HTTP_STATUS.OK).json({ student, message: 'otp verified successfully' })
+                res.status(HTTP_STATUS.OK).json({ student, message: MESSAGES.OTP_VERIFIED })
                 return;
             }
-            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: 'invalid otp' })
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.INVALID_OTP })
             return;
 
         } catch (error: any) {
-            const message = error.message || 'Internal server error';
+            const message = error.message || MESSAGES.INTERNAL_SERVER_ERROR;
             res.status(HTTP_STATUS.BAD_REQUEST).json({ message });
             return;
         }
@@ -84,7 +85,7 @@ export class StudentController {
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
-                message: 'Failed to resend OTP.',
+                message: MESSAGES.OTP_RESEND_FAIL,
                 error: error instanceof Error ? error.message : error,
             });
 
@@ -96,7 +97,7 @@ export class StudentController {
             const { token, refreshToken,student} = await this.studentService.loginStudent(email, password)
 
             if (!token) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: 'student not found' })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.STUDENT_NOT_FOUND })
                 return;
             }
             // console.log("genretaeeee");
@@ -109,11 +110,11 @@ export class StudentController {
 
             })
 
-            res.status(HTTP_STATUS.OK).json({ message: 'Login successful', token, student })
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGIN_SUCCESS, token, student })
             return;
 
         } catch (error: any) {
-            const message = error.message || 'Internal server error';
+            const message = error.message || MESSAGES.INTERNAL_SERVER_ERROR;
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message });
             return;
 
@@ -123,8 +124,6 @@ export class StudentController {
 
     async refreshAccessToken (req:Request,res:Response):Promise<void>{
         try {
-
-            console.log("refressshhhhhhhhhh");
             
             const refreshToken = req.cookies.refreshToken;
             console.log(refreshToken,"refreshhhh");
@@ -132,7 +131,7 @@ export class StudentController {
                 console.error("No refresh token found,Logging out.")
         
             res.clearCookie("refreshToken");
-            res.status(HTTP_STATUS.UNAUTHORIZED).json({message:"No refresh token found"});
+            res.status(HTTP_STATUS.UNAUTHORIZED).json({message:MESSAGES.NO_REFRESH_TOKEN});
             return;
             }
 
@@ -144,7 +143,7 @@ export class StudentController {
 
             if(!student){
                 res.clearCookie('refreshToken');
-                res.status(HTTP_STATUS.NOT_FOUND).json({message:"student not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.STUDENT_NOT_FOUND})
                 return;
             }
 
@@ -162,7 +161,7 @@ export class StudentController {
         } catch (error) {
             console.log("invalid or expired refresh token:",error);
             res.clearCookie("refreshToken");
-            res.status(HTTP_STATUS.FORBIDDEN).json({message:"Invalid or expired refresh token"});
+            res.status(HTTP_STATUS.FORBIDDEN).json({message:MESSAGES.INVALID_REFRESH_TOKEN});
             
         }
     }
@@ -180,7 +179,7 @@ export class StudentController {
                 httpOnly:true,
                 secure:process.env.NODE_ENV ==="production"
             })
-            res.status(HTTP_STATUS.OK).json({ message: "Logout Successful" });
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGOUT_SUCCESS });
 
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in logging out", error });
@@ -196,7 +195,7 @@ export class StudentController {
             
             const { token, refreshToken,student } = await this.studentService.loginAdmin(email, password)
             if (!token) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Admin not found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.ADMIN_NOT_FOUND })
                 return;
             }
 
@@ -208,10 +207,10 @@ export class StudentController {
 
             })  
           
-            res.status(HTTP_STATUS.OK).json({ message: "Login successful", token, student })
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGIN_SUCCESS, token, student })
             return;
         } catch (error: any) {
-            const message = error.message || 'Internal server error';
+            const message = error.message || MESSAGES.INTERNAL_SERVER_ERROR;
             res.status(HTTP_STATUS.BAD_REQUEST).json({ message });
 
         }
@@ -224,7 +223,7 @@ export class StudentController {
                 httpOnly:true,
                 secure:process.env.NODE_ENV ==="production"
             })
-            res.status(HTTP_STATUS.OK).json({ message: "Logout Successful" });  
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGOUT_SUCCESS });  
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in logging out", error });
             
@@ -235,7 +234,7 @@ export class StudentController {
         try {
             const { idToken } = req.body
             if (!idToken) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "google id token is required" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: MESSAGES.GOOGLE_TOKEN_REQUIRED })
                 return;
             }
 
@@ -245,20 +244,20 @@ export class StudentController {
             });
             const payload = ticket.getPayload()
             if (!payload) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: 'invalid google id token' });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: MESSAGES.INVALID_GOOGLE_TOKEN });
                 return;
             }
 
             const { email, name } = payload
             if (!email) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: 'google account must have an email' });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: MESSAGES.EMAIL_REQUIRED });
                 return;
             }
 
             let student = await this.studentService.findStudentByEmail(email)
 
             if(student && student.isBlocked===true){
-                res.status(HTTP_STATUS.FORBIDDEN).json({error:"You are blocked currently,Can't login"})
+                res.status(HTTP_STATUS.FORBIDDEN).json({error:MESSAGES.ACCOUNT_BLOCKED})
                 return;
             }
             if (!student) {
@@ -273,7 +272,7 @@ export class StudentController {
 
             const token = generateToken({ id: student._id, email: student.email, role: student.role })
     
-            res.status(HTTP_STATUS.OK).json({ message: "google sign in success", token, student })
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.GOOGLE_SIGNIN_SUCCESS, token, student })
 
         } catch (error) {
             console.error("Error in Google Sign-In:", error);
@@ -288,12 +287,12 @@ export class StudentController {
 
             const resetToken = await this.studentService.handleForgotPassword(email)
             if (!resetToken) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "no student found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.STUDENT_NOT_FOUND })
                 return;
             }
-            res.status(HTTP_STATUS.OK).json({ message: "Password reset link send to registered email" })
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.PASSWORD_RESET_LINK_SENT })
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in sending link", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.PASSWORD_RESET_ERROR, error });
         }
     }
     async resetPassword(req: Request, res: Response): Promise<void> {
@@ -308,14 +307,14 @@ export class StudentController {
                 return;
             }
             if (newPassword !== confirmPassword) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "Password does not match" });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: MESSAGES.PASSWORD_MISMATCH });
                 return;
             }
 
             const student = await this.studentService.updatePassword(decoded.studentId, newPassword);
 
             if (!student) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Student not found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.STUDENT_NOT_FOUND })
                 return;
             }
             res.status(HTTP_STATUS.OK).json({ message: "Passoword reset succcessful" })
@@ -329,7 +328,6 @@ export class StudentController {
     async stripePayment (req:Request,res:Response):Promise<void>{
         try {
 
-            console.log("stripeeeeeeeeeee")
             const {courseId} = req.params;
             const studentId = (req as any).student?._id.toString();
             const title = req.body.title
@@ -344,7 +342,7 @@ export class StudentController {
             }
             const course = await this.studentService.getCourseById(courseId)
             if(!course){
-                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Course not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.COURSE_NOT_FOUND})
                 return;
             }
             const session = await stripe.checkout.sessions.create({
@@ -389,14 +387,14 @@ export class StudentController {
             
             const result = await this.studentService.editProfile(studentId,{name})
             if (!result) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Student not found." });
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.STUDENT_NOT_FOUND });
                 return;
               }
             console.log(result)
-            res.status(HTTP_STATUS.CREATED).json({message:"editted profile successfully",result})
+            res.status(HTTP_STATUS.CREATED).json({message:MESSAGES.EDIT_PROFILE_SUCCESS,result})
         } catch (error) {
             console.error("error editing profile",error)
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})
             
         }
     }
@@ -421,7 +419,7 @@ export class StudentController {
             res.status(HTTP_STATUS.OK).json(student)
 
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})
             
         }
     }

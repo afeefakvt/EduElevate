@@ -476,7 +476,7 @@ const Chat = () => {
     });
 
     socket.on("call_rejected",({senderId,recipientId})=>{
-      if(recipientId === isTutor ? student?._id : tutor?._id){
+      if(recipientId === isTutor ? tutor ?._id : student?._id){
         if(localStream){
           localStream.getTracks().forEach((track)=>track.stop())
         }

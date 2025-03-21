@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { AuthenticatedRequest } from "../types/types";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
 import { RequestWithUser } from "../middlewares/authToken";
+import { MESSAGES } from "../constants/message";
 
 
 export class EnrollmentController {
@@ -33,7 +34,7 @@ export class EnrollmentController {
             res.status(HTTP_STATUS.OK).json(enrolledCourses);
         } catch (error) {
             console.log("no course")
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "An unexpected error occured.", error: (error as Error).message, });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message:  MESSAGES.INTERNAL_SERVER_ERROR, error: (error as Error).message, });
         }
     }
 
@@ -60,14 +61,12 @@ export class EnrollmentController {
             // console.log("count");
             
             const { courseId } = req.params;
-            const count = await this.enrollmentService.getEnrolledCountPerCourse(courseId)
-            // console.log(count,"ccooooooooooooo");
-            
+            const count = await this.enrollmentService.getEnrolledCountPerCourse(courseId)            
             res.status(HTTP_STATUS.OK).json({ count })
 
         } catch (error) {
             console.error("Error fetching enrollment count:", error);
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: MESSAGES.INTERNAL_SERVER_ERROR });
 
         }
     }
@@ -90,7 +89,7 @@ export class EnrollmentController {
         
         } catch (error) {
             console.error("Error fetching students:", error);
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: MESSAGES.INTERNAL_SERVER_ERROR });
         }
 
     }
@@ -100,7 +99,7 @@ export class EnrollmentController {
             const courses = await this.enrollmentService.getFeaturedCourse()
             res.status(HTTP_STATUS.OK).json({courses:courses})
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Failed to fetch bestselling courses" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.FAILED_FETCH_BESTSELLING });
             
         }
 
@@ -114,7 +113,7 @@ export class EnrollmentController {
             
             res.status(HTTP_STATUS.OK).json(reportData)
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: MESSAGES.INTERNAL_SERVER_ERROR });
             
         }
     }
@@ -128,7 +127,7 @@ export class EnrollmentController {
             }            
             res.status(HTTP_STATUS.OK).json(total)
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });            
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: MESSAGES.INTERNAL_SERVER_ERROR });            
         }
     }
 

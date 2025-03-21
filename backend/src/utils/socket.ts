@@ -147,7 +147,7 @@ export const initializeSocket = (server:http.Server)=>{
     })
 
     socket.on("video_call_offer",async({senderId,recipientId,offer})=>{
-        console.log(`Received video call offer from ${senderId} to ${recipientId},${offer},"opopopopopopopopopopop");`)  
+        console.log(`Received video call offer from ${senderId} to ${recipientId},${offer});`)  
 
         const roomId =await getOrCreateRoom(senderId,recipientId);
         io.to(roomId.toString()).emit("video_call_offer",{

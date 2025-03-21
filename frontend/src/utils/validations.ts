@@ -164,15 +164,18 @@ export const validateResetPasswordForm = ( password: string, confirmPassword: st
     }
 
     if (!formData.thumbnail) {
-      errors.thumbnail = ERROR_MESSAGES.REQUIRED.THUMBNAIL
-    } else {
+      errors.thumbnail = ERROR_MESSAGES.REQUIRED.THUMBNAIL;
+    } else if (typeof formData.thumbnail === 'string') {
+      // If thumbnail is a URL, no need to validate type or size
+    } else if (formData.thumbnail instanceof File) {
       const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
       if (!allowedTypes.includes(formData.thumbnail.type)) {
-        errors.thumbnail = ERROR_MESSAGES.INVALID.THUMBNAIL_FORMAT
+        errors.thumbnail = ERROR_MESSAGES.INVALID.THUMBNAIL_FORMAT;
       }
       if (formData.thumbnail.size > 5 * 1024 * 1024) {
-        errors.thumbnail = ERROR_MESSAGES.INVALID.THUMBNAIL_SIZE
+        errors.thumbnail = ERROR_MESSAGES.INVALID.THUMBNAIL_SIZE;
       }
+    
     }
 
     return errors;

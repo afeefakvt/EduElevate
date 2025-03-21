@@ -53,9 +53,9 @@ const VideoCall:React.FC<VideoCallProps> = ({
             setIsCalling(false)
             setCallConnected(true)
         }
-        console.log(isCalling);
-        console.log(callConnected);
-        console.log(remoteStream);
+        // console.log(isCalling);
+        // console.log(callConnected);
+        // console.log(remoteStream);
         
     },[remoteStream,isCalling,callConnected]);
 
@@ -78,7 +78,6 @@ const VideoCall:React.FC<VideoCallProps> = ({
             }
         }
     }
-
 
     const calling = ()=>(
         <Box

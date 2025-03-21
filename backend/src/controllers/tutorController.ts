@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
 import { ITutorService } from "../interfaces/tutor/ITutorService";
 import { sendOtptoEmail, storeOtp } from "../utils/otp";
-import { sendEmail } from "../utils/mail"
 import { generateToken } from "../utils/jwt";
 import { verifyPasswordResetToken } from "../utils/jwt";
 import { AuthenticatedRequest } from "../types/types";
-import mongoose from "mongoose";
-import { CourseService } from "../services/courseService";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
 import { verifyRefreshToken } from "../utils/jwt";
 import Tutor from "../models/tutorModel";
 import { RequestWithUser } from "../middlewares/authToken";
+import { MESSAGES } from "../constants/message";
+import messageRoutes from "../routes/messageRoutes";
 
 
 export class TutorController {
@@ -23,7 +22,7 @@ export class TutorController {
         try {
             const { name, email, password,confirmPassword, title, bio } = req.body
             if (password !== confirmPassword) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "passwords do not match" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.PASSWORD_MISMATCH })
                 return;
             }
 
@@ -54,14 +53,14 @@ export class TutorController {
                     await tutor.save()
                 }
 
-                res.status(HTTP_STATUS.OK).json({ tutor, message: 'otp verified successfully' })
+                res.status(HTTP_STATUS.OK).json({ tutor, message: MESSAGES.OTP_VERIFIED })
                 return;
             }
-            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: 'invalid otp' })
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.INVALID_OTP })
             return;
 
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: 'internal server error' })
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR })
         }
     }
 
@@ -76,7 +75,7 @@ export class TutorController {
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
-                message: 'Failed to resend OTP.',
+                message: MESSAGES.OTP_RESEND_FAIL,
                 error: error instanceof Error ? error.message : error,
             });
 
@@ -89,7 +88,7 @@ export class TutorController {
             const { email, password } = req.body
             const { token, refreshToken,tutor } = await this.tutorService.loginTutor(email, password)
             if (!token) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "tutor not found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.TUTOR_NOT_FOUND })
                 return;
             }
 
@@ -102,7 +101,7 @@ export class TutorController {
 
             })
            
-            res.status(HTTP_STATUS.OK).json({ message: 'Login successful', token, tutor })
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGIN_SUCCESS, token, tutor })
             return;
 
         } catch (error: any) {  
@@ -122,7 +121,7 @@ export class TutorController {
                     console.error("No refresh token found,Logging out.")
             
                 res.clearCookie("tutorRefreshToken");
-                res.status(HTTP_STATUS.UNAUTHORIZED).json({message:"No refresh token found"});
+                res.status(HTTP_STATUS.UNAUTHORIZED).json({message:MESSAGES.NO_REFRESH_TOKEN});
                 return;
                 }
     
@@ -134,7 +133,7 @@ export class TutorController {
     
                 if(!tutor){
                     res.clearCookie('tutorRefreshToken');
-                    res.status(HTTP_STATUS.NOT_FOUND).json({message:"tutor not found"})
+                    res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.TUTOR_NOT_FOUND})
                     return;
                 }
     
@@ -152,7 +151,7 @@ export class TutorController {
             } catch (error) {
                 console.log("invalid or expired refresh token:",error);
                 res.clearCookie("refreshToken");
-                res.status(HTTP_STATUS.FORBIDDEN).json({message:"Invalid or expired refresh token"});
+                res.status(HTTP_STATUS.FORBIDDEN).json({message:MESSAGES.INVALID_REFRESH_TOKEN});
                 
             }
         }
@@ -166,7 +165,7 @@ export class TutorController {
                 httpOnly:true,
                 secure:process.env.NODE_ENV ==="development"
             })
-            res.status(HTTP_STATUS.OK).json({ message: "Logout Successful" });
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGOUT_SUCCESS });
 
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in logging out", error });
@@ -181,12 +180,12 @@ export class TutorController {
 
             const resetToken = await this.tutorService.handleForgotPassword(email)
             if (!resetToken) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "no tutor found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.TUTOR_NOT_FOUND })
                 return;
             }
-            res.status(HTTP_STATUS.OK).json({ message: "Password reset link send to registered email" })
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.PASSWORD_RESET_LINK_SENT })
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in sending link", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.PASSWORD_RESET_ERROR, error });
         }
     }
     async resetPassword(req: Request, res: Response): Promise<void> {
@@ -201,14 +200,14 @@ export class TutorController {
                 return;
             }
             if (newPassword !== confirmPassword) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "Password does not match" });
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ error: MESSAGES.PASSWORD_MISMATCH });
                 return;
             }
 
             const student = await this.tutorService.updatePassword(decoded.studentId, newPassword);
 
             if (!student) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Student not found" })
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.STUDENT_NOT_FOUND })
                 return;
             }
             res.status(HTTP_STATUS.OK).json({ message: "Passoword reset succcessful" })
@@ -240,7 +239,7 @@ export class TutorController {
             res.status(HTTP_STATUS.OK).json({courses,total})
             
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR});
             (error as Error).message
             
         }
@@ -256,7 +255,7 @@ export class TutorController {
             
             res.status(HTTP_STATUS.OK).json(courseDetails)
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"An unexpected error occured"});
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR});
             (error as Error).message
             
         }
@@ -269,7 +268,7 @@ export class TutorController {
             // console.log(approvedCount,"countt");
             res.status(HTTP_STATUS.OK).json(approvedCount) 
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})    
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})    
         }
     }
     async pendingCount(req:Request,res:Response):Promise<void>{
@@ -279,7 +278,7 @@ export class TutorController {
             // console.log(approvedCount,"countt");
             res.status(HTTP_STATUS.OK).json(pendingCount) 
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})    
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})    
         }
     }
 
@@ -291,14 +290,14 @@ export class TutorController {
             const result = await this.tutorService.editTutorProfile(tutorId,{name,title,bio})
             
             if (!result) {
-                res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Tutor not found." });
+                res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.TUTOR_NOT_FOUND });
                 return;
               }
-              res.status(HTTP_STATUS.CREATED).json({message:"editted profile successfully",result})
+              res.status(HTTP_STATUS.CREATED).json({message:MESSAGES.EDIT_PROFILE_SUCCESS,result})
             
         } catch (error) {
             console.error("error editing profile",error)
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"internal server error"})
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})
             
             
         }

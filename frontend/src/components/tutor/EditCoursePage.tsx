@@ -61,14 +61,14 @@ const EditCoursePage = () => {
     const fetchData = async () => {
       try {
         const categoryData = await getCategories();
-        console.log("Fetched categories:", categoryData); // Debugging line
+        console.log("Fetched categories:", categoryData);
         const filteredCategories = categoryData.filter((category:Category) => category.isListed === true);
         setCategories(filteredCategories);
 
         if(courseId){
             const courseDatas = await getCourseDetails(courseId)
             const courseData = courseDatas.course
-            console.log("Fetched course:", courseData); // Debugging line
+            console.log("Fetched course:", courseData);
 
             setFormData({
                 title: courseData.title,
@@ -108,7 +108,7 @@ const EditCoursePage = () => {
       ...prev,
       [name]: value
    }));
-   // Clear errors when user updates the field
+
    setFormErrors((prevErrors) => ({
       ...prevErrors,
       [name]: ""
@@ -130,8 +130,8 @@ const EditCoursePage = () => {
       setFormData((prev) => ({ ...prev, thumbnail: file }));
       setImagePreview(URL.createObjectURL(file));  // Set new image preview
 
-      }
-    };
+    }
+  };
 
 
   
@@ -172,7 +172,7 @@ const EditCoursePage = () => {
       return;
     }
 
- console.log("FormData being sent:", Object.fromEntries(formDataToSend.entries()));
+    console.log("FormData being sent:", Object.fromEntries(formDataToSend.entries()));
 
     try {
       console.log("Submitting:", formDataToSend);
@@ -186,9 +186,6 @@ const EditCoursePage = () => {
       console.error("Failed to add course", error);
     }
   };
-
-
-  
 
 
   return (
