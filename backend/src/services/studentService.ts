@@ -5,8 +5,6 @@ import { hashPassword,comparePassword } from "../utils/password";
 import { validateOtp } from "../utils/otp";
 import { generatePasswordResetToken, generateRefreshToken, generateToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetPassword";
-import { StudentRepository } from "../repositories/studentRepository";
-import { error } from "console";
 
 
 export class StudentService implements IStudentService  {

@@ -12,10 +12,7 @@ const StudentProtected = () => {
   if(!token){
     return <Navigate to= "/login"/>
   }
-// if(role && student?.role!==role){
-//   return <Navigate to='/login'/>
-// }
-
+  
 return <Outlet/>
   
 }

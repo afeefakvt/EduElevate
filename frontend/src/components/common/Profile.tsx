@@ -15,7 +15,7 @@ import TutorNavbar from "../../components/tutor/Navbar"
 import Footer from "../../components/common/Footer"
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { editProfile } from "@/api/studentApi";
 import { logout, updateStudent } from "@/store/authSlice";
 import { changePassword } from "@/api/studentApi";
@@ -125,7 +125,7 @@ const Profile: React.FC<ProfileProps> = ({ userType }) => {
             return;
         }
         try {
-            console.log("change pass");
+            // console.log("change pass");
 
             if (userType === "student") {
                 await changePassword(user._id, currentPassword, newPassword);

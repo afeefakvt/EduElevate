@@ -15,7 +15,7 @@ export const addRatings = async(courseId: string | undefined, rating: number | n
 
 export const getCourseRatings  = async(courseId:string)=>{
     try {
-        console.log(courseId,"iddddddd");
+        // console.log(courseId,"iddddddd");
         
         const response = await axiosInstance.get(`/rating/${courseId}`)
         return response.data

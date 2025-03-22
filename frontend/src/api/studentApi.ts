@@ -3,12 +3,9 @@ import { handleAxiosError } from "@/utils/errorHandler";
 
 
 export const editProfile = async(studentId:string,name: string )=>{
-    try {
-        console.log("dgvsjsa");
-        
+    try {        
         const response = await axiosInstance.put(`/editProfile/${studentId}`,{name})
-        console.log("reposnseee",response);
-        
+        // console.log("reposnseee",response);        
         return response.data
         
     } catch (error) {

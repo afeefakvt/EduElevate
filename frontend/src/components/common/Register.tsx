@@ -1,6 +1,5 @@
 import { Box, Button, Container, TextField, Typography, Paper,Alert , IconButton, InputAdornment} from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUp } from '../../api/authApi';

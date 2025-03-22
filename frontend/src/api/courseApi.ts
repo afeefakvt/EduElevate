@@ -5,11 +5,7 @@ import { handleAxiosError } from "@/utils/errorHandler";
 
 export const getCategories = async()=>{
     try {
-        console.log("vjhvuj");
-        
-        const response = await axiosInstance.get('/categories');
-        console.log(response.data.categories,"mgujfhvhgnvhg ");
-        
+        const response = await axiosInstance.get('/categories');        
         return response.data.categories
     } catch (error) {
         console.error("Error fetching categories:", error);

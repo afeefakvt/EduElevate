@@ -32,8 +32,6 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
                 {$group:{_id:"$courseId",count:{$sum:1}}}
 
             ]);
-
-
     // Convert array to a record (courseId -> count)
             const enrollmentStats = enrollments.reduce((acc,curr)=>{
                 acc[curr._id.toString()] = curr.count;

@@ -6,9 +6,7 @@ export const fetchEnrolledCourses = async()=>{
     try {
         const response = await axiosInstance.get('/enrollment/myCourses/',{
             withCredentials:true
-        })
-        // console.log(response.data,"pppppp");
-        
+        })        
         return response.data
 
     } catch (error) {
@@ -19,9 +17,7 @@ export const fetchEnrolledCourses = async()=>{
 }
 
 export const bestSellingCourses = async()=>{
-    try {
-        // console.log("pppppppppppppppppppppp");
-        
+    try {        
         const response = await axiosInstance.get('/bestSelling')
         return response.data 
         

@@ -227,9 +227,7 @@ export const fetchDashboardCounts = async()=>{
 }
 
 export const fetchMostRatedCourse = async()=>{
-    try {
-        // console.log("oooooooooooooooooo");
-        
+    try {        
         const response = await axiosInstance.get('/mostRated');
         // console.log(response.data,"kfkkkkkkkkkkd");
         

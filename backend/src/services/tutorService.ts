@@ -19,8 +19,6 @@ export class TutorService implements ITutorService {
     }
 
 
-
-
     private async authenticateTutor(email:string,password:string):Promise<ITutor>{
         if(!email || !password){
             throw new Error("Email and password cannot be empty")
@@ -49,8 +47,6 @@ export class TutorService implements ITutorService {
         return tutor
 
     }
-    
-
 
     async registerTutor(tutorData: ITutor): Promise<ITutor> {
 

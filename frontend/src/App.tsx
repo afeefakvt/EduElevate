@@ -30,7 +30,7 @@ import CourseDetailsAdmin from "./components/admin/CourseDetails"
 import EditApplications from "./components/admin/EditApllications";
 import EditCourseDetails from "./components/admin/EditCourseDetails";
 import PendingPayments from "./components/admin/PendingPayments";
-import PaymentHistory from "./components/admin/paymentHistory";
+import PaymentHistory from "./components/admin/PaymentHistory";
 
 
 import TutorHome from "./components/tutor/tutorHome"

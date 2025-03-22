@@ -3,13 +3,11 @@ import { ITutorService } from "../interfaces/tutor/ITutorService";
 import { sendOtptoEmail, storeOtp } from "../utils/otp";
 import { generateToken } from "../utils/jwt";
 import { verifyPasswordResetToken } from "../utils/jwt";
-import { AuthenticatedRequest } from "../types/types";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
 import { verifyRefreshToken } from "../utils/jwt";
 import Tutor from "../models/tutorModel";
 import { RequestWithUser } from "../middlewares/authToken";
 import { MESSAGES } from "../constants/message";
-import messageRoutes from "../routes/messageRoutes";
 
 
 export class TutorController {

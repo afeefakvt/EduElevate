@@ -115,7 +115,6 @@ const AddLecture = () => {
 
     }
 
-
     return (
         <Box
             sx={{

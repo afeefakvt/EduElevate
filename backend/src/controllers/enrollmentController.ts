@@ -1,6 +1,5 @@
 import { IEnrollmentService } from "../interfaces/enrollment/IEnrollmentService";
 import { Request, Response } from "express";
-import { AuthenticatedRequest } from "../types/types";
 import { HTTP_STATUS } from "../constants/httpStatusCode";
 import { RequestWithUser } from "../middlewares/authToken";
 import { MESSAGES } from "../constants/message";
@@ -72,9 +71,7 @@ export class EnrollmentController {
     }
 
     async getMyStudents(req:RequestWithUser,res:Response):Promise<void>{
-        try {
-            // console.log("llllllllllll");
-            
+        try {            
             if (!req.tutor || !req.tutor._id) {
                 res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a tutor." });
                 return;

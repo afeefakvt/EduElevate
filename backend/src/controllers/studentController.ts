@@ -39,7 +39,6 @@ export class StudentController {
             storeOtp(email, otp)
             console.log('otp is', otp);
 
-
             const student = await this.studentService.createStudent({ name, email, password } as any)
 
             res.status(HTTP_STATUS.CREATED).json({ message: MESSAGES.STUDENT_CREATED })
@@ -49,7 +48,6 @@ export class StudentController {
 
         }
     }
-
 
     async verifyOtp(req: Request, res: Response): Promise<void> {
         try {
@@ -120,7 +118,6 @@ export class StudentController {
 
         }
     }
-
 
     async refreshAccessToken (req:Request,res:Response):Promise<void>{
         try {
@@ -333,8 +330,8 @@ export class StudentController {
             const title = req.body.title
             const price = req.body.price
 
-            console.log(courseId,"coyrseeeeeid");
-            console.log(studentId,"studentttttttttt");
+            // console.log(courseId,"coyrseeeeeid");
+            // console.log(studentId,"studentttttttttt");
                         
             if(!mongoose.Types.ObjectId.isValid(courseId)){
                 res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Invalid course ID"})

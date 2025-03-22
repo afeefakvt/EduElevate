@@ -142,7 +142,7 @@ export const fetchTutorCourses = async (queryParams: string) => {
 export const getTutorCourseDetails = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(`/tutor/myCourses/${courseId}`);
-    console.log("API Response:", response.data);
+    // console.log("API Response:", response.data);
     return response.data;
   } catch (error) {
     console.log("error is", error);
@@ -152,7 +152,7 @@ export const getTutorCourseDetails = async (courseId: string) => {
 
 export const getCategories = async () => {
   try {
-    console.log("vjhvuj");
+    // console.log("vjhvuj");
 
     const response = await axiosInstance.get("/categories");
     // console.log(response.data.categories,"mgujfhvhgnvhg ");
