@@ -13,8 +13,6 @@ export class EnrollmentController {
 
     async getEnrolledCoursesByStudent(req: RequestWithUser, res: Response): Promise<void> {
         try {            
-            // console.log(req.url);
-
             if (!req.student || !req.student._id) {
                 res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a student." });
                 return;
@@ -56,9 +54,7 @@ export class EnrollmentController {
         }
     }
     async getEnrolledCountPerCourse(req: Request, res: Response): Promise<void> {
-        try {
-            // console.log("count");
-            
+        try {            
             const { courseId } = req.params;
             const count = await this.enrollmentService.getEnrolledCountPerCourse(courseId)            
             res.status(HTTP_STATUS.OK).json({ count })
@@ -105,8 +101,6 @@ export class EnrollmentController {
         try {
             const { timeRange, startDate, endDate } = req.query;
             const reportData = await this.enrollmentService.getSalesReport(timeRange as string,startDate as string,endDate as string)
-
-            // console.log(reportData);
             
             res.status(HTTP_STATUS.OK).json(reportData)
         } catch (error) {

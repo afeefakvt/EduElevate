@@ -16,10 +16,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+
 interface Course {
   _id: string;
   title: string;
   description: string;
+  categoryId: { _id: string; name: string };
+  tutorId: {
+    _id: string;
+    name: string;
+    email: string;
+    title: string;
+    bio: string;
+  };
+  language: string;
+  level: string;
   status: string;
   rejectReason: string;
   lectures: {
@@ -114,10 +125,40 @@ export default function EditCourseDetails() {
           </p>
         ) : (
           <>
-            <h1 className="text-2xl font-bold mb-4">Course Details</h1>
-            <div className="bg-white p-4 rounded shadow ">
-              <h2 className="font-bold text-lg">Course Description</h2>
-              <p className="mb-4">{course.description}</p>
+           <h1 className="text-2xl font-bold mb-4">Course Details</h1>
+            <div className="bg-white p-4 rounded shadow">
+              <div className="flex ">
+                <h3 className="font-semibold text-md"> Title : </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.title}</p>
+              </div>
+              <div className="flex">
+                <h3 className=" font-semibold text-md"> Description: </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.description}</p>
+              </div>
+              <div className="flex">
+                <h3 className=" font-semibold text-md"> Category: </h3>
+                <p className="mb-4 mx-2 text-gray-600">
+                  {course.categoryId.name}
+                </p>
+              </div>
+              <div className="flex">
+                <h3 className=" font-semibold text-md"> Status: </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.status}</p>
+              </div>
+              <div className="flex">
+                <h3 className=" font-semibold text-md">Language: </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.language}</p>
+              </div>
+              <div className="flex">
+                <h3 className=" font-semibold text-md"> Level: </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.level}</p>
+              </div>
+              <div className="flex">
+                <h3 className=" font-semibold text-md">No of lectures: </h3>
+                <p className="mb-4 mx-2 text-gray-600">
+                  {course.lectures.length}
+                </p>
+              </div>
               <div className="flex gap-2">
                 <Button
                   onClick={handleApprove}
@@ -168,6 +209,29 @@ export default function EditCourseDetails() {
                     </div>
                   </DialogContent>
                 </Dialog>
+              </div>
+            </div>
+
+            <div className="mt-6">
+            <h2 className="font-bold text-lg mb-4">About Tutor</h2>
+              <div className="bg-white p-4 rounded shadow">
+              <div className="flex ">
+                <h3 className="font-semibold text-md"> Name : </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.tutorId.name}</p>
+              </div>
+              <div className="flex ">
+                <h3 className="font-semibold text-md"> Email : </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.tutorId.email}</p>
+              </div>
+              <div className="flex ">
+                <h3 className="font-semibold text-md"> Title : </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.tutorId.title}</p>
+              </div>
+              <div className="flex ">
+                <h3 className="font-semibold text-md"> Bio : </h3>
+                <p className="mb-4 mx-2 text-gray-600">{course.tutorId.bio}</p>
+              </div>
+                
               </div>
             </div>
 

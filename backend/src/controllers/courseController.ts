@@ -4,7 +4,6 @@ import { HTTP_STATUS } from "../constants/httpStatusCode";
 import { MESSAGES } from "../constants/message";
 
 
-
 interface CourseQuery {
     search?: string;
     category?: string;
@@ -20,24 +19,19 @@ export class CourseController{
 
     async addCourse(req:Request,res:Response):Promise<void>{
         try {            
-            // console.log(" Request Received:", req.body);
-            // console.log(" Uploaded File:", req.file);
             const courseData = req.body;
             if(req.file){
                 courseData.thumbnail = req.file.path
             }
 
             const newCourse = await this.courseService.addCourse(courseData,req.file)
-            // console.log(" Course Saved:", newCourse);
-
-            res.status(201).json({newCourse,message:MESSAGES.COURSE_ADD_SUCCESS})
+            res.status(HTTP_STATUS.OK).json({newCourse,message:MESSAGES.COURSE_ADD_SUCCESS})
         } catch (error) {
             res.status(HTTP_STATUS.BAD_REQUEST).json({ error: (error as Error).message });
         }
     }
     async getCourses(req:Request,res:Response):Promise<void>{
         try {
-            // console.log(req.url);
             const{search='',category="all",sort="default",page=1,limit=4} = req.query;
 
             const pageNumber = parseInt(page as string, 10);
@@ -70,9 +64,7 @@ export class CourseController{
     }
 
     async listUnlistCourse(req:Request,res:Response):Promise<void>{
-        try {
-            // console.log("delte courseasc");
-            
+        try {            
             const {courseId} = req.params;
             const {isListed} = req.body
             const deletedCourse = await this.courseService.listUnlistCourse(courseId,{isListed})
@@ -109,9 +101,7 @@ export class CourseController{
     }
 
     async bestSellingCourses(req:Request,res:Response):Promise<void>{
-        try {
-            // console.log("cvas djchmndcdscas");
-            
+        try {            
             const courses = await this.courseService.getBestSellingCourses()
             res.status(HTTP_STATUS.OK).json({courses:courses})
         } catch (error) {
@@ -122,9 +112,7 @@ export class CourseController{
     }
     async fetchStatusCounts(req:Request,res:Response):Promise<void>{
         try {
-            const result  = await this.courseService.fetchStatusCounts()
-            console.log(result,"resss");
-            
+            const result  = await this.courseService.fetchStatusCounts()            
             res.status(HTTP_STATUS.OK).json({result})
 
         } catch (error) {

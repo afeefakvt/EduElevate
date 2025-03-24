@@ -115,7 +115,7 @@ const AddCourse = () => {
     // Validate form data
     const errors = validateAddCourseForm({
       ...formData,
-      category: formData.categoryId,
+      categoryId: formData.categoryId,
       price: Number(formData.price),
     });
     setFormErrors(errors);
@@ -222,9 +222,9 @@ const AddCourse = () => {
             </Alert>
           )}
 
-          <TextField label="Course Title" name="title" fullWidth required onChange={handleChange} error={!!formErrors.title}
+          <TextField label="Course Title" name="title" fullWidth onChange={handleChange} error={!!formErrors.title}
             helperText={formErrors.title} />
-          <FormControl fullWidth required error={!!formErrors.categoryId}>
+          <FormControl fullWidth  error={!!formErrors.categoryId}>
             <InputLabel>Category</InputLabel>
             <Select name="categoryId" value={formData.categoryId} onChange={handleSelectChange} >
               {categories.map((category) => (
@@ -239,10 +239,10 @@ const AddCourse = () => {
               </Typography>
             )}
           </FormControl>
-          <TextField label="Description" name="description" fullWidth required multiline rows={3} onChange={handleChange}
+          <TextField label="Description" name="description" fullWidth multiline rows={3} onChange={handleChange}
             error={!!formErrors.description}
             helperText={formErrors.description} />
-          <TextField label="Price(₹)" name="price" fullWidth required onChange={handleChange}
+          <TextField label="Price(₹)" name="price" fullWidth onChange={handleChange}
             error={!!formErrors.price}
             helperText={formErrors.price} />
           <TextField label="Duration " name="duration" fullWidth onChange={handleChange}

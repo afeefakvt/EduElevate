@@ -21,15 +21,12 @@ export class LectureController {
 
     async addLecture(req: Request, res: Response): Promise<void> {
         try {
-            // console.log("adddddlectureeeeeee");
-
 
             if (!req.files || !Array.isArray(req.files)) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.FILE_REQUIRED });
                 return;
             }
             const lectureDatas = JSON.parse(req.body.lectures) as LectureData[];
-            // console.log(lectureDatas,"khv hn")
 
             if (!lectureDatas.length || !mongoose.Types.ObjectId.isValid(lectureDatas[0].courseId)) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.INVALID_COURSE_ID })
@@ -93,7 +90,6 @@ export class LectureController {
             try {
                 const { lectureId } = req.params;
                 const updatedData = req.body;
-                // console.log("edit requesttt",updatedData);
 
                 // Check if a new video file is uploaded
                 if (req.file) {

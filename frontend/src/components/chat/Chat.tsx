@@ -475,17 +475,22 @@ const Chat = () => {
       }
     });
 
-    socket.on("call_rejected",({senderId,recipientId})=>{
-      if(recipientId === isTutor ? tutor ?._id : student?._id){
-        if(localStream){
-          localStream.getTracks().forEach((track)=>track.stop())
+    socket.on("call_rejected", ({ senderId, recipientId }) => {
+      const currentUserId = isTutor ? tutor?._id : student?._id;
+    
+      if (recipientId === currentUserId) {
+        // This means the caller's call was rejected
+        setSnackbar(true);
+        setSnackbarMessage("Your call was rejected");
+        setIsVideoCallActive(false);
+        if (localStream) {
+          localStream.getTracks().forEach((track) => track.stop());
         }
-        setIsVideoCallActive(false)
-        setLocalStream(null)
-        setSnackbar(true)
-        setSnackbarMessage("Your call was rejected")
+        setLocalStream(null);
+        setRemoteStream(null);
       }
     });
+    
 
     return()=>{
       socket.off("video_call_offer");

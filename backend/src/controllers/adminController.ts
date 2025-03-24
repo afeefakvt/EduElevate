@@ -54,13 +54,9 @@ export class AdminController {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: MESSAGES.NO_TUTORS_FOUND });
             }
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR, error: error instanceof Error ? error.message : error });
-
-            
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR, error: error instanceof Error ? error.message : error });   
         }
-
     }
-
 
     async getTutorDetails(req:Request,res:Response):Promise<void>{
         try {
@@ -69,7 +65,6 @@ export class AdminController {
             
             if(tutor){
                 res.status(HTTP_STATUS.OK).json({ success: true, tutor:tutor });
-
             }
             else{
                 res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: MESSAGES.TUTOR_NOT_FOUND });
@@ -256,7 +251,6 @@ export class AdminController {
                 message: MESSAGES.INTERNAL_SERVER_ERROR,
                 error: error instanceof Error ? error.message : error,
               });
-            
         }
     }
     

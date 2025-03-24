@@ -98,7 +98,6 @@ export class StudentController {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.STUDENT_NOT_FOUND })
                 return;
             }
-            // console.log("genretaeeee");
 
             res.cookie("refreshToken",refreshToken,{
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
@@ -136,22 +135,20 @@ export class StudentController {
             const decoded= verifyRefreshToken(refreshToken) as {id:string}
             console.log(decoded,"decoded")
             const student = await Student.findById(decoded.id)
-            console.log("student is",student)
-
             if(!student){
                 res.clearCookie('refreshToken');
                 res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.STUDENT_NOT_FOUND})
                 return;
             }
 
-            console.log("generating new access token");
+            // console.log("generating new access token");
             const newAccessToken = generateToken({
                 id:student._id,
                 email:student.email,
                 role:student.role,
                 isBlocked:student.isBlocked
             })
-            console.log("generated new access token",newAccessToken);
+            // console.log("generated new access token",newAccessToken);
             res.json({token:newAccessToken})
             
             
@@ -165,12 +162,7 @@ export class StudentController {
 
 
     async logout(req:Request,res:Response):Promise<void>{
-        try {    
-
-            // console.log('Headers:', req.headers) // Log incoming headers
-            // console.log('Cookies:', req.cookies) 
-            // console.log("Cookies received:", req.cookies);
-            
+        try {   
             res.clearCookie('token')
             res.clearCookie("refreshToken",{
                 httpOnly:true,
@@ -188,7 +180,6 @@ export class StudentController {
     async adminLogin(req: Request, res: Response): Promise<void> {
         try {
             const { email, password } = req.body
-            // console.log("uyjhncs");
             
             const { token, refreshToken,student } = await this.studentService.loginAdmin(email, password)
             if (!token) {
@@ -330,8 +321,6 @@ export class StudentController {
             const title = req.body.title
             const price = req.body.price
 
-            // console.log(courseId,"coyrseeeeeid");
-            // console.log(studentId,"studentttttttttt");
                         
             if(!mongoose.Types.ObjectId.isValid(courseId)){
                 res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Invalid course ID"})

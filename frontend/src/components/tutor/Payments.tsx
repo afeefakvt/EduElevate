@@ -16,7 +16,6 @@ import {
   import { RootState } from "@/store/store";
   import { tutorAmount } from "@/api/tutorApi";
   import Navbar from "./Navbar";
-  import Footer from "../common/Footer";
   
   const Payments = () => {
     const [payments, setPayments] = useState<Payment[]>([]);
@@ -28,7 +27,7 @@ import {
     useEffect(() => {
       const fetchTutorsPayment = async (tutorId: string) => {
         const data = await tutorAmount(tutorId);
-        setPayments(data);
+        setPayments(data);        
       };
       if (tutorId) {
         fetchTutorsPayment(tutorId);

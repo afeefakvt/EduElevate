@@ -56,9 +56,7 @@ export class RatingController{
         }
     }
     async getMostRatedCourse(req:Request,res:Response):Promise<void>{
-        try {
-            // console.log("ppppppppppppppppp");
-            
+        try {            
             const course = await this.ratingService.getMostRatedCourse()
             if(!course){
                 res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.COURSE_NOT_FOUND});

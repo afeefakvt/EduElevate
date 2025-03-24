@@ -117,7 +117,7 @@ export const validateResetPasswordForm = ( password: string, confirmPassword: st
   export const validateAddCourseForm = (formData: { 
     title: string;
     description: string;
-    category: string;
+    categoryId: string;
     price: number;
     duration: string;
     thumbnail: File | null;
@@ -127,7 +127,7 @@ export const validateResetPasswordForm = ( password: string, confirmPassword: st
     const errors: { 
       title?: string; 
       description?: string;  
-      category?: string; 
+      categoryId?: string; 
       price?: string; 
       duration?: string; 
       thumbnail?: string;
@@ -147,8 +147,8 @@ export const validateResetPasswordForm = ( password: string, confirmPassword: st
       errors.description = ERROR_MESSAGES.INVALID.DESCRIPTION
     }
 
-    if (!formData.category.trim()) {
-      errors.category = ERROR_MESSAGES.REQUIRED.CATEGORY
+    if (!formData.categoryId.trim()) {
+      errors.categoryId = ERROR_MESSAGES.REQUIRED.CATEGORY
     } 
 
     if (!formData.price) {

@@ -89,14 +89,11 @@ export class TutorController {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.TUTOR_NOT_FOUND })
                 return;
             }
-
-            
             res.cookie("tutorRefreshToken",refreshToken,{
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
                 secure:process.env.NODE_ENV==="production",
                 sameSite:"strict", //helps prevent csrf
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-
             })
            
             res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGIN_SUCCESS, token, tutor })
@@ -114,7 +111,6 @@ export class TutorController {
         async refreshAccessToken (req:Request,res:Response):Promise<void>{
             try {
                 const refreshToken = req.cookies.tutorRefreshToken;
-                console.log(refreshToken,"refreshhhh");
                 if(!refreshToken){
                     console.error("No refresh token found,Logging out.")
             
@@ -125,9 +121,7 @@ export class TutorController {
     
     
                 const decoded= verifyRefreshToken(refreshToken) as {id:string}
-                console.log(decoded,"decoded")
                 const tutor = await Tutor.findById(decoded.id)
-                console.log("tutor is",tutor)
     
                 if(!tutor){
                     res.clearCookie('tutorRefreshToken');
@@ -135,7 +129,7 @@ export class TutorController {
                     return;
                 }
     
-                console.log("generating new access token");
+                // console.log("generating new access token");
                 const newAccessToken = generateToken({
                     id:tutor._id,
                     email:tutor.email,
@@ -156,8 +150,6 @@ export class TutorController {
 
     async logoutTutor(req:Request,res:Response):Promise<void>{
         try {    
-            // console.log("Cookies received:", req.cookies);
-
             res.clearCookie('token')
             res.clearCookie("tutorRefreshToken",{
                 httpOnly:true,
@@ -174,8 +166,6 @@ export class TutorController {
     async forgotPassword(req: Request, res: Response): Promise<void> {
         try {
             const { email } = req.body;
-            // console.log("Received request for forgot password:", email);
-
             const resetToken = await this.tutorService.handleForgotPassword(email)
             if (!resetToken) {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.TUTOR_NOT_FOUND })
@@ -189,8 +179,6 @@ export class TutorController {
     async resetPassword(req: Request, res: Response): Promise<void> {
         try {
             const { token, newPassword, confirmPassword } = req.body
-            // console.log("Received Token:", req.body.token);
-
 
             const decoded = verifyPasswordResetToken(token)
             if (!decoded) {
@@ -219,8 +207,6 @@ export class TutorController {
     async getTutorCourses(req:RequestWithUser,res:Response):Promise<void>{
         try {
             
-            // const {tutor} = req as AuthenticatedRequest;
-            // console.log(req.url);
             const {search="", category="all",sort="default",page=1,limit=4} = req.query
             const pageNumber = parseInt(page as string, 10);
             const limitNumber = parseInt(limit as string, 10);
@@ -244,13 +230,9 @@ export class TutorController {
     }
 
     async getTutorCourseDetails(req:Request,res:Response):Promise<void>{
-        try {
-            // console.log("jhhvchgvcduvchshjchbn");
-            
+        try {            
             const {courseId} = req.params;
-            const courseDetails = await this.tutorService.getTutorCourseDetails(courseId);
-            // console.log(courseDetails);
-            
+            const courseDetails = await this.tutorService.getTutorCourseDetails(courseId);            
             res.status(HTTP_STATUS.OK).json(courseDetails)
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR});
@@ -263,7 +245,6 @@ export class TutorController {
         try {
             const {tutorId} = req.params;
             const approvedCount = await this.tutorService.getApprovedCount(tutorId);
-            // console.log(approvedCount,"countt");
             res.status(HTTP_STATUS.OK).json(approvedCount) 
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})    
@@ -273,7 +254,6 @@ export class TutorController {
         try {
             const {tutorId} = req.params;
             const pendingCount = await this.tutorService.getPendingCount(tutorId);
-            // console.log(approvedCount,"countt");
             res.status(HTTP_STATUS.OK).json(pendingCount) 
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:MESSAGES.INTERNAL_SERVER_ERROR})    

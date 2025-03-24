@@ -21,16 +21,12 @@ export class CategoryController{
             
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR, error: error instanceof Error ? error.message : error });
-
-            
         }
     }
 
     async addCategory(req:Request,res:Response):Promise<void>{
                 
-        try {
-            // console.log("categroy request");
-            
+        try {            
             const {name} = req.body
 
             if(!name || typeof name !=='string'){
