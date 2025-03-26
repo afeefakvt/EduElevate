@@ -130,9 +130,7 @@ const Bestselling = () => {
             </Grid>
           ))}
         </Grid>
-
       </Box>
-
 
       <Box
         sx={{
@@ -226,8 +224,6 @@ const Bestselling = () => {
             </ol>
           </Box>
         </Box>
-
-
       )}
 
     </Box>
@@ -267,10 +263,6 @@ export default Bestselling
                         sx={{ fontWeight: "bold", marginBottom: "1rem" }}
                       >
                         EDUELEVATE
-                      </Typography>
-
-
-             
+                      </Typography>             
         </Grid>
-        
     </Box> */}
