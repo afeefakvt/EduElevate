@@ -12,10 +12,7 @@ export class LectureService implements ILectureService{
         this.lectureRepository = lectureRepository
     }
     async addLecture(lectureData: Partial<ILecture>, courseId: mongoose.Types.ObjectId): Promise<ILecture | null> {
-        try {
-
-            // console.log("leeeeeeeeeeksfjn");
-            
+        try {            
            if(lectureData){
             const updatedCourse = await Course.findByIdAndUpdate(
                 courseId,
@@ -51,8 +48,6 @@ export class LectureService implements ILectureService{
             return await this.lectureRepository.editLecture(lectureId,updatedData)
         } catch (error) {
             throw new Error(`Error editing lecture: ${(error as Error).message}`);
-
-            
         }
     }
     async listUnlistLecture(lectureId: string, lectureData: Partial<ILecture>): Promise<ILecture | null> {

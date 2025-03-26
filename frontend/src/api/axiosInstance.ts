@@ -14,12 +14,10 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config)=>{
         const token = Cookies.get('authToken')
-        // console.log('Student token:', token) // Check if the token exists
 
         if(token){
             config.headers['Authorization'] = `Bearer ${token}`
         }
-        // console.log('Request headers:', config.headers) // Log the full headers
 
         return config
     },

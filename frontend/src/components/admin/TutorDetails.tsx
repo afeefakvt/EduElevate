@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, Button, CircularProgress, Toolbar, Card, CardContent, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { axiosInstance } from '../../api/axiosInstance';
 import Navbar from './AdminNavbar';
 import Sidebar from './Sidebar';
 import { getTutorDetails,approveTutor,rejectTutor } from '../../api/adminApi';

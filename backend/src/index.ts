@@ -15,7 +15,6 @@ import webhookRoutes from './routes/webhookRoutes'
 import ratingRoutes from './routes/ratingRoutes'
 import messageRoutes from './routes/messageRoutes'
 import paymentRoutes from './routes/paymentRoutes'
-import Stripe from 'stripe'
 import { initializeSocket } from './utils/socket'
 
 

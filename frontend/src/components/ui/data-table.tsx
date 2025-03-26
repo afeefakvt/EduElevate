@@ -10,7 +10,7 @@ interface DataTableProps<TData> {
 
 export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
 
-    const safeData = Array.isArray(data) ? data : [];
+  Array.isArray(data) ? data : [];
   const table = useReactTable({
     data,
     columns,

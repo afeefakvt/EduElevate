@@ -17,7 +17,6 @@ export interface RequestWithUser extends Request{
 }
 
 export const authenticateToken = async(req:RequestWithUser,res:Response,next:NextFunction):Promise<void>=>{
-    // const token = req.cookies.authToken
 
     const token  = req.headers.authorization?.split(" ")[1];
     console.log("authenticating the token");
@@ -29,7 +28,6 @@ export const authenticateToken = async(req:RequestWithUser,res:Response,next:Nex
 
     try {
         const decoded  = verifyToken(token) as DecodedToken
-        // console.log("12233w223qwdwads",decoded);
         let user;
 
         if(decoded.role==="student" || decoded.role==="admin"){

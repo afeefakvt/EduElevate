@@ -13,8 +13,6 @@ export class CourseService implements ICourseService{
     async addCourse(courseData: Partial<ICourse>, file?: Express.Multer.File): Promise<ICourse | null> {
         try {
             if(file && file.path){
-                console.log("Uploading file to Cloudinary:", file.path);
-
                 const result = await cloudinary.v2.uploader.upload(file.path,{
                     folder:"course_thumbnails",
                     resource_type:"auto"
@@ -27,9 +25,7 @@ export class CourseService implements ICourseService{
             return newCourse
             
         } catch (error) {
-            throw new Error("Failed to add course. Please try again..");
-
-            
+            throw new Error("Failed to add course. Please try again..");            
         }
     }
 
@@ -61,11 +57,8 @@ export class CourseService implements ICourseService{
             return await this.courseRepository.editCourse(courseId,updatedData,"pending")
 
         } catch (error) {
-            throw new Error(`Error editing course: ${(error as Error).message}`);
-
-            
+            throw new Error(`Error editing course: ${(error as Error).message}`);            
         }
-
     }
     async getBestSellingCourses(): Promise<ICourse[]> {
         return await this.courseRepository.getBestSellingCourses()

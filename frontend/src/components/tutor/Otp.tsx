@@ -4,8 +4,7 @@ import { verifyOtp } from '../../api/tutorApi';
 import { useEffect, useState } from 'react';
 import { resendOtp } from '../../api/tutorApi';
 import Navbar from './Navbar';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+
 
 const Otp = () => {
     const [otp, setOtp] = useState('');

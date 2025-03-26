@@ -19,7 +19,6 @@ export const initializeSocket = (server:http.Server)=>{
         console.log(`User connected: ${socket.id}`);
        
         const getOrCreateRoom = async(senderId:string, recipientId:string):Promise<string>=>{
-            console.log("create room");
                 
             let room =await MessageRoom.findOne({
                 users:{$all: [senderId,recipientId]},
@@ -36,7 +35,6 @@ export const initializeSocket = (server:http.Server)=>{
             
             const roomId = await getOrCreateRoom(senderId,recipientId);
             socket.join(roomId.toString())
-            console.log("joined room",roomId);
             console.log(`${socket.id} joined room: ${roomId}`);
 
             
@@ -57,7 +55,6 @@ export const initializeSocket = (server:http.Server)=>{
             await newMessage.save();
 
             await MessageRoom.findByIdAndUpdate(roomId,{lastMessage:message,lastMessageAt:new Date()},{new :true});
-            console.log("Emitting receive_message to room:", roomId);
 
 
             io.to(roomId.toString()).emit("receive_message",{
@@ -120,7 +117,6 @@ export const initializeSocket = (server:http.Server)=>{
             await Message.findByIdAndUpdate(messageId,{
                 message:"This message was deleted"
             });
-            console.log("emittingg ",message.roomId);
             
             io.to(message.roomId.toString()).emit("message_deleted",{messageId});
         } catch (error) {
@@ -164,7 +160,6 @@ export const initializeSocket = (server:http.Server)=>{
     })
     
     socket.on("ice_candidate",async({senderId,recipientId,candidate})=>{
-        // console.log(senderId,recipientId);
         
         const roomId = await getOrCreateRoom(senderId,recipientId)
         io.to(roomId.toString()).emit("ice_candidate",{

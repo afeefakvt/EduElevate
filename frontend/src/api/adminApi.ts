@@ -8,8 +8,6 @@ import { handleAxiosError } from "@/utils/errorHandler";
 export const loginAdmin =  async(email:string,password:string)=>{
     try {
         const response =  await axiosInstance.post('/admin/login',{email,password})
-
-        // console.log(response.data);
         
         const {token} = response.data
         if(token){
@@ -128,38 +126,6 @@ export const rejectTutor = async(tutorId:string)=>{
 }
 
 
-// export const getCategories = async()=>{
-//     try {
-//         const response = await axiosInstance.get('/admin/category')
-
-//         return response.data
-//     } catch (error) {
-//         if( error instanceof AxiosError){
-//             const errMessage = error.response?.data.message || 'something went wrong';
-//             throw new Error(errMessage)
-            
-//         }
-//         throw new Error((error as Error).message); 
-        
-//     }
-// }
-
-// export const listUnlistCategory = async(id:string,isListed:boolean)=>{
-//     try {
-//         const response = await axiosInstance.patch(`/admin/category/${id}/listUnlistCategory`, { isListed: !isListed })
-//         return response.data
-//     } catch (error) {
-//         if( error instanceof AxiosError){
-//             const errMessage = error.response?.data.message || 'something went wrong';
-//             throw new Error(errMessage)
-            
-//         }
-//         throw new Error((error as Error).message); 
-        
-//     }
-// }
-
-
 export const getCourseApplications = async()=>{
     try {
         const response  = await axiosInstance.get('/admin/courseApplications')
@@ -229,7 +195,6 @@ export const fetchDashboardCounts = async()=>{
 export const fetchMostRatedCourse = async()=>{
     try {        
         const response = await axiosInstance.get('/mostRated');
-        // console.log(response.data,"kfkkkkkkkkkkd");
         
         return response.data
     } catch (error) {

@@ -1,5 +1,4 @@
 import { IPaymentRepository } from "../interfaces/payment/IPaymentRepository";
-import { IBaseRepository } from "../interfaces/base/IBaseRepository";
 import  Payment,{IPayment } from "../models/paymentModel";
 import { BaseRepository } from "./baseRepository";
 import mongoose from "mongoose";
@@ -51,8 +50,6 @@ export class PaymentRepository extends BaseRepository<IPayment> implements IPaym
                     },
                   }
         ]);
-
-        // console.log(result,"res");
         
         return result.length > 0 ? result[0].total : 0;
 

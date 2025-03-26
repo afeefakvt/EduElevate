@@ -5,10 +5,8 @@ import {
   ListItemButton,
   ListItemText,
   ListItemIcon,
-  Toolbar,
   IconButton,
   Divider,
-  Box,
   useMediaQuery,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -26,7 +24,7 @@ import {
 import { logout } from "../../store/authSlice";
 import { useDispatch,useSelector } from "react-redux";
 import storage from 'redux-persist/lib/storage';
-import { persistor,RootState,store } from "@/store/store";
+import { persistor,RootState } from "@/store/store";
 import { logoutAdmin } from "@/api/adminApi";
 
 
@@ -47,7 +45,6 @@ const Sidebar = () => {
     const isMobile = useMediaQuery("(max-width: 900px)");
     const [open, setOpen] = useState(!isMobile);
     const admin = useSelector((state: RootState) => state.auth.student)
-    const token = useSelector((state: RootState) => state.auth.token)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 

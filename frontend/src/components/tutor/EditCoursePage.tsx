@@ -61,14 +61,12 @@ const EditCoursePage = () => {
     const fetchData = async () => {
       try {
         const categoryData = await getCategories();
-        console.log("Fetched categories:", categoryData);
         const filteredCategories = categoryData.filter((category:Category) => category.isListed === true);
         setCategories(filteredCategories);
 
         if(courseId){
             const courseDatas = await getCourseDetails(courseId)
             const courseData = courseDatas.course
-            console.log("Fetched course:", courseData);
 
             setFormData({
                 title: courseData.title,
@@ -142,7 +140,7 @@ const EditCoursePage = () => {
     // Validate form data
     const errors = validateAddCourseForm({
       ...formData,
-      category: formData.categoryId,
+      categoryId: formData.categoryId,
       price: Number(formData.price),
     });
     setFormErrors(errors);

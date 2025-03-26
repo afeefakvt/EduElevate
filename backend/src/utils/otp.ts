@@ -47,7 +47,6 @@ export const validateOtp = async(email:string,otp:string):Promise<boolean> =>{
 
     if(isExpired){
         delete otpStore[email]  // Cleanup expired OTP
-        // console.log('expiredd');
         return false
     }
     if(storedOtp.otp===otp){
@@ -55,7 +54,6 @@ export const validateOtp = async(email:string,otp:string):Promise<boolean> =>{
         
         return true
     }
-    // console.log("Invalid OTP for email:", email);
     return false
 }
 

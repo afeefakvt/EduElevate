@@ -44,13 +44,11 @@ export const validateStudentRegistration = [
 
 
 export const validateStudentLogin = [
-    // Email Validation
     body("email")
         .notEmpty().withMessage(VALIDATION_MESSAGES.EMAIL_REQUIRED)
         .isEmail().withMessage("Valid email is required")
         .normalizeEmail(),
 
-    // Password Validation
     body("password")
         .notEmpty().withMessage(VALIDATION_MESSAGES.PASSWORD_REQUIRED),
         // .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
@@ -106,13 +104,11 @@ export const validateTutorRegistration = [
 ];
 
 export const validateTutorLogin = [
-    // Email Validation
     body("email")
         .notEmpty().withMessage(VALIDATION_MESSAGES.EMAIL_REQUIRED)
         .isEmail().withMessage("Valid email is required")
         .normalizeEmail(),
 
-    // Password Validation
     body("password")
         .notEmpty().withMessage(VALIDATION_MESSAGES.PASSWORD_REQUIRED),
         // .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),

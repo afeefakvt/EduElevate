@@ -45,16 +45,6 @@ const ChatContainer = styled(Box)({
     },
   }));
   
-  const ContentArea = styled(Box)({
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-  });
-  
-  
   
 
 const TutorContacts = () => {
@@ -62,7 +52,7 @@ const TutorContacts = () => {
     const [myStudents,setMyStudents] = useState<IStudent[]>([])
     const navigate = useNavigate()
     const {studentId} = useParams()
-    const student = useSelector((state:RootState)=>state.auth.student)
+    // const student = useSelector((state:RootState)=>state.auth.student)
     const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
     const unreadCounts  = useUnreadMessages(tutor?._id ?? "")
     
@@ -81,7 +71,6 @@ const TutorContacts = () => {
                 ).values()
             ) as IStudent[]
             setMyStudents(uniqueStudents)
-            // console.log(myStudents,"ppppppppppp");
             
         }
         fetchMyStudents()

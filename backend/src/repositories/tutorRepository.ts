@@ -56,10 +56,6 @@ export class TutorRepository extends BaseRepository<ITutor> implements ITutorRep
         const total = await Course.countDocuments(filter)
         const courses = await Course.find(filter).populate('categoryId', 'name').populate('tutorId', 'name')
             .sort(sortOption).skip(skip).limit(limit).exec();
-
-            
-//   console.log("Filter being used:", filter);
-//   console.log("Courses fetched:", courses);
             
         return {courses,total}
 

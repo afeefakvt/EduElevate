@@ -5,9 +5,7 @@ import { RootState } from "../../store/store";
 
 const TutorProtected = () => {
 
-
   const token = useSelector((state:RootState)=>state.tutorAuth.token)
-  const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
 
   if(!token){
     return <Navigate to= "/tutor/login" replace/>

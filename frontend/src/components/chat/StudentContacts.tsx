@@ -45,14 +45,14 @@ const ContactItem = styled(Box, {
   },
 }));
 
-const ContentArea = styled(Box)({
-  flex: 1,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100%",
-});
+// const ContentArea = styled(Box)({
+//   flex: 1,
+//   display: "flex",
+//   flexDirection: "column",
+//   justifyContent: "center",
+//   alignItems: "center",
+//   height: "100%",
+// });
 
 
 const StudentContacts = () => {
@@ -75,7 +75,6 @@ const StudentContacts = () => {
         ).values()
       ) as ITutor[]
       setMyTutors(uniqueTutors)
-      // console.log(myTutors, "pppppppppppp");
 
     }
     getMyTutors()

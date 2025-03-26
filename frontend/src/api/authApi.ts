@@ -49,7 +49,6 @@ export const login =  async(email:string,password:string)=>{
         const response =  await axiosInstance.post('/login',{email,password})
         
         const {token} = response.data
-        // console.log(token,"tokkkkkkkkk");
         
         if(token){
             store.dispatch(loginSuccess({
@@ -119,8 +118,6 @@ export const getCategories = async()=>{
 export const logoutStudent = async()=>{
     try {
         const response = await axiosInstance.post('/logout')
-        // console.log(response,"resss");
-        // console.log(response?.data ?? "No response data");
 
         return response.data
     } catch (error) {

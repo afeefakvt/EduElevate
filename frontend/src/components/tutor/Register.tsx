@@ -34,14 +34,12 @@ const Register = () => {
     const errors = validateRegisterForm(name, email, password, confirmPassword,title, bio);
     setFormErrors(errors)
 
-
-    // Stop submission if errors exist
     if (Object.keys(errors).length > 0) {
         return;
       }
 
     try {
-       const response=await signUp(name,email,password,confirmPassword,title,bio)
+       await signUp(name,email,password,confirmPassword,title,bio)
        navigate('/tutor/verifyOtp',{state:{email}})   //pass email to the otp page
     } catch (error:any) {
       setErrMessage(error.message)

@@ -33,16 +33,12 @@ const TutorLecturePage = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
 
-
-  const navigate = useNavigate();
-
   useEffect(() => {
     const fetchCourse = async () => {
       if (!courseId) return;
       try {
         const response = await getCourseDetails(courseId)
         setCourse(response.course);
-        //  console.log(response.course,"ewaaaaaaaaaaa");
 
         if (response.course.lectures.length > 0) {
           setSelectedLecture(response.course.lectures[0]); //auto select first lecture
@@ -62,7 +58,7 @@ const TutorLecturePage = () => {
 
   const handleListUnlistLecture = async (lectureId: string, isListed: boolean) => {
     try {
-      const reponse = await listUnlistLecture(lectureId,isListed)
+       await listUnlistLecture(lectureId,isListed)
 
       setCourse((prevCourse) => {
         if (!prevCourse) return prevCourse;

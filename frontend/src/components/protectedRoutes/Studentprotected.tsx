@@ -5,9 +5,7 @@ import { RootState } from "../../store/store";
 
 const StudentProtected = () => {
 
-
   const token = useSelector((state:RootState)=>state.auth.token)
-  const student = useSelector((state:RootState)=>state.auth.student)
 
   if(!token){
     return <Navigate to= "/login"/>

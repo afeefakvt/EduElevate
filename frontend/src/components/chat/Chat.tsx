@@ -15,9 +15,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import LazyLoad from "react-lazyload";
 import { IMessage } from "@/interfaces/interface";
-import Bgimage from '../../assets/bg.jpeg'
 import { getStudentById, getTutorMessages, uploadTutorMessageFile } from "@/api/tutorApi";
 import { getTutorDetails } from "@/api/adminApi";
 import { getStudentMessages, uploadStudentMessageFile } from "@/api/chatApi";
@@ -86,15 +84,11 @@ const Chat = () => {
       try {
         let data;
         if (isTutor) {
-          console.log(recipientId,"recipeeeeeee");
-
           data = await getStudentById(recipientId)
           setRecipientRole("student")
         } else {
-          console.log(recipientId,"recipeeeeeee");
           const response = await getTutorDetails(recipientId)
           data = response.tutor
-          // console.log("data",data);
           setRecipientRole("tutor")
         }
         setRecipientName(data?.name || "Unknown")
@@ -106,10 +100,6 @@ const Chat = () => {
   }, [recipientId, isTutor]);
 
   useEffect(() => {
-    // console.log("join rommmm");
-    // console.log(senderId,"snde");
-    // console.log(recipientId,"snde");
-
     if (!senderId || !recipientId) return;
 
     socket.emit('joinRoom', { senderId, recipientId });
@@ -122,7 +112,6 @@ const Chat = () => {
         } else {
           response = await getStudentMessages(senderId, recipientId)
         }
-        // console.log(response,"messafess");
 
         setMessages(response)
         if (response.some((msg) => msg.senderId === recipientId && !msg.read)) {
@@ -164,7 +153,6 @@ const Chat = () => {
 
 
     socket.on("message_read", ({ senderId: msgSenderId, recipientId: msgRecipientId, readAt }) => {
-      // console.log("read console");
 
       setMessages((prevMessages) =>
         prevMessages.map((msg) => {
@@ -214,10 +202,6 @@ const Chat = () => {
   }
 
   const sendMessage = async () => {
-    // console.log(message,"kkkkkkk");
-    // console.log(senderId,"kkkkkkk");
-    // console.log(recipientId,"kkkkkkk");
-
     if ((!message.trim() && !file) || !senderId || !recipientId) return;
     setLoading(true)
     try {
@@ -246,8 +230,6 @@ const Chat = () => {
         messageData.fileType = fileType
 
       }
-      // console.log("messgae",messageData);
-
       socket.emit("message", messageData)
 
       setMessage('')
@@ -430,7 +412,7 @@ const Chat = () => {
       }
     });
 
-    socket.on("video_call_answer", async({senderId,recipientId:recieverId,answer})=>{
+    socket.on("video_call_answer", async({recipientId:recieverId,answer})=>{
       if(recieverId === (isTutor ? tutor?._id : student?._id )&& peerConnections){
         try {
           await peerConnections.setRemoteDescription(
@@ -443,7 +425,7 @@ const Chat = () => {
       }
     })
 
-    socket.on("ice_candidate",async({senderId,recipientId:recieverId,candidate})=>{
+    socket.on("ice_candidate",async({recipientId:recieverId,candidate})=>{
       if(recieverId === (isTutor ? tutor?._id : student?._id) && peerConnections){
         try {
           await peerConnections.addIceCandidate(new RTCIceCandidate(candidate));
@@ -457,7 +439,7 @@ const Chat = () => {
     })
 
 
-    socket.on("call_ended", async({senderId,recipientId:recieverId})=>{
+    socket.on("call_ended", async({recipientId:recieverId})=>{
       if(recieverId === (isTutor ? tutor?._id : student?._id)){
         if(peerConnections){
           peerConnections.close()
@@ -475,7 +457,7 @@ const Chat = () => {
       }
     });
 
-    socket.on("call_rejected", ({ senderId, recipientId }) => {
+    socket.on("call_rejected", ({ recipientId }) => {
       const currentUserId = isTutor ? tutor?._id : student?._id;
     
       if (recipientId === currentUserId) {

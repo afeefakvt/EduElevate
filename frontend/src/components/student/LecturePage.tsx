@@ -33,7 +33,6 @@ const LecturePage = () => {
       try {
         const response = await getCourseDetails(courseId)
         setCourse(response.course);
-        //  console.log(response.course,"ewaaaaaaaaaaa");
 
         if (response.course.lectures.length > 0) {
           setSelectedLecture(response.course.lectures[0]); //auto select first lecture
@@ -69,9 +68,7 @@ const LecturePage = () => {
     }
 
     try {
-      const response = await addRatings(courseId, rating, review)
-      // console.log("Rating submitted successfully!");
-      
+       await addRatings(courseId, rating, review)      
       setOpenModal(false)
       setRating(0);
       setReview("");

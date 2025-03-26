@@ -113,7 +113,7 @@ const TutorMyCourses = () => {
 
   const handleListUnlistCourse = async (courseId: string, isCurrentlyListed: boolean) => {
     try {
-      const response = await listUnlistCourse(courseId, isCurrentlyListed);
+      await listUnlistCourse(courseId, isCurrentlyListed);
       setCourses((prevCourses) =>
         prevCourses.map((course) =>
           course._id === courseId ? { ...course, isListed: !isCurrentlyListed } : course))

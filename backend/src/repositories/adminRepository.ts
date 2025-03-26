@@ -1,8 +1,6 @@
-import { Model } from "mongoose";
 import { IAdminRepository } from "../interfaces/admin/IAdminRepository";
 import { IStudent, Student } from "../models/studentModel";
 import Tutor, { ITutor } from "../models/tutorModel";
-import { TutorRepository } from "./tutorRepository";
 import { BaseRepository } from "./baseRepository";
 import Course, { ICourse } from "../models/courseModel";
 

@@ -21,7 +21,6 @@ import Footer from "../common/Footer";
 import { getTutorCourseDetails } from "@/api/tutorApi";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import contact from '../../assets/contact.jpeg'
 
 
 
@@ -46,7 +45,6 @@ const TutorCourseDetails = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const tutor = useSelector((state:RootState)=>state.tutorAuth.tutor)
   const navigate = useNavigate()
 
 
@@ -58,7 +56,6 @@ const TutorCourseDetails = () => {
       setLoading(true)
       try {
         const response = await getTutorCourseDetails(courseId);
-        console.log("respneseeeeeeeeeee",response)
         setCourse(response)
       } catch (error) {
         console.error("Failed to fetch course details:", error);

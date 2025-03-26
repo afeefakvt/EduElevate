@@ -56,6 +56,7 @@ export const verifyOtp = async (email: string, otp: string) => {
     throw new Error((error as Error).message);
   }
 };
+
 export const resendOtp = async (email: string): Promise<void> => {
   const response = await axiosInstance.post("/tutor/resendOtp", { email });
   return response.data;
@@ -76,7 +77,6 @@ export const login = async (email: string, password: string) => {
           isAuthenticated: true,
         })
       );
-      // console.log('tutorrrr', response.data?.tutor);
       Cookies.set("tutorAuthToken", token, { expires: 15 / 1440 });
     } else {
       console.log("not logged in");
@@ -112,14 +112,12 @@ export const resetPassword = async (
 
 export const addCourse = async (formData: FormData) => {
   try {
-    // console.log("courseee");
 
     const response = await axiosInstance.post("tutor/addCourse", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    // console.log("ress gottt",response)
     return response.data;
   } catch (error) {
     console.error("Error adding course:", error);
@@ -142,7 +140,6 @@ export const fetchTutorCourses = async (queryParams: string) => {
 export const getTutorCourseDetails = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(`/tutor/myCourses/${courseId}`);
-    // console.log("API Response:", response.data);
     return response.data;
   } catch (error) {
     console.log("error is", error);
@@ -152,11 +149,7 @@ export const getTutorCourseDetails = async (courseId: string) => {
 
 export const getCategories = async () => {
   try {
-    // console.log("vjhvuj");
-
     const response = await axiosInstance.get("/categories");
-    // console.log(response.data.categories,"mgujfhvhgnvhg ");
-
     return response.data.categories;
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -247,9 +240,6 @@ export const getCourseRatings = async (courseId: string) => {
 export const logoutTutor = async () => {
   try {
     const response = await axiosInstance.post("/tutor/logout");
-    // console.log("cameeee repsosne");
-    // console.log(response?.data ?? "No response data");
-
     return response.data;
   } catch (error) {
     console.log("error is", error);
@@ -298,7 +288,6 @@ export const tutorChangePassword = async (
 export const approvedCount = async (tutorId: string) => {
   try {
     const response = await axiosInstance.get(`/tutor/approved/${tutorId}`);
-    // console.log(response,"\\");
     return response.data;
   } catch (error) {
     console.log("error is", error);
@@ -330,7 +319,6 @@ export const getEnrollmentCount = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(`/enrollment/${courseId}`);
     const data = response.data;
-    // console.log(data.count)
     return data.count;
   } catch (error) {
     console.log("error is", error);

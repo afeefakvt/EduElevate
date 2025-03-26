@@ -64,9 +64,6 @@ const AddLecture = () => {
     };
 
     const handlePublishCourse = async () => {
-        console.log("Course ID:", courseId);
-
-        // console.log("publishinggggggggggg")
         if (!courseId) {
             setSnackbarMessage("Course id is missing. Please go back.");
             setSnackbarSeverity("error");
@@ -85,17 +82,14 @@ const AddLecture = () => {
             title, description, order, duration, courseId
         }))))
 
-        lectures.forEach((lecture, index) => {
+        lectures.forEach((lecture) => {
             if (lecture.video) {
                 formData.append('videoFiles', lecture.video)
             }
         })
         try {
-
-            console.log(formData,"formdata");
             
-            const response = await addLecture(courseId, formData)
-            // console.log(response,"lecturessss");
+            await addLecture(courseId, formData)
             setLectures([])
             setSnackbarMessage("Your request for publishing course in EduElevate is under review. We will reach out to you within 24 hours.");
             setSnackbarSeverity("success");

@@ -53,7 +53,7 @@ const Register = () => {
   const handleGoogleLogin = async(credentialResponse:CredentialResponse)=>{
     try {
         if(credentialResponse.credential){
-            const studentData = await googleSignIn(credentialResponse.credential);
+           await googleSignIn(credentialResponse.credential);
             navigate('/')
         }
     } catch (error) {

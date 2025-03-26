@@ -1,4 +1,4 @@
-import { Box, Grid, Card, CardContent, Typography, Toolbar,TextField,MenuItem,Select } from '@mui/material';
+import { Box, Grid, Card, CardContent, Typography,TextField,MenuItem,Select } from '@mui/material';
 import Navbar from './AdminNavbar';
 import Sidebar from './Sidebar'; 
 import { fetchDashboardCounts } from '@/api/adminApi'; 
@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { fetchMostRatedCourse,featuredCourses } from '@/api/adminApi';
 import category from '../../assets/category1.jpg'
 import { Course } from '@/interfaces/interface';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import { fillMissingDates } from '@/utils/dateHandler';
 import { getSalesReport } from '@/api/enrollmentApi';
 import { fetchTotalRevenue } from '@/api/adminApi';
@@ -66,9 +66,7 @@ const AdminDashboard = () => {
   },[timeRange,customDates])
 
   const fetchsalesReport = async()=>{
-    try {
-      // console.log("slaeeee");
-      
+    try {      
       const data = await getSalesReport(timeRange,customDates.startDate,customDates.endDate)
       console.log(data);
       

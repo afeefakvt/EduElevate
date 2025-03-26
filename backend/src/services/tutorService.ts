@@ -1,7 +1,6 @@
 import { ITutorRepository } from "../interfaces/tutor/ITutorRepository"
 import { ITutorService } from "../interfaces/tutor/ITutorService"
 import { ITutor } from "../models/tutorModel";
-import { StudentRepository } from "../repositories/studentRepository";
 import { validateOtp } from "../utils/otp";
 import { hashPassword } from "../utils/password";
 import { generatePasswordResetToken, generateRefreshToken, generateToken } from "../utils/jwt";
@@ -90,7 +89,6 @@ export class TutorService implements ITutorService {
             return null
         }
         const resetToken = generatePasswordResetToken(student.id.toString());
-        // console.log("reset token is", resetToken);
 
         await sendEmail(email, resetToken)
         return resetToken

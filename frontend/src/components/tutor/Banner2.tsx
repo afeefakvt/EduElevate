@@ -6,11 +6,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { tutorRevenue } from "@/api/tutorApi";
 
-interface Course {
-  id: string;
-  title: string;
-  status: "pending" | "approved" | "rejected";
-}
 
 const Banner2 = () => {
   const [approvedCourses, setApprovedCourses] = useState(0);
@@ -33,7 +28,6 @@ const Banner2 = () => {
           setPendingCourses(pending);
 
           const revenueSum = await tutorRevenue(tutorId);
-          // console.log(revenueSum,"summm");
           setTotalRevenue(revenueSum.toFixed(2));
         }
         const enrollments = await fetchTutorEnrollments();
