@@ -49,7 +49,6 @@ import TutorContacts from "./components/chat/TutorContacts";
 import Payments from "./components/tutor/Payments";
 
 
-import { ThemeProvider } from './components/ui/themeProvider'
 import PasswordReset from "./components/common/PasswordReset"
 import { useEffect } from "react";
 import { socket } from "./utils/socket";
@@ -79,7 +78,6 @@ function App() {
 
   return (
     <>
-      <ThemeProvider>
 
         <Router>
           <Routes>
@@ -150,7 +148,6 @@ function App() {
 
           </Routes>
         </Router>
-      </ThemeProvider>
 
     </>
   )
