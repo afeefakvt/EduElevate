@@ -3,18 +3,18 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import NotFound from "./components/errors/NotFound";
 
-import Home from "./pages/Home"
-import LoginPage from "./pages/LoginPage"
-import RegisterPage from "./pages/RegisterPage"
-import OtpPage from "./pages/OtpPage"
-import Courses from "./components/student/Courses"
-import CourseDetails from "./components/student/CourseDetails"
-import StudentProtected from "./components/protectedRoutes/Studentprotected"
-import MyCourses from "./components/student/MyCourses";
-import LecturePage from "./components/student/LecturePage";
-import Profile from "./components/common/Profile";
-import StudentContacts from "./components/chat/StudentContacts";
-import Chat from "./components/chat/Chat";
+import Home from "@/pages/Home"
+import LoginPage from "@/pages/LoginPage"
+import RegisterPage from "@/pages/RegisterPage"
+import OtpPage from "@/pages/OtpPage"
+import Courses from "@/components/student/Courses"
+import CourseDetails from "@/components/student/CourseDetails"
+import StudentProtected from "@/components/protectedRoutes/Studentprotected"
+import MyCourses from "@/components/student/MyCourses";
+import LecturePage from "@/components/student/LecturePage";
+import Profile from "@/components/common/Profile";
+import StudentContacts from "@/components/chat/StudentContacts";
+import Chat from "@/components/chat/Chat";
 
 
 import AdminLogin from "./components/admin/AdminLogin"
