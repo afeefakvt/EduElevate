@@ -7,8 +7,8 @@ import Home from "./pages/Home"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import OtpPage from "./pages/OtpPage"
-import Courses from "./components/student/Courses";
-import CourseDetails from "./components/student/CourseDetails";
+import Courses from "./components/student/courses"
+import CourseDetails from "./components/student/courseDetails"
 import StudentProtected from "./components/protectedRoutes/Studentprotected"
 import MyCourses from "./components/student/MyCourses";
 import LecturePage from "./components/student/LecturePage";
