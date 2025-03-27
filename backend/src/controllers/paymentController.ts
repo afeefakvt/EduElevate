@@ -47,7 +47,7 @@ export class PaymentController{
             const {tutorId} = req.params
             const tutorsAmount = await this.paymentService.tutorsAmount(tutorId)
             if(!tutorsAmount){
-                res.status(HTTP_STATUS.NOT_FOUND).json("Tutor's amount not found")
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.TUTOR_AMOUNT_NOT_FOUND})
                 return;
             } 
             res.status(HTTP_STATUS.OK).json(tutorsAmount)
@@ -63,7 +63,7 @@ export class PaymentController{
             const total = await this.paymentService.tutorTotal(tutorId)
             // console.log(total,"tot");
             if(!total){
-                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Tutor total not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.TUTOR_TOTAL_NOT_FOUND})
                 return;
             }
             

@@ -85,7 +85,7 @@ export class CategoryController{
             if (error instanceof Error && error.message === MESSAGES.CATEGORY_NAME_EXISTS) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({
                     success: false,
-                    message: "Category name already exists",
+                    message: MESSAGES.CATEGORY_NAME_EXISTS,
                 });
             } else if (error instanceof Error && error.message === MESSAGES.CATEGORY_NOT_FOUND) {
                 res.status(HTTP_STATUS.NOT_FOUND).json({

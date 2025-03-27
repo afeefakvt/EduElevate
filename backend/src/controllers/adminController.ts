@@ -156,7 +156,7 @@ export class AdminController {
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 success: false,
-                message: "Internal server error",
+                message: MESSAGES.INTERNAL_SERVER_ERROR,
                 error: error instanceof Error ? error.message : error,
               });
         }

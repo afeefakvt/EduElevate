@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { axiosInstance } from "../api/tutorAxiosInstance";
 import { store } from "../store/store";
@@ -24,19 +23,8 @@ export const signUp = async (
     });
     return repsonse.data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      const validationErrors = error.response?.data.errors;
-      if (validationErrors) {
-        const errorMessage = validationErrors
-          .map((err: any) => err.msg)
-          .join(", ");
-        throw new Error(errorMessage);
-      }
-      const errMessage =
-        error.response?.data.message || " something went wrong";
-      throw new Error(errMessage);
-    }
-    throw new Error((error as Error).message);
+    throw handleAxiosError(error);
+
   }
 };
 
@@ -48,12 +36,8 @@ export const verifyOtp = async (email: string, otp: string) => {
     });
     return reposne.data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      const errMessage =
-        error.response?.data.message || "otp verification failed";
-      throw new Error(errMessage);
-    }
-    throw new Error((error as Error).message);
+    throw handleAxiosError(error);
+
   }
 };
 
@@ -83,18 +67,8 @@ export const login = async (email: string, password: string) => {
     }
     return response.data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      const validationErrors = error.response?.data.errors; // Extract validation errors
-      if (validationErrors) {
-        const errorMessage = validationErrors
-          .map((err: any) => err.msg)
-          .join(", ");
-        throw new Error(errorMessage); // Join all validation messages into a single string
-      }
-      const errMessage = error.response?.data.message || "something went wrong";
-      throw new Error(errMessage);
-    }
-    throw new Error((error as Error).message);
+    throw handleAxiosError(error);
+
   }
 };
 
@@ -161,8 +135,6 @@ export const listUnlistCourse = async (
   isCurrentlyListed: Boolean
 ) => {
   try {
-    console.log("delete courseee");
-
     const response = await axiosInstance.patch(
       `/courses/deleteCourse/${courseId}`,
       { isListed: !isCurrentlyListed }
@@ -328,8 +300,6 @@ export const getEnrollmentCount = async (courseId: string) => {
 
 export const getMyStudents = async () => {
   try {
-    // console.log("ppppppppppp");
-
     const response = await axiosInstance.get("/tutor/myStudents", {
       withCredentials: true,
     });

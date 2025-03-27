@@ -5,6 +5,7 @@ import { hashPassword,comparePassword } from "../utils/password";
 import { validateOtp } from "../utils/otp";
 import { generatePasswordResetToken, generateRefreshToken, generateToken } from "../utils/jwt";
 import { sendEmail } from "../utils/resetPassword";
+import { MESSAGES } from "../constants/message";
 
 
 export class StudentService implements IStudentService  {
@@ -14,34 +15,31 @@ export class StudentService implements IStudentService  {
         this.studentRepository = studentRepository //injecting dependency
     }
 
-
-
     private async authenticateStudent(email:string,password:string):Promise<IStudent>{
         if(!email || !password){
-            throw new Error("Email and password cannot be empty")
+            throw new Error(MESSAGES.EMPTY_CREDENTIALS)
         }
 
         const student = await this.studentRepository.getStudentByEmail(email)
         if(!student){
-            throw new Error("student not found")
+            throw new Error(MESSAGES.STUDENT_NOT_FOUND)
         }
 
         const isValidPassword = await comparePassword(password, student.password);
         if(!isValidPassword){
-            throw new Error("Invalid password.Please enter a valid password")
+            throw new Error(MESSAGES.INVALID_PASSWORD)
         }
         if(student.isBlocked){
-            throw new Error("You are blocked by admin. Can't login now");
+            throw new Error(MESSAGES.USER_BLOCKED);
         }
         return student
 
     }
 
-
     async createStudent(studentData:IStudent):Promise<IStudent>{
         const existingStudent = await this.studentRepository.findStudentByEmail(studentData.email);
         if(existingStudent){
-            throw new Error("email id already exists")
+            throw new Error(MESSAGES.EMAIL_ID_EXISTS)
         }
         const hashedPassword = await hashPassword(studentData.password as string);
         studentData.password = hashedPassword
@@ -56,7 +54,7 @@ export class StudentService implements IStudentService  {
         const student = await this.authenticateStudent(email,password);
 
         if(student.role!=="student"){
-            throw new Error("Access denied. Only registered student can login")
+            throw new Error(MESSAGES.STUDENT_ACCESS_DENIED)
         }
 
         const token = generateToken({
@@ -68,15 +66,13 @@ export class StudentService implements IStudentService  {
 
         const refreshToken = generateRefreshToken({id:student._id})
         return {token,refreshToken,student}
-
     }
     
-
     async loginAdmin(email: string, password: string): Promise<{ token: string; refreshToken: string; student: IStudent; }> {
         const student = await this.authenticateStudent(email,password);
 
         if(student.role!=="admin"){
-            throw new Error("Access denied. Only admin can login here.")
+            throw new Error(MESSAGES.ADMIN_ACCESS_DENIED)
         }
 
         const token = generateToken({
@@ -86,7 +82,6 @@ export class StudentService implements IStudentService  {
             isBlocked:student.isBlocked 
         })
 
-        
         const refreshToken = generateRefreshToken({id:student._id})
         return {token,refreshToken,student}
     }
@@ -120,11 +115,11 @@ export class StudentService implements IStudentService  {
     async changePassword(studentId: string, currentPassword: string, newPassword: string): Promise<IStudent | null> {
         const student  = await this.studentRepository.findStudentById(studentId)
         if(!student){
-            throw new Error("Student not found")
+            throw new Error(MESSAGES.STUDENT_NOT_FOUND)
         }
         const isMatch = await comparePassword(currentPassword,student.password)
         if(!isMatch){
-            throw new Error("Current Password is incorrect");
+            throw new Error(MESSAGES.INCORRECT_CURRENT_PASSWORD);
         }
         const hashedPassword = await hashPassword(newPassword);
         return this.studentRepository.changePassword(studentId,{password:hashedPassword})

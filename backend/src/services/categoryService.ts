@@ -1,6 +1,7 @@
 import { ICategoryService } from "../interfaces/category/ICategoryService";
 import { ICategoryRepository } from "../interfaces/category/ICategoryRepository";
 import { ICategory } from "../models/categoryModel";
+import { MESSAGES } from "../constants/message";
 
 export class CategoryService implements ICategoryService{
     private categoryRepository: ICategoryRepository
@@ -18,7 +19,7 @@ export class CategoryService implements ICategoryService{
         const existingCategory = await this.categoryRepository.getCategoryByName(categoryName);
 
         if(existingCategory){
-            return {success:false,message:"Category with this name already exists"};
+            return {success:false,message:MESSAGES.CATEGORY_NAME_EXISTS};
         }
         
         const category = await this.categoryRepository.addCategory(categoryName);
@@ -33,12 +34,12 @@ export class CategoryService implements ICategoryService{
 
         const existingCategory = await this.categoryRepository.getCategoryByName(name);
         if (existingCategory) {
-           throw new Error("category name already exists");
+           throw new Error(MESSAGES.CATEGORY_NAME_EXISTS);
         }
         
         const category = await this.categoryRepository.getCategoryById(id)
         if (!category) {
-            throw new Error("Category not found");
+            throw new Error(MESSAGES.CATEGORY_NOT_FOUND);
         }
         return this.categoryRepository.editCategory(id,name)
     }

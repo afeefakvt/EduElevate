@@ -4,6 +4,7 @@ import { ILectureRepository } from "../interfaces/lecture/ILectureRepository";
 import Course from "../models/courseModel";
 import mongoose from "mongoose";
 import { cloudinary } from "../config/cloudinary";
+import { MESSAGES } from "../constants/message";
 
 export class LectureService implements ILectureService{
     private lectureRepository:ILectureRepository
@@ -20,7 +21,7 @@ export class LectureService implements ILectureService{
                 {new:true}
             );
             if(!updatedCourse){
-                throw new Error("course not found")
+                throw new Error(MESSAGES.COURSE_NOT_FOUND)
             } 
            }
            return await this.lectureRepository.addLecture(lectureData) 

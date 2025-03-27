@@ -1,5 +1,6 @@
 export const MESSAGES = {
     STUDENT_CREATED: 'Student created successfully, OTP is sent to the email address.',
+    TUTOR_CREATED: 'Tutor created successfully, OTP is sent to the email address.',
     OTP_SENT: 'OTP is sent to the email address.',
     INVALID_OTP: 'Invalid OTP.',
     OTP_VERIFIED: 'OTP verified successfully.',
@@ -56,4 +57,29 @@ export const MESSAGES = {
     RATING_FETCH_ERROR: "Error fetching ratings",
     MOST_RATED_COURSE_NOT_FOUND: "Most rated course not found",
 
+    PASSWORD_CHANGED:"Password updated successfully. PLease login again",
+    NO_COURSE_CREATED:"No courses created",
+    ACCESS_DENIED_TUTOR:"Access denied. Not a tutor",
+    ACCESS_DENIED_STUDENT:"Access denied. Not a student",
+    INVALID_PASSWORD_RESET_TOKEN:"Invalid or expired token",
+    PASSWORD_RESET_SUCCESS: "Password reset successful",
+    PAYMENT_SETUP_FAILED:"Payment setup failed",
+
+    TUTOR_AMOUNT_NOT_FOUND:"tutor's amount not found",
+    TUTOR_TOTAL_NOT_FOUND:"tutor's total not found",
+    EDIT_COURSE_SUBMIT:"Edit course details submitted successfully for admin review",
+    TOTAL_REVENUE_NOT_FOUND:"Total revenue not found",
+    NO_ENROLLED_STUDENTS:"No enrolled students",
+    NO_COURSES_ENROLLED:"No courses enrolled",
+    EMPTY_CREDENTIALS: "Email and password cannot be empty",
+    INVALID_PASSWORD: "Invalid password. Please enter a valid password",
+    USER_BLOCKED: "You are blocked by admin. Can't login now",
+    EMAIL_ID_EXISTS:"Email id already exists",
+    STUDENT_ACCESS_DENIED: "Access denied. Only registered student can login",
+    ADMIN_ACCESS_DENIED: "Access denied. Only admin can login here.",
+    TUTOR_ACCESS_DENIED: "Access denied. Only registered tutor can login",
+    INCORRECT_CURRENT_PASSWORD:"Current password is incorrect.",
+    TUTOR_REJECTED: " Sorry you cannot login. Your approval is rejected by admin",
+    TUTOR_PENDING: "You cannot login. Your account is waiting admin approval"
+  
 }

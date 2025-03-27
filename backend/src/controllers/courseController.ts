@@ -77,7 +77,6 @@ export class CourseController{
               res.status(HTTP_STATUS.OK).json({ deletedCourse });
           
         } catch (error) {
-            console.error("Error deleting course:", error);
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
         }
     }
@@ -92,9 +91,8 @@ export class CourseController{
             }
 
             const updatedCourse = await this.courseService.editCourse(courseId,updatedData,req.file);
-            res.status(HTTP_STATUS.OK).json({message:"Edit course details submitted successfully for admin review",course:updatedCourse})
+            res.status(HTTP_STATUS.OK).json({message:MESSAGES.EDIT_COURSE_SUBMIT,course:updatedCourse})
         } catch (error) {
-            console.error("Error deleting course:", error);
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
             
         }

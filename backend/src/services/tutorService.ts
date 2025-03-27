@@ -7,6 +7,7 @@ import { generatePasswordResetToken, generateRefreshToken, generateToken } from 
 import { sendEmail } from "../utils/resetTutorPassword";
 import { ICourse } from "../models/courseModel";
 import { comparePassword } from "../utils/password";
+import { MESSAGES } from "../constants/message";
 
 
 
@@ -20,27 +21,27 @@ export class TutorService implements ITutorService {
 
     private async authenticateTutor(email:string,password:string):Promise<ITutor>{
         if(!email || !password){
-            throw new Error("Email and password cannot be empty")
+            throw new Error(MESSAGES.EMPTY_CREDENTIALS)
         }
 
         const tutor = await this.tutorRepository.getTutorByEmail(email)
         if(!tutor){
-            throw new Error("tutor not found")
+            throw new Error(MESSAGES.TUTOR_NOT_FOUND)
         }
 
         const isValidPassword = await comparePassword(password, tutor.password);
         if(!isValidPassword){
-            throw new Error("Invalid password.Please enter a valid password")
+            throw new Error(MESSAGES.INVALID_PASSWORD)
         }
         if(tutor.isBlocked){
-            throw new Error("You are blocked by admin. Can't login now");
+            throw new Error(MESSAGES.USER_BLOCKED);
         }
         if (tutor.status==="pending") {
-            throw new Error('You cannot login. Your account is waiting admin approval')
+            throw new Error(MESSAGES.TUTOR_PENDING)
                     
         }
         if (tutor.status==='rejected') {
-            throw new Error(' Sorry you cannot login. Your approval is rejected by admin')
+            throw new Error(MESSAGES.TUTOR_REJECTED)
         }
             
         return tutor
@@ -51,7 +52,7 @@ export class TutorService implements ITutorService {
 
         const existingTutor = await this.tutorRepository.findTutorByEmail(tutorData.email)
         if (existingTutor) {
-            throw new Error('email id already exists')
+            throw new Error(MESSAGES.EMAIL_ID_EXISTS)
 
         }
         const hashedPassword = await hashPassword(tutorData.password as string)
@@ -109,11 +110,11 @@ export class TutorService implements ITutorService {
     async changeTutorPassword(tutorId: string, currentPassword: string, newPassword: string): Promise<ITutor | null> {
         const tutor = await this.tutorRepository.getTutorById(tutorId)
         if(!tutor){
-            throw new Error("Student not found")
+            throw new Error(MESSAGES.STUDENT_NOT_FOUND)
         }
         const isMatch = await comparePassword(currentPassword,tutor.password)
         if(!isMatch){
-            throw new Error("Current Password is incorrect");
+            throw new Error(MESSAGES.INCORRECT_CURRENT_PASSWORD);
         }
         const hashedPassword = await hashPassword(newPassword)
         return this.tutorRepository.changeTutorPassword(tutorId,{password:hashedPassword})

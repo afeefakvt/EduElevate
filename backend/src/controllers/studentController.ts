@@ -167,7 +167,7 @@ export class StudentController {
             res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGOUT_SUCCESS });
 
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in logging out", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR, error });
 
         }
     }
@@ -209,7 +209,7 @@ export class StudentController {
             })
             res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGOUT_SUCCESS });  
         } catch (error) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error in logging out", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR, error });
             
         }
     }
@@ -287,7 +287,7 @@ export class StudentController {
 
             const decoded = verifyPasswordResetToken(token)
             if (!decoded) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Invalid or expired token" })
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.INVALID_PASSWORD_RESET_TOKEN })
                 return;
             }
             if (newPassword !== confirmPassword) {
@@ -301,10 +301,10 @@ export class StudentController {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.STUDENT_NOT_FOUND })
                 return;
             }
-            res.status(HTTP_STATUS.OK).json({ message: "Passoword reset succcessful" })
+            res.status(HTTP_STATUS.OK).json({ message: MESSAGES.PASSWORD_RESET_SUCCESS })
         } catch (error) {
             console.error("Error resetting password:", error);
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Error resetting password", error });
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR, error });
 
         }
     }
@@ -319,7 +319,7 @@ export class StudentController {
 
                         
             if(!mongoose.Types.ObjectId.isValid(courseId)){
-                res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Invalid course ID"})
+                res.status(HTTP_STATUS.BAD_REQUEST).json({message:MESSAGES.INVALID_COURSE_ID})
                 return;
             }
             const course = await this.studentService.getCourseById(courseId)
@@ -356,7 +356,7 @@ export class StudentController {
             
         } catch (error) {
             console.error("Stripe payment error:", error);
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: "Payment setup failed", error: (error as Error).message,
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message: MESSAGES.PAYMENT_SETUP_FAILED, error: (error as Error).message,
         });  
         }
     }
@@ -386,10 +386,10 @@ export class StudentController {
             const {studentId} = req.params;
             const {currentPassword,newPassword} = req.body;
                 await this.studentService.changePassword(studentId,currentPassword,newPassword)
-                res.status(200).json({message:"Password updates successfully. Please login again"})
+                res.status(200).json({message:MESSAGES.PASSWORD_CHANGED})
           
-        } catch (error:any) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: error.message || 'Something went wrong' })
+        } catch (error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: MESSAGES.INTERNAL_SERVER_ERROR })
             
         }
     }

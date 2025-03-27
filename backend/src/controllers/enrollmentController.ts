@@ -14,7 +14,7 @@ export class EnrollmentController {
     async getEnrolledCoursesByStudent(req: RequestWithUser, res: Response): Promise<void> {
         try {            
             if (!req.student || !req.student._id) {
-                res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a student." });
+                res.status(HTTP_STATUS.FORBIDDEN).json({ message: MESSAGES.ACCESS_DENIED_STUDENT });
                 return;
             }
 
@@ -26,11 +26,10 @@ export class EnrollmentController {
             
             const enrolledCourses = await this.enrollmentService.getEnrolledCoursesByStudent(req.student._id.toString());
             if (!enrolledCourses || enrolledCourses.length === 0) {
-                res.status(HTTP_STATUS.NOT_FOUND).json("No courses enrolled")
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.NO_COURSES_ENROLLED})
             }
             res.status(HTTP_STATUS.OK).json(enrolledCourses);
         } catch (error) {
-            console.log("no course")
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message:  MESSAGES.INTERNAL_SERVER_ERROR, error: (error as Error).message, });
         }
     }
@@ -38,7 +37,7 @@ export class EnrollmentController {
     async getTotalEnrolledCount(req: RequestWithUser, res: Response): Promise<void> {
         try {
             if (!req.tutor || !req.tutor._id) {
-                res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a tutor." });
+                res.status(HTTP_STATUS.FORBIDDEN).json({ message: MESSAGES.ACCESS_DENIED_TUTOR });
                 return;
             }
             const tutorId = req.tutor._id.toString()
@@ -69,13 +68,13 @@ export class EnrollmentController {
     async getMyStudents(req:RequestWithUser,res:Response):Promise<void>{
         try {            
             if (!req.tutor || !req.tutor._id) {
-                res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Access denied. Not a tutor." });
+                res.status(HTTP_STATUS.FORBIDDEN).json({ message: MESSAGES.ACCESS_DENIED_TUTOR});
                 return;
             }
             const tutorId = req.tutor._id.toString()
             const enrolledStudents = await this.enrollmentService.getEnrolledStudents(tutorId)
             if(!enrolledStudents || enrolledStudents.length===0){
-                res.status(HTTP_STATUS.NOT_FOUND).json({message:"no enrolled students"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.NO_ENROLLED_STUDENTS})
             }
             res.status(HTTP_STATUS.OK).json(enrolledStudents    )
             
@@ -113,7 +112,7 @@ export class EnrollmentController {
         try {
             const total = await this.enrollmentService.getTotalRevenue()
             if(!total){
-                res.status(HTTP_STATUS.NOT_FOUND).json({message:"Total Revenue not found"})
+                res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.TOTAL_REVENUE_NOT_FOUND})
                 return
             }            
             res.status(HTTP_STATUS.OK).json(total)

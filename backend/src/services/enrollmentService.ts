@@ -2,6 +2,7 @@ import { IEnrollmentRepository } from "../interfaces/enrollment/IEnrollmentRepos
 import { IEnrollmentService } from "../interfaces/enrollment/IEnrollmentService";
 import { IEnrollment } from "../models/enrollmentModel";
 import { ICourse } from "../models/courseModel";
+import { MESSAGES } from "../constants/message";
 
 export class EnrollmentService implements IEnrollmentService{
     private enrollmentRepository:IEnrollmentRepository
@@ -12,7 +13,7 @@ export class EnrollmentService implements IEnrollmentService{
     async getEnrolledCoursesByStudent(id: string): Promise<IEnrollment[] | null> {
         const enrolledCourses = await this.enrollmentRepository.getEnrolledCoursesByStudent(id);
         if(!enrolledCourses || enrolledCourses.length===0){
-            throw new Error("No courses enrolled");
+            throw new Error(MESSAGES.NO_COURSES_ENROLLED);
         }
         return enrolledCourses
     }
