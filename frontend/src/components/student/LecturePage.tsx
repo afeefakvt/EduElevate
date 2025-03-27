@@ -195,7 +195,8 @@ const LecturePage = () => {
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             Course rating and review
           </Typography>
-          <Rating value={rating} onChange={(event, newValue) => setRating(newValue)} />
+
+          <Rating value={rating} onChange={(_, newValue) => setRating(newValue)} />
           {ratingError && (
             <Typography color="error" variant="body2">
               {ratingError}

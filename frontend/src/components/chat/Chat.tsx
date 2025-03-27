@@ -65,7 +65,7 @@ const Chat = () => {
     senderId:string;
     offer:any
   } | null>(null);
-  const [callAccepted,setCallAccepted] = useState(false)
+  const [,setCallAccepted] = useState(false)
   
   const localVideoRef = useRef<HTMLVideoElement>(null)
   const remoteVideoRef = useRef<HTMLVideoElement>(null)

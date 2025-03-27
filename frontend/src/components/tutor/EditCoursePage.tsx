@@ -46,7 +46,7 @@ const EditCoursePage = () => {
   const navigate = useNavigate()
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const tutor = useSelector((state: RootState) => state.tutorAuth.tutor)
-  const [loading, setLoading] = useState(true); 
+  const [, setLoading] = useState(true); 
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const tutorId = tutor?._id
