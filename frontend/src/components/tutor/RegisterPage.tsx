@@ -10,7 +10,7 @@ const RegisterPage = () => {
     return (
         <div>
             <Navbar />
-            <Box sx={{ marginTop: 15 }}>
+            <Box sx={{ marginTop: 20,marginBottom:20 }}>
                 <Register />
             </Box>
             <Footer />

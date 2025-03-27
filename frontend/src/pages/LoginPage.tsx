@@ -7,7 +7,7 @@ const LoginPage = () => {
   return (
     <Box>
     <Navbar />
-    <Box sx={{  marginTop:30,marginBottom:25}}> 
+    <Box sx={{  marginTop:25,marginBottom:25}}> 
         <Login />
     </Box>
     <Footer />
