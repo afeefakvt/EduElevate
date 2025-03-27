@@ -10,13 +10,13 @@ import { HTTP_STATUS } from "../constants/httpStatusCode";
 import { MESSAGES } from "../constants/message";
 
 
-
-
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!,{
     apiVersion:"2025-01-27.acacia"
 })
+
+const refreshTokenMaxAge = parseInt(process.env.REFRESH_TOKEN_MAX_AGE ?? "604800000", 10);
 
 
 export class StudentController {
@@ -103,7 +103,7 @@ export class StudentController {
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
                 secure:process.env.NODE_ENV==="development",
                 sameSite:"strict", //helps prevent csrf
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                maxAge: refreshTokenMaxAge
 
             })
 
@@ -122,7 +122,6 @@ export class StudentController {
         try {
             
             const refreshToken = req.cookies.refreshToken;
-            console.log(refreshToken,"refreshhhh");
             if(!refreshToken){
                 console.error("No refresh token found,Logging out.")
         
@@ -140,15 +139,12 @@ export class StudentController {
                 res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.STUDENT_NOT_FOUND})
                 return;
             }
-
-            // console.log("generating new access token");
             const newAccessToken = generateToken({
                 id:student._id,
                 email:student.email,
                 role:student.role,
                 isBlocked:student.isBlocked
             })
-            // console.log("generated new access token",newAccessToken);
             res.json({token:newAccessToken})
             
             
