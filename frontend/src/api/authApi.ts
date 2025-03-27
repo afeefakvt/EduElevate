@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { axiosInstance } from "./axiosInstance";
 import {store} from '../store/store'
