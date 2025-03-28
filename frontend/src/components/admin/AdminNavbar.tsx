@@ -32,7 +32,7 @@
 
 
 import logo from "../../assets/afeefalogo.png"
-import { AppBar, Box,  Toolbar, Typography } from "@mui/material";
+import { AppBar, Box,  Toolbar } from "@mui/material";
 
 const AdminNavbar = () => {
    
@@ -79,18 +79,6 @@ const AdminNavbar = () => {
                 ></Box>
 
                 <Box display="flex" alignItems="center" gap={2}>
-                    <Typography
-                        variant="body2"
-                        color="black"
-                        sx={{
-                            cursor: "pointer",
-                            fontWeight: 750,
-                            display: { xs: "none", md: "block" },
-                        }}
-                    >
-                        Admin
-
-                    </Typography>
 
                         <Box display={"flex"} justifyContent="center" alignItems="center">
                            

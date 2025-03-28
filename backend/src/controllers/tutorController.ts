@@ -107,8 +107,6 @@ export class TutorController {
             return;
         }
     }
-
-    
     
         async refreshAccessToken (req:Request,res:Response):Promise<void>{
             try {
