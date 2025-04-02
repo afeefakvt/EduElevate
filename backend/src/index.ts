@@ -22,11 +22,21 @@ const app:Application = express()
 
 connectDB()
 
-app.use(cors({
-    origin:'https://edu-elevate-seven.vercel.app',
-    credentials:true
-})
-);
+const allowedOrigins = [
+    "https://edu-elevate-seven.vercel.app", 
+    "http://localhost:5173"
+  ];
+
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true
+  }));
 
 app.use('/webhook',express.raw({type:"application/json"}),webhookRoutes);
 
