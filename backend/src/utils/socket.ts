@@ -10,7 +10,7 @@ export interface IMessageRoom extends Document{
 export const initializeSocket = (server:http.Server)=>{
     const io= new SocketIOServer(server,{
         cors:{
-            origin:'http://localhost:5173',
+            origin:'https://edu-elevate-seven.vercel.app',
             methods:['GET','POST']
         }
     })
