@@ -101,7 +101,7 @@ export class StudentController {
 
             res.cookie("refreshToken",refreshToken,{
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
-                secure:process.env.NODE_ENV==="development",
+                secure:process.env.NODE_ENV==="production",
                 sameSite:"strict", //helps prevent csrf
                 maxAge: refreshTokenMaxAge
 
@@ -185,7 +185,7 @@ export class StudentController {
 
             res.cookie("refreshToken",refreshToken,{
                 httpOnly:true,
-                secure:process.env.NODE_ENV==="development",
+                secure:process.env.NODE_ENV==="production",
                 sameSite:"strict", 
                 maxAge: 7 * 24 * 60 * 60 * 1000, 
 
