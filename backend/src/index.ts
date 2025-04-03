@@ -23,7 +23,7 @@ const app:Application = express()
 connectDB()
 
 app.use(cors({
-    origin:'https://edu-elevate-seven.vercel.app',
+    origin:process.env.FRONTEND_URL,
     credentials:true
 })
 );
