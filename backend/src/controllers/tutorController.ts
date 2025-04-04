@@ -91,6 +91,8 @@ export class TutorController {
                 res.status(HTTP_STATUS.NOT_FOUND).json({ message: MESSAGES.TUTOR_NOT_FOUND })
                 return;
             }
+            console.log(process.env.NODE_ENV==="production",'uygyfyfyfy');
+            
             res.cookie("tutorRefreshToken",refreshToken,{
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
                 secure:process.env.NODE_ENV==="production",
@@ -152,7 +154,8 @@ export class TutorController {
             res.clearCookie('token')
             res.clearCookie("tutorRefreshToken",{
                 httpOnly:true,
-                secure:process.env.NODE_ENV ==="development"
+                secure:process.env.NODE_ENV ==="development",
+                sameSite:"none"
             })
             res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGOUT_SUCCESS });
 
