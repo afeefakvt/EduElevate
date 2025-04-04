@@ -94,7 +94,7 @@ export class TutorController {
             res.cookie("tutorRefreshToken",refreshToken,{
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
                 secure:process.env.NODE_ENV==="production",
-                sameSite:"strict", //helps prevent csrf
+                sameSite:"none", //helps prevent csrf
                 maxAge: refreshTokenMaxAge
             })
            
@@ -152,7 +152,8 @@ export class TutorController {
             res.clearCookie('token')
             res.clearCookie("tutorRefreshToken",{
                 httpOnly:true,
-                secure:process.env.NODE_ENV ==="development"
+                secure:process.env.NODE_ENV ==="production",
+                
             })
             res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGOUT_SUCCESS });
 
