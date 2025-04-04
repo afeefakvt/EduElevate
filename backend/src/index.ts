@@ -21,6 +21,7 @@ import { initializeSocket } from './utils/socket'
 const app:Application = express()
 
 connectDB()
+console.log('NODE_ENV:', process.env.NODE_ENV);
 
 app.use(cors({
     origin:process.env.FRONTEND_URL,
