@@ -94,7 +94,7 @@ export class TutorController {
             res.cookie("tutorRefreshToken",refreshToken,{
                 httpOnly:true,// Prevents JavaScript access (mitigates XSS attacks)
                 secure:process.env.NODE_ENV==="production",
-                sameSite:"strict", //helps prevent csrf
+                sameSite:"none", //helps prevent csrf
                 maxAge: refreshTokenMaxAge
             })
            
