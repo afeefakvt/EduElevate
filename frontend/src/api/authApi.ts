@@ -55,7 +55,7 @@ export const login =  async(email:string,password:string)=>{
 
 
 export const googleSignIn = async(idToken:string)=>{
-        const response = await fetch('http://localhost:3000/auth/google',{
+        const response = await fetch('https://audizo.shop/auth/google',{
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({idToken}),
