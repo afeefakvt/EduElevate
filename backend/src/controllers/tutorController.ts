@@ -154,7 +154,7 @@ export class TutorController {
             res.clearCookie('token')
             res.clearCookie("tutorRefreshToken",{
                 httpOnly:true,
-                secure:process.env.NODE_ENV ==="development",
+                secure:process.env.NODE_ENV ==="production",
                 sameSite:"none"
             })
             res.status(HTTP_STATUS.OK).json({ message: MESSAGES.LOGOUT_SUCCESS });
