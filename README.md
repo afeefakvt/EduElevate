@@ -1,38 +1,77 @@
-# EduElevate 🚀
+# 🎓 EduElevate 🚀  
+**An Interactive E-Learning Platform**
+
+---
 
 ## 🌟 About the Project
-EduElevate is an innovative e-learning platform designed to make online education interactive and engaging. 
 
+**EduElevate** is a modern and interactive e-learning platform designed to transform the online education experience. Whether you're a student looking to learn or a tutor eager to teach, EduElevate offers powerful tools to connect, collaborate, and grow in a seamless digital environment.
 
-Features:
+---
 
-User Registration & Authentication (JWT) 
+## ✨ Key Features
 
-OTP-based Email Verification for registration
+- 🔐 **User Registration & Authentication** with JWT  
+- ✉️ **OTP-based Email Verification** during registration  
+- 📚 **Course Management System** for tutors  
+- 🎓 **Student Enrollment** into courses  
+- 💬 **Real-Time Messaging** between students and tutors  
+- 📹 **One-on-One Video Calls** for tutoring sessions  
+- 🛠️ **Admin Panel** to manage users, tutors, and courses  
+- 👤 **Profile Management** for both students and tutors  
+- 🔁 **Forgot Password Functionality**
 
-Course Management for Tutors
+---
 
-Student Enrollment in courses
+## 🛠️ Tech Stack
 
-Messaging between student and tutor
+### 🔧 Frontend
+- React.js  
+- TypeScript  
+- Redux  
 
-Video call between student and tutor
+### 🖥️ Backend
+- Node.js  
+- Express.js  
+- TypeScript  
 
-Admin Panel managing users, tutors and courses
+### 🗃️ Database
+- MongoDB  
 
-Profile Management for both students and tutors
+### 🔐 Authentication
+- JWT (JSON Web Tokens)
 
-Forgot Password
+### ☁️ Cloud & File Management
+- Cloudinary (Image & Video Uploads)  
+- Multer (File Upload Handling)
 
+---
+\
 
-Tech Stack:
+## 🚀 Installation & Setup
 
-Frontend : React, TypeScript, Redux
+1. **Clone the repository**
 
-Backend: Node.js, Express, TypeScript
+```bash
+git clone https://github.com/afeefakvt/EduElevate
+```
+```bash
+cd eduElevate
+```
 
-Database : MongoDB
-Authentication : JWT (JSON Web Tokens)
-Cloud Storage : Cloudinary (for image, videos uploads)
-File Uploads : Multer (for file management)
+2. **Setup Frontend**
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+3. **Setup Backend**
+
+```bash
+cd backend
+npm isntall
+npm run dev
+
 
