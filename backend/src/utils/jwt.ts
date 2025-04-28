@@ -56,20 +56,3 @@ export const verifyPasswordResetToken = (token:string):any=>{
 
 
 
-
-
-
-
-
-
-// export const generateResetToken = (userId:string):string=>{
-//     return jwt.sign({userId}, JWT_SECRET, {expiresIn:'15m'})
-// }
-// export const verifyResetToken = (token:string):any=>{
-//     try {
-//         return jwt.verify(token,JWT_SECRET)
-//     } catch (error) {
-//         throw new Error('invalid token')
-        
-//     }
-// }

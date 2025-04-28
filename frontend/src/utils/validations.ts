@@ -3,7 +3,6 @@ import { ERROR_MESSAGES } from "@/constants/messages";
 export const validateLoginForm = (email: string, password: string) => {
     const errors: { email?: string; password?: string } = {};
   
-    // Validate email format
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email) {
       errors.email = ERROR_MESSAGES.REQUIRED.EMAIL

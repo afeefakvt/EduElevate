@@ -9,14 +9,6 @@ export class StudentRepository extends BaseRepository<IStudent> implements IStud
         super(Student)
     }
    
-
-    // private studentRepository:BaseRepository<IStudent>
-    // private courseRepository:BaseRepository<ICourse>
-    
-    // constructor(){
-    //     this.studentRepository = new BaseRepository<IStudent>(Student)
-    //     this.courseRepository = new BaseRepository<ICourse>(Course)
-    // }
     async createStudent(studentData:IStudent):Promise<IStudent>{
         return await this.create(studentData)
     }

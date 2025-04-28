@@ -16,7 +16,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 export default class WebhookController {
     async stripeWebhook(req: Request, res: Response): Promise<void> {
-        // console.log("Received a request at webhook.");
 
         const sig = req.headers["stripe-signature"] as string | undefined;
 
@@ -53,6 +52,17 @@ export default class WebhookController {
                     const paymentAmount = session.amount_total ? session.amount_total / 100 : 0;
 
                     console.log(`Student ${studentId} enrolled for course ${courseId} with amount ${paymentAmount}`);
+
+                    const existingEnrollment = await Enrollment.findOne({
+                        studentId,
+                        courseId,
+                    });
+
+                    if (existingEnrollment) {
+                        console.log(`Student ${studentId} is already enrolled in course ${courseId}`);
+                        responseSent = true;
+                        break;
+                    }
 
                     await Enrollment.create({
                         studentId,

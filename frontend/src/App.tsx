@@ -57,9 +57,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 
 function App() {
 
-  useEffect(() => {
-    console.log("socket");
-    
+  useEffect(() => {    
     socket.on("connect", () => {
       console.log(`socket connected to server with id: ${socket.id} `);
 

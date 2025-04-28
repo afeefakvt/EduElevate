@@ -17,12 +17,6 @@ export class EnrollmentController {
                 res.status(HTTP_STATUS.FORBIDDEN).json({ message: MESSAGES.ACCESS_DENIED_STUDENT });
                 return;
             }
-
-            // const id =req.student?.id
-            // if(!student.id){
-            //     res.status(HTTP_STATUS.BAD_REQUEST).json({message:"Student ID is required"});
-            //     return;
-            // }
             
             const enrolledCourses = await this.enrollmentService.getEnrolledCoursesByStudent(req.student._id.toString());
             if (!enrolledCourses || enrolledCourses.length === 0) {

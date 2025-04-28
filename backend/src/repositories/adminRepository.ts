@@ -5,15 +5,6 @@ import { BaseRepository } from "./baseRepository";
 import Course, { ICourse } from "../models/courseModel";
 
 export class AdminRepository  implements IAdminRepository{
-
-    // private tutorRepository:BaseRepository<ITutor>
-    // private  courseRepository:BaseRepository<ICourse>
-    // constructor(){
-    //     super(Student)
-    //     this.tutorRepository = new  BaseRepository<ITutor>(Tutor) //injecting baserepository for tutors
-    //     this.courseRepository   = new BaseRepository<ICourse>(Course)
-        
-    // }
     
     private studentRepository: BaseRepository<IStudent>;
     private tutorRepository: BaseRepository<ITutor>;

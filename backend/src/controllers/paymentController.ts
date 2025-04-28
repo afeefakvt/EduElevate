@@ -61,7 +61,6 @@ export class PaymentController{
         try {
             const {tutorId} = req.params;
             const total = await this.paymentService.tutorTotal(tutorId)
-            // console.log(total,"tot");
             if(!total){
                 res.status(HTTP_STATUS.NOT_FOUND).json({message:MESSAGES.TUTOR_TOTAL_NOT_FOUND})
                 return;

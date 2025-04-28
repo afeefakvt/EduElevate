@@ -67,12 +67,8 @@ const AdminDashboard = () => {
 
   const fetchsalesReport = async()=>{
     try {      
-      const data = await getSalesReport(timeRange,customDates.startDate,customDates.endDate)
-      console.log(data);
-      
-      const formattedData = fillMissingDates(data,timeRange, new Date(customDates.startDate),new Date(customDates.endDate))
-      console.log(formattedData);
-      
+      const data = await getSalesReport(timeRange,customDates.startDate,customDates.endDate)      
+      const formattedData = fillMissingDates(data,timeRange, new Date(customDates.startDate),new Date(customDates.endDate))      
       setSalesData(formattedData)
     } catch (error) {
       console.error("Error fetching sales report", error);

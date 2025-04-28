@@ -9,8 +9,6 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
     constructor(){
         super(Enrollment)
     }
-
-
    
     async getEnrolledCoursesByStudent(id: string): Promise<IEnrollment[] | null> {
       return await this.find({studentId:id}).populate({path:"courseId",populate:
@@ -18,8 +16,7 @@ export class EnrollmentRepository extends BaseRepository<IEnrollment> implements
           {path:"categoryId",select:"name"}
           ]
       })
-      .exec();
-      
+      .exec();  
   }
 
     async getTutorEnrollments(tutorId: string): Promise<Record<string, number>> {

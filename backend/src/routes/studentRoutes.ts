@@ -3,7 +3,6 @@ import { StudentController } from "../controllers/studentController";
 import { StudentService } from "../services/studentService";
 import { authenticateToken } from "../middlewares/authToken";
 import { authorizeRoles } from "../middlewares/authRole";
-import { Student } from "../models/studentModel";
 import { StudentRepository } from "../repositories/studentRepository";
 import { validateStudentRegistration,validateStudentLogin,validateForgotPassword } from "../middlewares/validationMiddleware";
 
