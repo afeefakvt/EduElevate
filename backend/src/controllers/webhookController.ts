@@ -53,17 +53,6 @@ export default class WebhookController {
 
                     console.log(`Student ${studentId} enrolled for course ${courseId} with amount ${paymentAmount}`);
 
-                    const existingEnrollment = await Enrollment.findOne({
-                        studentId,
-                        courseId,
-                    });
-
-                    if (existingEnrollment) {
-                        console.log(`Student ${studentId} is already enrolled in course ${courseId}`);
-                        responseSent = true;
-                        break;
-                    }
-
                     await Enrollment.create({
                         studentId,
                         courseId,
