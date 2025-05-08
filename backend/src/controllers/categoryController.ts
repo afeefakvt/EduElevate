@@ -53,7 +53,7 @@ export class CategoryController{
 
     async listUnlistCategory(req:Request,res:Response):Promise<void>{
         const {id} = req.params;
-            const {isListed} = req.body
+        const {isListed} = req.body
         try {
             const category = await this.categoryService.listUnlistCategory(id,{isListed});
 

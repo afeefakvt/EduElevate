@@ -129,8 +129,6 @@ export class StudentController {
             res.status(HTTP_STATUS.UNAUTHORIZED).json({message:MESSAGES.NO_REFRESH_TOKEN});
             return;
             }
-
-
             const decoded= verifyRefreshToken(refreshToken) as {id:string}
             console.log(decoded,"decoded")
             const student = await Student.findById(decoded.id)
