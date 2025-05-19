@@ -55,7 +55,7 @@ export const login =  async(email:string,password:string)=>{
 
 
 export const googleSignIn = async(idToken:string)=>{
-        const response = await fetch('https://audizo.shop/auth/google',{
+        const response = await fetch('https://eduelevate-b8zn.onrender.com/auth/google',{
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({idToken}),
